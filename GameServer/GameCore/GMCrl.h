@@ -48,7 +48,7 @@ struct ActionElem
 	ActionElem& operator = (const ActionElem& Elem)
 	{
 		if (this == &Elem)
-			return *this;
+ return *this;
 
 		strcpy(ObjName, Elem.ObjName);
 		strcpy(PlacardInfo, Elem.PlacardInfo);

@@ -11,7 +11,7 @@ ScriptSystem::~ScriptSystem()
 	// Liberar todos los módulos almacenados
 	for (map<string, PyObject*>::iterator it = m_Modules.begin(); it != m_Modules.end(); ++it) {
 		if (it->second) {
-			Py_DECREF(it->second);
+ Py_DECREF(it->second);
 		}
 	}
 
@@ -155,9 +155,9 @@ void ScriptSystem::ReloadAll()
 		PyObject* newModule = PyImport_ReloadModule(oldModule);
 
 		if (!newModule) {
-			PyErr_Print();
-			PyErr_Clear();
-			continue;
+ PyErr_Print();
+ PyErr_Clear();
+ continue;
 		}
 
 		// Actualizar el módulo en el mapa

@@ -9,7 +9,7 @@ namespace snet
  		assert(m_Buf!=NULL);
  		if (m_Buf == NULL)
  		{
-			sbase::SysLogSave("New PerIOData buffer failed %d!",BufLen);
+ sbase::SysLogSave("New PerIOData buffer failed %d!",BufLen);
  		}
 
 		m_BufLen = BufLen;
@@ -32,7 +32,7 @@ namespace snet
    	void  PerIOData::operator delete(void* p)
    	{
    		if (!p) 
-   			return;
+    return;
    
    		HeapFree(GetProcessHeap(), 0, p);
    	}

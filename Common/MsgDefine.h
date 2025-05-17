@@ -48,7 +48,7 @@ struct  MSG_LOGIN_RETURN_INFO
 struct  MSG_PIPESERVER_INFO
 {
 	MsgHead  Head;
-	int      ucInfo;									//0:登入失败;1:登陆成功;2:注册
+	int      ucInfo;   //0:登入失败;1:登陆成功;2:注册
 };
 
 //注册游戏服务器\
@@ -145,7 +145,7 @@ struct  MSG_CREATE_ROLE
 	BYTE     ucProfession;                      //职业
 	BYTE     ucBelief;                          //信仰
 	BYTE     ucHairStyle;                       //发型
-	BYTE	 ucFaceShap;						//脸型
+	BYTE	 ucFaceShap;  //脸型
 };
 //删除角色\
 (  Client ----> GameServer )
@@ -165,10 +165,10 @@ struct  MSG_ROLE_INFO
 	char     Name[ROLENAME_LENGTH];             //角色名
 	BYTE     cCamp;                             //阵营
 	BYTE     ucProfession;                      //职业
-	BYTE     ucLV;								//等级
+	BYTE     ucLV;  		//等级
 	BYTE     ucGender;                          //性别
 	BYTE     ucHairStyle;                       //发型
-	BYTE	 ucFaceShap;						//脸型
+	BYTE	 ucFaceShap;  //脸型
 	INT      iEquip[MAX_EQUIP_COUNT];           //装备
 
 	char     Name1[ROLENAME_LENGTH];            //角色名
@@ -177,7 +177,7 @@ struct  MSG_ROLE_INFO
 	BYTE     ucLV1;                             //等级
 	BYTE     ucGender1;                         //性别
 	BYTE     ucHairStyle1;                      //发型
-	BYTE	 ucFaceShap1;						//脸型
+	BYTE	 ucFaceShap1;  //脸型
 	INT      iEquip1[MAX_EQUIP_COUNT];          //装备
 
 	char     Name2[ROLENAME_LENGTH];             //角色名
@@ -186,16 +186,16 @@ struct  MSG_ROLE_INFO
 	BYTE     ucLV2;                              //等级
 	BYTE     ucGender2;                          //性别
 	BYTE     ucHairStyle2;                       //发型
-	BYTE	 ucFaceShap2;						 //脸型
+	BYTE	 ucFaceShap2;   //脸型
 	INT      iEquip2[MAX_EQUIP_COUNT];           //装备
 
-	char     Name3[ROLENAME_LENGTH];			 //角色名
+	char     Name3[ROLENAME_LENGTH];  //角色名
 	BYTE     cCamp3;                             //阵营
 	BYTE     ucProfession3;                      //职业
 	BYTE     ucLV3;                              //等级
 	BYTE     ucGender3;                          //性别
 	BYTE     ucHairStyle3;                       //发型
-	BYTE	 ucFaceShap3;						 //脸型
+	BYTE	 ucFaceShap3;   //脸型
 	INT      iEquip3[MAX_EQUIP_COUNT];           //装备
 };
 
@@ -239,19 +239,19 @@ struct KitBag
 ( GameServer  ----> Client )
 struct MSG_SELFINFO
 {
-	MsgHead 				Head;
-	LONG					lDB_id;						 //数据库ID
+	MsgHead  	Head;
+	LONG 		lDB_id;   //数据库ID
 	char	                cName[MAX_NAME];             //名称
 	BYTE                    ucGender;                    //性别
 	BYTE                    ucCamp;                      //阵营
 	BYTE                    ucBelief;                    //信仰
 	BYTE                    ucProfession;                //职业
 	BYTE                    ucHairStyle;                 //发型
-	BYTE					ucFaceShap;					 //脸型
-	USHORT  				usMapID;                     //地图ID
+	BYTE 		ucFaceShap; 		 //脸型
+	USHORT   	usMapID;                     //地图ID
 	USHORT                  cEquipPos;                   //装备位置标志
-	UINT    				uiUserID;                    //玩家ID
-	FLOAT   				X, Y, Z;                       //当前坐标
+	UINT     	uiUserID;                    //玩家ID
+	FLOAT    	X, Y, Z;                       //当前坐标
 	UINT                    uiMaxHP;                     //最大HP
 	UINT                    uiMaxMP;                     //最大MP
 	UINT                    uiCurHP;                     //当前HP
@@ -267,32 +267,32 @@ struct MSG_SELFINFO
 ( GameServer  ----> Client )
 struct MSG_SELFPROPERTY
 {
-	MsgHead 				Head;
-	char					m_strName[32];						//名称
+	MsgHead  	Head;
+	char 		m_strName[32];  //名称
 	BYTE                    m_Gender;                           //性别0：女 1：男
-	USHORT					m_lRegionID;						//当前的场景标记
-	FLOAT					m_fX, m_fY, m_fZ;					//当前坐标
-	FLOAT					m_fSpeed;							//移动速度
-	USHORT					m_lStyle;							//外形特征
-	BYTE					m_lFaction;							//所属阵营 0：雅典 1：斯巴达
-	USHORT					m_lPrestige;						//声望
+	USHORT 		m_lRegionID;  //当前的场景标记
+	FLOAT 		m_fX, m_fY, m_fZ; 		//当前坐标
+	FLOAT 		m_fSpeed;  	//移动速度
+	USHORT 		m_lStyle;  	//外形特征
+	BYTE 		m_lFaction;  	//所属阵营 0：雅典 1：斯巴达
+	USHORT 		m_lPrestige;  //声望
 	BYTE                    m_cKnight;                          //爵位
 	USHORT                  m_cUnion;                           //公会
 	BYTE                    m_cUnionBusiness;                   //公会职务
 	UINT                    m_uiUionContribute;                 //公会贡献
-	UINT					m_uiStoreNum;						//仓库个数
-	UINT					m_uiBagNum;							//包裹个数
-	BYTE					m_lClass;							//职业
-	UINT                    m_cExp;								//经验
-	BYTE                    m_cRank;							//等级
-	long					m_lHP;								//HP
-	long					m_lMP;								//MP
+	UINT 		m_uiStoreNum;  //仓库个数
+	UINT 		m_uiBagNum;  	//包裹个数
+	BYTE 		m_lClass;  	//职业
+	UINT                    m_cExp;  		//经验
+	BYTE                    m_cRank;  	//等级
+	long 		m_lHP;  		//HP
+	long 		m_lMP;  		//MP
 	USHORT                  m_usAttackDistance;                 //人物攻击范围
 	USHORT                  m_usAttackSpeed;                    //攻击速度
 	BYTE                    m_cHairStyle;                       //发型
 	BYTE                    m_cPupilColor;                      //瞳色(脸型)
 	USHORT                  m_usBelief;                         //信仰
-	UINT					m_lMoney;							//金钱
+	UINT 		m_lMoney;  	//金钱
 	UINT                    m_lStone;                           //宝石
 };
 
@@ -366,10 +366,10 @@ struct MSG_PARAMATER
 ( GameServer  ----> Client )
 struct MSG_KITBAG
 {
-	MsgHead 				 Head;
-	UINT    				 uiUserID;                   //玩家ID
-	UINT					 uiBagNum;					 //当前包数
-	UINT					 uiUpdataNum;				 //更新可用包间数目
+	MsgHead  	 Head;
+	UINT     	 uiUserID;                   //玩家ID
+	UINT 		 uiBagNum; 		 //当前包数
+	UINT 		 uiUpdataNum; 	 //更新可用包间数目
 	char                     ctab;                       //第几页
 	char                     cStartPos;                  //起始位置
 	UINT                     cKitBagFlag;                //各个位置有无道具的标识
@@ -380,9 +380,9 @@ struct MSG_KITBAG
 ( GameServer  ----> Client )
 struct MSG_STORAGE
 {
-	MsgHead 				 Head;
-	int						 Money;						  //金钱
-	UINT    				 uiUserID;                    //玩家ID
+	MsgHead  	 Head;
+	int   Money;    //金钱
+	UINT     	 uiUserID;                    //玩家ID
 	char                     cActiveNum;                  //激活数量
 	char                     cLine;                       //第几行
 	USHORT                   cKitBagFlag;                 //各个位置有无道具的标识
@@ -403,8 +403,8 @@ struct Friend
 ( GameServer  ----> Client )
 struct MSG_RELATIONALL
 {
-	MsgHead 				 Head;
-	UINT    				 uiUserID;                    //玩家ID
+	MsgHead  	 Head;
+	UINT     	 uiUserID;                    //玩家ID
 	BYTE                     ucType;                      //类型
 	BYTE                     cNum;                        //数量
 	Friend                   sFriend[MAX_FRIENDS_COUNT];                 //最大允许数量30
@@ -415,13 +415,13 @@ struct MSG_RELATIONALL
 struct MSG_OBJECTINFO
 {
 	MsgHead  Head;
-	long     DB_id;						 //数据库ID
-	UINT     uiID;						 //游戏ID
-	UINT	 uiType;					 //类型(_OBJECT_TYPE_PLAYER/_OBJECT_TYPE_NPC...)
+	long     DB_id;   //数据库ID
+	UINT     uiID;   //游戏ID
+	UINT	 uiType; 		 //类型(_OBJECT_TYPE_PLAYER/_OBJECT_TYPE_NPC...)
 	USHORT   usMapID;                    //地图ID
 	float    X, Y, Z;                      //当前坐标
-	float	 fAtan2;					 //面部朝向
-	bool	 Stall;						 //摆摊状态
+	float	 fAtan2; 		 //面部朝向
+	bool	 Stall;   //摆摊状态
 	wchar_t	 StallText[MAX_NAME];		 //摆摊字符
 	char	 cName[MAX_NAME];		     //名称
 	UINT     uiMaxHP;                    //最大HP
@@ -431,7 +431,7 @@ struct MSG_OBJECTINFO
 	BYTE     ucBelief;                   //信仰
 	BYTE     ucProfession;               //职业
 	BYTE     ucHairStyle;                //发型
-	BYTE	 ucFaceShap;				 //脸型
+	BYTE	 ucFaceShap; 	 //脸型
 	UINT     ucLV;                       //等级
 	UINT     iStatusCount;               //目前状态个数
 	UINT     iStautsDis[MAX_INC_STATUS + MAX_INC_STATUS];//状态ID
@@ -445,16 +445,16 @@ struct MSG_OBJECTINFO
 struct MSG_TALK
 {
 	MsgHead		Head;
-	INT			uiUserID;                   //玩家ID
-	INT			ucTextSize;                 //聊天内容大小
+	INT uiUserID;                   //玩家ID
+	INT ucTextSize;                 //聊天内容大小
 	BYTE		ucType;                     //  0:私聊频道; 1:队伍频道; 2:公会频道; 3:阵营频道; 4:区域频道; 5:世界频道;
 	BYTE		ucResPlayerNameSize;		//自己名字大小
 	BYTE		ucAimPlayerNameSize;        //私聊专用
-	BYTE		ucChatBubbleSytle;			//聊天气泡的样式 0表示默认
+	BYTE		ucChatBubbleSytle; //聊天气泡的样式 0表示默认
 	WCHAR		wcContent[256];              //聊天内容max length 512
 	//
-	// 	INT			ItemCount;					//装备数量
-	// 	Item		ItemList[3];				//装备信息
+	// 	INT ItemCount; 		//装备数量
+	// 	Item		ItemList[3]; 	//装备信息
 };
 
 struct MSG_TALKCHANNEL
@@ -497,7 +497,7 @@ struct MSG_WALK_END
 
 	UINT	  uiTick;
 	float     X, Y, Z;
-	float	  fAtan2;				 	  //面部朝向
+	float	  fAtan2; 	 	  //面部朝向
 	USHORT    usSkillFlag;                //默认0（普通用法），1技能用的标志，保证状态不被切换
 };
 
@@ -530,8 +530,8 @@ struct MSG_ATTACK
 struct MSG_DEAD
 {
 	MsgHead   Head;
-	UINT      uiID;			                         //死亡者ID
-	INT  	  playerID[MAX_TEAM_NUMBER];			 //队伍最大数
+	UINT      uiID;                          //死亡者ID
+	INT  	  playerID[MAX_TEAM_NUMBER];  //队伍最大数
 	UINT	  playerMoney[MAX_TEAM_NUMBER];		     //相应的人物金钱
 	UINT	  Exp[MAX_TEAM_NUMBER];                  //等级经验
 	UINT	  SkillExp[MAX_TEAM_NUMBER];             //技能经验
@@ -576,10 +576,10 @@ struct MSG_SKILL
 	BYTE      cStep;                 //施法阶段 0:施法,1:执行
 	int	      uiObjectID;            //目标ID
 	BYTE      ucMP;                  //魔法数值减少
-	float	  x;					 //客户端x坐标
-	float	  z;					 //客户端z坐标
-	float	  x1;					 //目标x坐标
-	float	  z1;					 //目标y坐标
+	float	  x; 		 //客户端x坐标
+	float	  z; 		 //客户端z坐标
+	float	  x1; 		 //目标x坐标
+	float	  z1; 		 //目标y坐标
 };
 
 //魔法,招式\
@@ -589,39 +589,39 @@ struct MSG_MAGIC_DAMAGE
 	MsgHead   Head;
 	UINT      uiID;                 //玩家ID
 	INT	      uiObjectID;           //目标ID
-	BYTE	  Attack_Type;			//技能攻击命中类型(暴击,命中,Miss)
+	BYTE	  Attack_Type; //技能攻击命中类型(暴击,命中,Miss)
 	BYTE      Status_Type;          //状态命中类型(命中,Miss)
-	BYTE	  bType;				//0:HP,1:MP
+	BYTE	  bType; 	//0:HP,1:MP
 	int		  iPower;               //伤害数值
 	int       ucMagicID;            //技能ID
-	float	  x1;					//技能目标位置x
-	float	  z1;					//技能目标位置z
+	float	  x1; 		//技能目标位置x
+	float	  z1; 		//技能目标位置z
 };
 
 struct MSG_MAGIC_PERFORM
 {
 	MsgHead		Head;
 	UINT		uiID;
-	INT		uiObjectID;			// 对象ID,-1时表示
-	UINT		ucMagicID;			// 魔法id
-	float		x;					// 群体魔法的目标位置
-	float		z;					// 群体魔法的目标位置
+	INT		uiObjectID; // 对象ID,-1时表示
+	UINT		ucMagicID; // 魔法id
+	float		x; 		// 群体魔法的目标位置
+	float		z; 		// 群体魔法的目标位置
 };
 
 struct MAGIC_DAMAGE {
-	UINT		uiObjectID;			//
+	UINT		uiObjectID; //
 	BYTE		Attack_Type;
-	BYTE		ucType;				// 0-HP, 1-MP
-	int			iPower;				// 效果
+	BYTE		ucType; 	// 0-HP, 1-MP
+	int iPower; 	// 效果
 };
 #pragma pack(push)
 #pragma pack(1)
 struct MSG_MAGIC_CLUSTER_DAMAGE
 {
-	MsgHead			Head;
-	UINT			uiID;
-	int				iCount;
-	UINT		    ucMagicID;			// 魔法id
+	MsgHead Head;
+	UINT uiID;
+	int 	iCount;
+	UINT		    ucMagicID; // 魔法id
 	char            bHitStatus;         // 状态命中
 	MAGIC_DAMAGE	magicDamage[100];
 };
@@ -743,7 +743,7 @@ struct MSG_SKILL_INTERRUPT
 struct MSG_LEAVE
 {
 	MsgHead   Head;
-	UINT      uiID;						 // ID
+	UINT      uiID;   // ID
 };
 
 //群体消亡\
@@ -852,7 +852,7 @@ struct MSG_STORAGE_ITEM
 ( Client  ----> GameServer || GameServer  ----> Client )
 struct MSG_SELL
 {
-	MsgHead			Head;
+	MsgHead Head;
 
 	unsigned short	Index;
 	unsigned short	Num;
@@ -873,14 +873,14 @@ struct MSG_STALLADDITEM
 {
 	MsgHead		Head;
 
-	int			Index;
-	int			Pocket;
+	int Index;
+	int Pocket;
 
-	int			BagIndex;
-	int			BagNum;
+	int BagIndex;
+	int BagNum;
 
-	int			Money;
-	int			Bijou;
+	int Money;
+	int Bijou;
 
 	__int64		StallID;
 };
@@ -889,8 +889,8 @@ struct MSG_STALLDELITEM
 {
 	MsgHead		Head;
 
-	int			Index;
-	int			Pocket;
+	int Index;
+	int Pocket;
 };
 
 struct MSG_STALLITEM
@@ -902,18 +902,18 @@ struct MSG_STALLITEM
 
 	__int64		StallID;
 
-	int			Pocket;
-	int			Index;
+	int Pocket;
+	int Index;
 
-	int			BaseID;
-	int			Append[MAX_EQUIPAPPEND_COUNT];
+	int BaseID;
+	int Append[MAX_EQUIPAPPEND_COUNT];
 
-	int			BaseLevel;
-	int			AppLevel;
-	int			Overlap;
+	int BaseLevel;
+	int AppLevel;
+	int Overlap;
 
-	int			Money;
-	int			Bijou;
+	int Money;
+	int Bijou;
 };
 
 struct MSG_STALLBUYITEM
@@ -928,8 +928,8 @@ struct MSG_STALLBUYITEM
 
 	__int64		StallID;
 
-	int			Pocket;
-	int			Index;
+	int Pocket;
+	int Index;
 };
 
 //NPC对话
@@ -1033,18 +1033,18 @@ struct PlayerQuest
 	int		RewardNPCID;
 	int		QuestSort;
 
-	int		Money;									//任务需要金钱
-	int		Bijou;									//任务需要宝石
-	int		RewardMoney;							//回报金钱
-	int		RewardBijou;							//回报金币
+	int		Money;   //任务需要金钱
+	int		Bijou;   //任务需要宝石
+	int		RewardMoney;  	//回报金钱
+	int		RewardBijou;  	//回报金币
 
-	short	Item[QUEST_OBJECTIVES_COUNT];			//任务需要收集道具ID
+	short	Item[QUEST_OBJECTIVES_COUNT]; //任务需要收集道具ID
 	short	Creature[QUEST_OBJECTIVES_COUNT];		//任务需要杀怪ID
 	short	ItemCount[QUEST_OBJECTIVES_COUNT];		//任务需要收集道具数量
 	short	CreatureCount[QUEST_OBJECTIVES_COUNT];	//任务需要杀怪数量
 	bool	ExplorerState[QUEST_EXPLORER_COUNT];	//任务需要杀怪数量
 
-	char	SpecialFlags;							//标志位
+	char	SpecialFlags;  	//标志位
 	char	Status;
 	char	Completed;
 	short	ItemCompletedCount[QUEST_OBJECTIVES_COUNT];
@@ -1062,14 +1062,14 @@ struct MSG_ExplorerQuest //探索任务验证
 struct MSG_FINDQUEST
 {
 	MsgHead		Head;
-	int			Nothing;
+	int Nothing;
 };
 
 struct MSG_FINDQUESTRESULT
 {
 	MsgHead		Head;
 
-	int			Count;
+	int Count;
 
 	short		Quest[QUEST_FIND_COUNT];
 };
@@ -1093,17 +1093,17 @@ struct MSG_NPC_NEXTQUEST
 	int		QuestID;
 	int		QuestSort;
 
-	int		SpecialFlags;							//标志位
+	int		SpecialFlags;  	//标志位
 
-	short	Item[QUEST_OBJECTIVES_COUNT];			//任务需要收集道具ID
+	short	Item[QUEST_OBJECTIVES_COUNT]; //任务需要收集道具ID
 	short	Creature[QUEST_OBJECTIVES_COUNT];		//任务需要杀怪ID
 	short	ItemCount[QUEST_OBJECTIVES_COUNT];		//任务需要收集道具数量
 	short	CreatureCount[QUEST_OBJECTIVES_COUNT];	//任务需要杀怪数量
 
-	int		Money;									//任务需要金钱
-	int		Bijou;									//任务需要宝石
-	int		RewardMoney;							//回报金钱
-	int		RewardBijou;							//回报金币
+	int		Money;   //任务需要金钱
+	int		Bijou;   //任务需要宝石
+	int		RewardMoney;  	//回报金钱
+	int		RewardBijou;  	//回报金币
 
 	ItemData RewardItem[QUEST_REWARDS_COUNT];		//回报道具
 };
@@ -1161,17 +1161,17 @@ struct MSG_NPC_QUESTVIEW
 	int		QuestID;
 	int		QuestSort;
 
-	int		SpecialFlags;							//标志位
+	int		SpecialFlags;  	//标志位
 
-	short	Item[QUEST_OBJECTIVES_COUNT];			//任务需要收集道具ID
+	short	Item[QUEST_OBJECTIVES_COUNT]; //任务需要收集道具ID
 	short	Creature[QUEST_OBJECTIVES_COUNT];		//任务需要杀怪ID
 	short	ItemCount[QUEST_OBJECTIVES_COUNT];		//任务需要收集道具数量
 	short	CreatureCount[QUEST_OBJECTIVES_COUNT];	//任务需要杀怪数量
 
-	int		Money;									//任务需要金钱
-	int		Bijou;									//任务需要宝石
-	int		RewardMoney;							//回报金钱
-	int		RewardBijou;							//回报金币
+	int		Money;   //任务需要金钱
+	int		Bijou;   //任务需要宝石
+	int		RewardMoney;  	//回报金钱
+	int		RewardBijou;  	//回报金币
 
 	ItemData RewardItem[QUEST_REWARDS_COUNT];	//回报道具
 };
@@ -1181,7 +1181,7 @@ struct MSG_PLAYER_ACCEPTQUESTS
 {
 	MsgHead		Head;
 
-	int			Count;
+	int Count;
 
 	PlayerQuest Quests[3];
 };
@@ -1198,17 +1198,17 @@ struct MSG_NPC_ACCEPTQUEST
 
 	int		QuestSort;
 
-	int		SpecialFlags;							//标志位
+	int		SpecialFlags;  	//标志位
 
-	short	Item[QUEST_OBJECTIVES_COUNT];			//任务需要收集道具ID
+	short	Item[QUEST_OBJECTIVES_COUNT]; //任务需要收集道具ID
 	short	Creature[QUEST_OBJECTIVES_COUNT];		//任务需要杀怪ID
 	short	ItemCount[QUEST_OBJECTIVES_COUNT];		//任务需要收集道具数量
 	short	CreatureCount[QUEST_OBJECTIVES_COUNT];	//任务需要杀怪数量
 
-	int		Money;									//任务需要金钱
-	int		Bijou;									//任务需要宝石
-	int		RewardMoney;							//回报金钱
-	int		RewardBijou;							//回报金币
+	int		Money;   //任务需要金钱
+	int		Bijou;   //任务需要宝石
+	int		RewardMoney;  	//回报金钱
+	int		RewardBijou;  	//回报金币
 
 	ItemData RewardItem[QUEST_REWARDS_COUNT];	//回报道具
 };
@@ -1259,9 +1259,9 @@ struct MSG_NPC_REWARDQUEST
 	int		Choice;
 
 	//因为这个没有同步，只存在服务器，所以每次完成时发送一次
-	int		Credit;			//荣誉？
+	int		Credit; //荣誉？
 	int		Contribute;		//贡献
-	int		EXP;			//经验
+	int		EXP; //经验
 	int		SkillPoint;		//技能经验
 
 	int		SpecialFlags;	//特殊奖励标识
@@ -1339,8 +1339,8 @@ struct MSG_TRADE
 	MsgHead		Head;
 	UINT		uiID;
 	UINT		uiObjectID;
-	int			State;
-	int			TraderState;
+	int State;
+	int TraderState;
 	char		chName[64];
 	char		chObjectName[64];
 };
@@ -1351,8 +1351,8 @@ struct MSG_TRADE_MONEY
 {
 	MsgHead		Head;
 	UINT		uiID;
-	int			Money;
-	int			Bijou;
+	int Money;
+	int Bijou;
 	char		chName[64];
 };
 
@@ -1362,12 +1362,12 @@ struct MSG_TRADE_ITEM
 {
 	MsgHead		Head;
 	UINT		uiID;
-	int			Index;
-	int			BaseID;
-	int			Append[MAX_EQUIPAPPEND_COUNT];
+	int Index;
+	int BaseID;
+	int Append[MAX_EQUIPAPPEND_COUNT];
 	char		AppendLevel;
 	char		BaseLevel;
-	int			Overlap;
+	int Overlap;
 	char		chName[64];
 };
 
@@ -1377,9 +1377,9 @@ struct MSG_TRADE_ADDITEM
 {
 	MsgHead		Head;
 	UINT		uiID;
-	int			Index;
-	int			Bag;
-	int			Grid;
+	int Index;
+	int Bag;
+	int Grid;
 	char		chName[64];
 };
 
@@ -1389,7 +1389,7 @@ struct MSG_TRADE_REMOVEITEM
 {
 	MsgHead		Head;
 	UINT		uiID;
-	int			Index;
+	int Index;
 	char		chName[64];
 };
 
@@ -1398,8 +1398,8 @@ struct MSG_EQUIPFORGE_EQUIP
 {
 	MsgHead		Head;
 
-	int			Index;		//装备武器索引号
-	int			Num;		//那个包索引号
+	int Index;		//装备武器索引号
+	int Num;		//那个包索引号
 	int         Type;        //区分主/付装备
 };
 
@@ -1407,8 +1407,8 @@ struct MSG_EQUIPFORGE_MATERIAL
 {
 	MsgHead		Head;
 
-	int			Index;		//在那个包号
-	int			Num;		//宝石索引号
+	int Index;		//在那个包号
+	int Num;		//宝石索引号
 	int         Type;        //区分宝石类型(宝石,水晶,幸运金币)
 };
 
@@ -1457,7 +1457,7 @@ struct MSG_TEAM_ADD
 {
 	MsgHead		Head;
 	UINT		uiPlayerID;
-	int			uiTeamID[5];
+	int uiTeamID[5];
 };
 
 //组队刷新消息体
@@ -1570,9 +1570,9 @@ struct MSG_CONSORTIA_BASE_INFO
 	long        lbijou;                       //宝石
 	long		lCredit;                      //公会声望
 	char	    acTextInfo[256];              //公会公告
-	int			MaxMember;					 //公会人数上限
-	UINT		AltarCounts;				 //公会创建祭坛的个数
-	Consortia_AltarInfo		Altar[9];					 //创建的祭坛ID号
+	int MaxMember; 		 //公会人数上限
+	UINT		AltarCounts; 	 //公会创建祭坛的个数
+	Consortia_AltarInfo		Altar[9]; 		 //创建的祭坛ID号
 };
 
 struct  CONSORTIA_MEMBER1
@@ -1580,7 +1580,7 @@ struct  CONSORTIA_MEMBER1
 	char acMemberName[32];             //成员名字
 	char lMapID;                       //所在地图ID,-1为离线,0雅典....
 	BYTE acDuty;                       //职务 6会长 5副会长 4理事 3精英 2会员 1见习会员
-	BYTE iLevel;			           //等级
+	BYTE iLevel;            //等级
 	BYTE ucBusiness;                   //职业
 	UINT uiContribute;                 //贡献
 
@@ -1667,7 +1667,7 @@ struct MSG_CONSORTIA_MEMBER_DEL
 struct MSG_ALTAR_INFO
 {
 	MsgHead     Head;
-	int			iAltarCounts;
+	int iAltarCounts;
 	Consortia_AltarInfo  Altar[20];
 };
 //===============END=================//
@@ -1676,11 +1676,11 @@ struct MSG_SKILL_BACKUP
 {
 	MsgHead     Head;
 
-	int			ID[SKILLBACKUPCOUNT];
-	int			Item[SKILLBACKUPCOUNT];
+	int ID[SKILLBACKUPCOUNT];
+	int Item[SKILLBACKUPCOUNT];
 
-	int			RID;
-	int			RItem;
+	int RID;
+	int RItem;
 };
 
 //技能点数升级\
@@ -1737,7 +1737,7 @@ struct MSG_ERROR
 struct MSG_UPDATE_MP {
 	MsgHead		Head;
 	UINT		playerID;
-	int			mp;
+	int mp;
 };
 
 struct MSG_CONSORTIA_LVUP
@@ -1771,12 +1771,12 @@ struct MSG_ALTAR_OBLATION
 struct MSG_CRETIT_EXCHANGE
 {
 	MsgHead Head;
-	UINT					iUserID;				//玩家的id
-	USHORT					iPrestige;						//声望
-	UINT                    iExp;				//角色经验
-	UINT					iMoney;							//金钱
-	int						iMaterialType;		//宝石的类型
-	unsigned short			Num;				//宝石的数量
+	UINT 		iUserID; 	//玩家的id
+	USHORT 		iPrestige;  //声望
+	UINT                    iExp; 	//角色经验
+	UINT 		iMoney;  	//金钱
+	int  iMaterialType;		//宝石的类型
+	unsigned short Num; 	//宝石的数量
 };
 
 //转盘消息 by lion
@@ -1784,9 +1784,9 @@ struct MSG_CRETIT_EXCHANGE
 struct MSG_GOLD_BOX
 {
 	MsgHead Head;
-	BYTE	Type;			//转盘消息类型 0： 打开转盘 1： 开始旋转  2：默认物品 8：直接打开
+	BYTE	Type; //转盘消息类型 0： 打开转盘 1： 开始旋转  2：默认物品 8：直接打开
 	UINT	GoldBoxId;		//宝箱ID
-	BYTE	Iter;			//宝箱所在位置
+	BYTE	Iter; //宝箱所在位置
 };
 
 //转盘消息返回 by lion
@@ -1823,7 +1823,7 @@ struct MSG_TARGETINFO
 struct MSG_DELAY_EXIT
 {
 	MsgHead		Head;
-	int			type;
+	int type;
 };
 
 //功能NPC获取列表
@@ -1831,7 +1831,7 @@ struct MSG_SYS_NPC_DATA
 {
 	MsgHead		Head;
 	UINT	    NPCID;
-	int			NpcType;		//判断是什么功能的NPC
+	int NpcType;		//判断是什么功能的NPC
 	int         State[8];
 };
 
@@ -1840,7 +1840,7 @@ struct MSG_SYS_FUN_USE
 {
 	MsgHead		Head;
 	UINT	    NPCID;
-	int			NpcType;
+	int NpcType;
 	USHORT      Data[20];
 	bool        NextWin;
 };

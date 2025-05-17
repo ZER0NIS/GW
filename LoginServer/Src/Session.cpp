@@ -96,10 +96,10 @@ void CSession::OnDBResponse(rade_db::PSQL_RESULT result)
 	if (Result == 1)
 	{
 		if (ban_account == 1)
-			Login_info.ucInfo++;
+ Login_info.ucInfo++;
 
 		if (ban_ip == 1)
-			Login_info.ucInfo += 2;
+ Login_info.ucInfo += 2;
 	}
 
 	printf("[DBResponse] Enviando resultado de login: ucInfo=%d a la cuenta %s\n", Login_info.ucInfo, pSession->m_Name);
@@ -116,13 +116,13 @@ void CSession::OnDBResponse(rade_db::PSQL_RESULT result)
 		login::CLogin::GAMESERVER_ID::iterator itor;
 		for (itor = pSession->m_Logion.m_GameServerMap.begin(); itor != pSession->m_Logion.m_GameServerMap.end(); itor++)
 		{
-			MSG_GAMESERVER_INFO GameSer = *(*itor).second;
-			memset(GameSer.cIP, 0L, sizeof(GameSer.cIP));
-			GameSer.uiPort = 0;
+ MSG_GAMESERVER_INFO GameSer = *(*itor).second;
+ memset(GameSer.cIP, 0L, sizeof(GameSer.cIP));
+ GameSer.uiPort = 0;
 
-			printf("[DBResponse] Enviando servidor [%s]: IP=..., Puerto=%u\n", GameSer.cIP, GameSer.uiPort);
+ printf("[DBResponse] Enviando servidor [%s]: IP=..., Puerto=%u\n", GameSer.cIP, GameSer.uiPort);
 
-			pSession->m_Logion.SendMsg(&GameSer, pSession->m_Socket, GameSer.Head.usSize);
+ pSession->m_Logion.SendMsg(&GameSer, pSession->m_Socket, GameSer.Head.usSize);
 		}
 	}
 }

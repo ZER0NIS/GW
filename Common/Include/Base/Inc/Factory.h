@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 //宏定义
-#define INFINITY_COUNT				-1									//无限数目
+#define INFINITY_COUNT 	-1   //无限数目
 
 //类对象工厂
 template <class TYPE> class CFactoryTemplate
@@ -30,10 +30,10 @@ template <class TYPE> class CFactoryTemplate
 
 	//变量定义
 protected:
-	INT_PTR							m_nMaxCount;						//最大数目
-	CItemPtrArray					m_FreeItem;							//空闲对象
-	CItemPtrArray					m_ActiveItem;						//活动对象
-	CItemPtrArray					m_StorageItem;						//存储对象
+	INT_PTR  	m_nMaxCount;  //最大数目
+	CItemPtrArray 		m_FreeItem;  	//空闲对象
+	CItemPtrArray 		m_ActiveItem;  //活动对象
+	CItemPtrArray 		m_StorageItem;  //存储对象
 
 	//函数定义
 public:
@@ -214,14 +214,14 @@ TYPE* CFactoryTemplate<TYPE>::ActiveItem()
 	{
 		if ((m_nMaxCount == INFINITY_COUNT) || (m_StorageItem.GetCount() < m_nMaxCount))
 		{
-			try
-			{
-				pObject = new TYPE;
-				if (pObject == NULL) return NULL;
-				m_StorageItem.Add(pObject);
-				m_ActiveItem.Add(pObject);
-			}
-			catch (...) { return NULL; }
+ try
+ {
+ 	pObject = new TYPE;
+ 	if (pObject == NULL) return NULL;
+ 	m_StorageItem.Add(pObject);
+ 	m_ActiveItem.Add(pObject);
+ }
+ catch (...) { return NULL; }
 		}
 	}
 
@@ -272,9 +272,9 @@ bool CFactoryTemplate<TYPE>::FreeItem(TYPE* pObject)
 	{
 		if (pObject == m_ActiveItem[i])
 		{
-			m_ActiveItem.RemoveAt(i);
-			m_FreeItem.Add(pObject);
-			return true;
+ m_ActiveItem.RemoveAt(i);
+ m_FreeItem.Add(pObject);
+ return true;
 		}
 	}
 

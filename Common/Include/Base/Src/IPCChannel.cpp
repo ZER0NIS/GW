@@ -35,8 +35,8 @@ namespace ipc
 		//等待客户端连接
 		if (ConnectNamedPipe(m_PipeHandle, NULL) == 0)
 		{
-			CloseHandle(m_PipeHandle);
-			return false;
+ CloseHandle(m_PipeHandle);
+ return false;
 		}
 		return true;
 	}
@@ -52,25 +52,25 @@ namespace ipc
 
 		if (NAMEPIPE_SERVER == m_Type)
 		{
-			if ((m_PipeHandle = CreateNamedPipe(cName, PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, PIPE_UNLIMITED_INSTANCES, 0, 0, 1000, NULL)) == INVALID_HANDLE_VALUE)
-			{
-				return false;
-			}
+ if ((m_PipeHandle = CreateNamedPipe(cName, PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, PIPE_UNLIMITED_INSTANCES, 0, 0, 1000, NULL)) == INVALID_HANDLE_VALUE)
+ {
+ 	return false;
+ }
 		}
 		else
 		{
-			//检查管道实例
-			if (WaitNamedPipe(cName, NMPWAIT_WAIT_FOREVER) == 0)
-			{
-				m_Start = false;
-				return false;
-			}
+ //检查管道实例
+ if (WaitNamedPipe(cName, NMPWAIT_WAIT_FOREVER) == 0)
+ {
+ 	m_Start = false;
+ 	return false;
+ }
 
-			if ((m_PipeHandle = CreateFile(cName, GENERIC_READ | GENERIC_WRITE, 0, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, (HANDLE)NULL)) == INVALID_HANDLE_VALUE)
-			{
-				m_Start = false;
-				return false;
-			}
+ if ((m_PipeHandle = CreateFile(cName, GENERIC_READ | GENERIC_WRITE, 0, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, (HANDLE)NULL)) == INVALID_HANDLE_VALUE)
+ {
+ 	m_Start = false;
+ 	return false;
+ }
 		}
 
 		m_Start = true;
@@ -87,15 +87,15 @@ namespace ipc
 		memset(m_ReadBuffer, 0L, BUF_SIZE);
 		if (ReadFile(m_PipeHandle, m_ReadBuffer, sizeof(m_ReadBuffer), &dwBytesRead, NULL) <= 0)
 		{
-			int Error = GetLastError();
-			if (Error == ERROR_BROKEN_PIPE || Error == ERROR_PIPE_NOT_CONNECTED)
-			{
-				iBytesRead = -1;
-			}
-			return NULL;
+ int Error = GetLastError();
+ if (Error == ERROR_BROKEN_PIPE || Error == ERROR_PIPE_NOT_CONNECTED)
+ {
+ 	iBytesRead = -1;
+ }
+ return NULL;
 		}
 		else
-			iBytesRead = dwBytesRead;
+ iBytesRead = dwBytesRead;
 		return m_ReadBuffer;
 	}
 
@@ -108,12 +108,12 @@ namespace ipc
 		DWORD iBytesRead = 0;
 		if (WriteFile(m_PipeHandle, m_SendBuffer, m_size, &iBytesRead, NULL) == 0)
 		{
-			CloseHandle(m_PipeHandle);
-			iBytesSend = -1;
-			return NULL;
+ CloseHandle(m_PipeHandle);
+ iBytesSend = -1;
+ return NULL;
 		}
 		else
-			iBytesSend = iBytesRead;
+ iBytesSend = iBytesRead;
 		return  m_SendBuffer;
 	}
 
@@ -122,21 +122,21 @@ namespace ipc
 	{
 		if (NAMEPIPE_SERVER == m_Type)
 		{
-			if (DisconnectNamedPipe(m_PipeHandle) == 0)
-			{
-				printf("Disconnect failed!");
-				return false;
-			}
-			else
-			{
-				printf("Client closed!\n");
-			}
+ if (DisconnectNamedPipe(m_PipeHandle) == 0)
+ {
+ 	printf("Disconnect failed!");
+ 	return false;
+ }
+ else
+ {
+ 	printf("Client closed!\n");
+ }
 		}
 
 		if (m_Start)
 		{
-			CloseHandle(m_PipeHandle);
-			m_Start = false;
+ CloseHandle(m_PipeHandle);
+ m_Start = false;
 		}
 
 		return true;
@@ -146,12 +146,12 @@ namespace ipc
 	{
 		if (DisconnectNamedPipe(m_PipeHandle) == 0)
 		{
-			printf("Disconnect failed!\n");
-			return false;
+ printf("Disconnect failed!\n");
+ return false;
 		}
 		else
 		{
-			printf("Client closed!\n");
+ printf("Client closed!\n");
 		}
 
 		return true;

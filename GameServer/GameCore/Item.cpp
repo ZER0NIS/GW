@@ -29,7 +29,7 @@ bool Item::HasClass(int n)
 		iter != m_BaseAttribute->Class.end(); iter++)
 	{
 		if (*iter == n)
-			return true;
+ return true;
 	}
 
 	return false;
@@ -133,13 +133,13 @@ int Item::InsertAppendAttribute(ItemAppendAttribute* attribute)
 	{
 		if (m_ItemAppendAttributes[i])
 		{
-			if (m_ItemAppendAttributes[i]->Type == attribute->Type)
-				return 0;
+ if (m_ItemAppendAttributes[i]->Type == attribute->Type)
+ 	return 0;
 		}
 		else if (!empty)
 		{
-			empty = &m_ItemAppendAttributes[i];
-			index = i;
+ empty = &m_ItemAppendAttributes[i];
+ index = i;
 		}
 	}
 
@@ -150,9 +150,9 @@ int Item::InsertAppendAttribute(ItemAppendAttribute* attribute)
 	{
 		if (m_BaseAttribute->MainAttribute[j] == attribute->ID)
 		{
-			*empty = attribute;
+ *empty = attribute;
 
-			return 0;
+ return 0;
 		}
 	}
 	return 1;
@@ -175,7 +175,7 @@ ItemData Item::GetItemData()
 		data.Overlap = 0;
 
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
-			data.Append[i] = -1;
+ data.Append[i] = -1;
 
 		return data;
 	}
@@ -191,11 +191,11 @@ ItemData Item::GetItemData()
 	{
 		if (m_ItemAppendAttributes[i])
 		{
-			data.Append[i] = m_ItemAppendAttributes[i]->ID;
+ data.Append[i] = m_ItemAppendAttributes[i]->ID;
 		}
 		else
 		{
-			data.Append[i] = -1;
+ data.Append[i] = -1;
 		}
 	}
 
@@ -237,69 +237,69 @@ void Item::Increase(EquipData* data)
 	for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 	{
 		if (!m_ItemAppendAttributes[i])
-			continue;
+ continue;
 
 		float value = m_ItemAppendAttributes[i]->LvInfo[AppLevel - 1];
 
 		switch (m_ItemAppendAttributes[i]->Type)
 		{
 		case ItemAppendAttribute::AttackA:
-			data->m_lAttack += (int)value;
-			break;
+ data->m_lAttack += (int)value;
+ break;
 		case ItemAppendAttribute::DefenceA:
-			data->m_lDefend += (int)value;
-			break;
+ data->m_lDefend += (int)value;
+ break;
 		case ItemAppendAttribute::AddMagicAk:
-			data->m_lMagicAttack += (int)value;
-			break;
+ data->m_lMagicAttack += (int)value;
+ break;
 		case ItemAppendAttribute::AddMagicRec:
-			data->m_lMagicDefend += (int)value;
-			break;
+ data->m_lMagicDefend += (int)value;
+ break;
 		case ItemAppendAttribute::Hit:
-			data->m_lHit += (int)value;
-			break;
+ data->m_lHit += (int)value;
+ break;
 		case ItemAppendAttribute::Miss:
-			data->m_lDodge += (int)value;
-			break;
+ data->m_lDodge += (int)value;
+ break;
 		case ItemAppendAttribute::FuryAkAdd:
-			data->m_lCritAppend += (int)value;
-			break;
+ data->m_lCritAppend += (int)value;
+ break;
 		case ItemAppendAttribute::FuryAkRec:
-			data->m_lCritDefend += (int)value;
-			break;
+ data->m_lCritDefend += (int)value;
+ break;
 		case ItemAppendAttribute::PhysicalDamage:
-			data->m_fPhyDamageAppend += (float)value;
-			break;
+ data->m_fPhyDamageAppend += (float)value;
+ break;
 		case ItemAppendAttribute::MagicDamage:
-			data->m_fMagicDamageAppend += (float)value;
-			break;
+ data->m_fMagicDamageAppend += (float)value;
+ break;
 		case ItemAppendAttribute::InjureImbibe:
-			data->m_lDamageSorb += (int)value;
-			break;
+ data->m_lDamageSorb += (int)value;
+ break;
 		case ItemAppendAttribute::State:
-			data->m_lStatusHit += (float)value;
-			break;
+ data->m_lStatusHit += (float)value;
+ break;
 		case ItemAppendAttribute::StateImmunity:
-			data->m_lStatudDodge += (float)value;
-			break;
+ data->m_lStatudDodge += (float)value;
+ break;
 		case ItemAppendAttribute::MaxHP:
-			data->m_lMaxHP += (int)value;
-			break;
+ data->m_lMaxHP += (int)value;
+ break;
 		case ItemAppendAttribute::MaxMP:
-			data->m_lMaxMP += (int)value;
-			break;
+ data->m_lMaxMP += (int)value;
+ break;
 		case ItemAppendAttribute::HPRestore:
-			data->m_lResumeHP += (int)value;
-			break;
+ data->m_lResumeHP += (int)value;
+ break;
 		case ItemAppendAttribute::MPRestore:
-			data->m_lResumeMP += (int)value;
-			break;
+ data->m_lResumeMP += (int)value;
+ break;
 		case ItemAppendAttribute::AcceptCure:
-			data->m_fBeCure += (float)value;
-			break;
+ data->m_fBeCure += (float)value;
+ break;
 		case ItemAppendAttribute::Cure:
-			data->m_fCure += (float)value;
-			break;
+ data->m_fCure += (float)value;
+ break;
 		}
 	}
 }
@@ -339,69 +339,69 @@ void Item::Decrease(EquipData* data)
 	for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 	{
 		if (!m_ItemAppendAttributes[i])
-			continue;
+ continue;
 
 		float value = m_ItemAppendAttributes[i]->LvInfo[AppLevel - 1];
 
 		switch (m_ItemAppendAttributes[i]->Type)
 		{
 		case ItemAppendAttribute::AttackA:
-			data->m_lAttack -= (int)value;
-			break;
+ data->m_lAttack -= (int)value;
+ break;
 		case ItemAppendAttribute::DefenceA:
-			data->m_lDefend -= (int)value;
-			break;
+ data->m_lDefend -= (int)value;
+ break;
 		case ItemAppendAttribute::AddMagicAk:
-			data->m_lMagicAttack -= (int)value;
-			break;
+ data->m_lMagicAttack -= (int)value;
+ break;
 		case ItemAppendAttribute::AddMagicRec:
-			data->m_lMagicDefend -= (int)value;
-			break;
+ data->m_lMagicDefend -= (int)value;
+ break;
 		case ItemAppendAttribute::Hit:
-			data->m_lHit -= (int)value;
-			break;
+ data->m_lHit -= (int)value;
+ break;
 		case ItemAppendAttribute::Miss:
-			data->m_lDodge -= (int)value;
-			break;
+ data->m_lDodge -= (int)value;
+ break;
 		case ItemAppendAttribute::FuryAkAdd:
-			data->m_lCritAppend -= (int)value;
-			break;
+ data->m_lCritAppend -= (int)value;
+ break;
 		case ItemAppendAttribute::FuryAkRec:
-			data->m_lCritDefend -= (int)value;
-			break;
+ data->m_lCritDefend -= (int)value;
+ break;
 		case ItemAppendAttribute::PhysicalDamage:
-			data->m_fPhyDamageAppend -= (float)value;
-			break;
+ data->m_fPhyDamageAppend -= (float)value;
+ break;
 		case ItemAppendAttribute::MagicDamage:
-			data->m_fMagicDamageAppend -= (float)value;
-			break;
+ data->m_fMagicDamageAppend -= (float)value;
+ break;
 		case ItemAppendAttribute::InjureImbibe:
-			data->m_lDamageSorb -= (int)value;
-			break;
+ data->m_lDamageSorb -= (int)value;
+ break;
 		case ItemAppendAttribute::State:
-			data->m_lStatusHit -= (float)value;
-			break;
+ data->m_lStatusHit -= (float)value;
+ break;
 		case ItemAppendAttribute::StateImmunity:
-			data->m_lStatudDodge -= (float)value;
-			break;
+ data->m_lStatudDodge -= (float)value;
+ break;
 		case ItemAppendAttribute::MaxHP:
-			data->m_lMaxHP -= (int)value;
-			break;
+ data->m_lMaxHP -= (int)value;
+ break;
 		case ItemAppendAttribute::MaxMP:
-			data->m_lMaxMP -= (int)value;
-			break;
+ data->m_lMaxMP -= (int)value;
+ break;
 		case ItemAppendAttribute::HPRestore:
-			data->m_lResumeHP -= (int)value;
-			break;
+ data->m_lResumeHP -= (int)value;
+ break;
 		case ItemAppendAttribute::MPRestore:
-			data->m_lResumeMP -= (int)value;
-			break;
+ data->m_lResumeMP -= (int)value;
+ break;
 		case ItemAppendAttribute::AcceptCure:
-			data->m_fBeCure -= (float)value;
-			break;
+ data->m_fBeCure -= (float)value;
+ break;
 		case ItemAppendAttribute::Cure:
-			data->m_fCure -= (float)value;
-			break;
+ data->m_fCure -= (float)value;
+ break;
 		}
 	}
 }

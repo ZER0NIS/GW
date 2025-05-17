@@ -40,8 +40,8 @@ namespace sLog
 		bool	IsOut2File		()	{ return (m_nLogAppender & LOG_APPENDER_FILE)!=0; }
 		bool	IsOut2DB		()	{ return (m_nLogAppender & LOG_APPENDER_DB)!=0; }
 
-		void	Close			();
-		bool	Open			();
+		void	Close ();
+		bool	Open ();
 
 		int		GetFileCreateDay	()	{ return m_nMDayFileCreate; }
 

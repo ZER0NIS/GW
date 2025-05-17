@@ -67,39 +67,39 @@ eError CMall::GetAthensMallData(CPlayer* player)
 
 		for (int j = 0; j < (int)m_AthensMallItems[i].size(); j++)
 		{
-			MallBase* mallbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensMallItems[i][j].Base);
-			if (!mallbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* mallbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensMallItems[i][j].Base);
+ if (!mallbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_gamemall_itemdate.Itemdata[j].Base = m_AthensMallItems[i][j].Base;
-			for (int k = 0; k < 5; k++)
-			{
-				msg_gamemall_itemdate.Itemdata[j].Append[k] = m_AthensMallItems[i][j].Append[k];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensMallItems[i][j].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_AthensMallItems[i][j].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_gamemall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_gamemall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_gamemall_itemdate.Itemdata[j].BuyTypeNum = m_AthensMallItems[i][j].Trade.size();
-			msg_gamemall_itemdate.Itemdata[j].AppendLV = m_AthensMallItems[i][j].AppendLV;
-			msg_gamemall_itemdate.Itemdata[j].BaseLV = m_AthensMallItems[i][j].BaseLV;
-			msg_gamemall_itemdate.Itemdata[j].Binding = m_AthensMallItems[i][j].Binding;
-			msg_gamemall_itemdate.Itemdata[j].Overlap = m_AthensMallItems[i][j].Overlap;
-			msg_gamemall_itemdate.Itemdata[j].Sell = m_AthensMallSell.at(i);
-			msg_gamemall_itemdate.Itemdata[j].Discount = mallbaseadd->Discount;
-			msg_gamemall_itemdate.Itemdata[j].New = mallbaseadd->New;
-			msg_gamemall_itemdate.Itemdata[j].Hot = mallbaseadd->Hot;
+ msg_gamemall_itemdate.Itemdata[j].Base = m_AthensMallItems[i][j].Base;
+ for (int k = 0; k < 5; k++)
+ {
+ 	msg_gamemall_itemdate.Itemdata[j].Append[k] = m_AthensMallItems[i][j].Append[k];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensMallItems[i][j].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_AthensMallItems[i][j].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_gamemall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_gamemall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_gamemall_itemdate.Itemdata[j].BuyTypeNum = m_AthensMallItems[i][j].Trade.size();
+ msg_gamemall_itemdate.Itemdata[j].AppendLV = m_AthensMallItems[i][j].AppendLV;
+ msg_gamemall_itemdate.Itemdata[j].BaseLV = m_AthensMallItems[i][j].BaseLV;
+ msg_gamemall_itemdate.Itemdata[j].Binding = m_AthensMallItems[i][j].Binding;
+ msg_gamemall_itemdate.Itemdata[j].Overlap = m_AthensMallItems[i][j].Overlap;
+ msg_gamemall_itemdate.Itemdata[j].Sell = m_AthensMallSell.at(i);
+ msg_gamemall_itemdate.Itemdata[j].Discount = mallbaseadd->Discount;
+ msg_gamemall_itemdate.Itemdata[j].New = mallbaseadd->New;
+ msg_gamemall_itemdate.Itemdata[j].Hot = mallbaseadd->Hot;
 
-			msg_gamemall_itemdate.Head.usSize += sizeof(msg_gamemall_itemdate.Itemdata[j]);
+ msg_gamemall_itemdate.Head.usSize += sizeof(msg_gamemall_itemdate.Itemdata[j]);
 		}
 
 		player->s_World->SendMsgToClient(&msg_gamemall_itemdate, player->GetSocket());
@@ -122,39 +122,39 @@ eError CMall::GetSpartaMallData(CPlayer* player)
 
 		for (int j = 0; j < (int)m_SpartaMallItems[i].size(); j++)
 		{
-			MallBase* mallbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaMallItems[i][j].Base);
-			if (!mallbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* mallbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaMallItems[i][j].Base);
+ if (!mallbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_gamemall_itemdate.Itemdata[j].Base = m_SpartaMallItems[i][j].Base;
-			for (int k = 0; k < 5; k++)
-			{
-				msg_gamemall_itemdate.Itemdata[j].Append[k] = m_SpartaMallItems[i][j].Append[k];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaMallItems[i][j].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_SpartaMallItems[i][j].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_gamemall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_gamemall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_gamemall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaMallItems[i][j].Trade.size();
-			msg_gamemall_itemdate.Itemdata[j].AppendLV = m_SpartaMallItems[i][j].AppendLV;
-			msg_gamemall_itemdate.Itemdata[j].BaseLV = m_SpartaMallItems[i][j].BaseLV;
-			msg_gamemall_itemdate.Itemdata[j].Binding = m_SpartaMallItems[i][j].Binding;
-			msg_gamemall_itemdate.Itemdata[j].Overlap = m_SpartaMallItems[i][j].Overlap;
-			msg_gamemall_itemdate.Itemdata[j].Sell = m_SpartaMallSell.at(i);
-			msg_gamemall_itemdate.Itemdata[j].Discount = mallbaseadd->Discount;
-			msg_gamemall_itemdate.Itemdata[j].New = mallbaseadd->New;
-			msg_gamemall_itemdate.Itemdata[j].Hot = mallbaseadd->Hot;
+ msg_gamemall_itemdate.Itemdata[j].Base = m_SpartaMallItems[i][j].Base;
+ for (int k = 0; k < 5; k++)
+ {
+ 	msg_gamemall_itemdate.Itemdata[j].Append[k] = m_SpartaMallItems[i][j].Append[k];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaMallItems[i][j].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_SpartaMallItems[i][j].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_gamemall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_gamemall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_gamemall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaMallItems[i][j].Trade.size();
+ msg_gamemall_itemdate.Itemdata[j].AppendLV = m_SpartaMallItems[i][j].AppendLV;
+ msg_gamemall_itemdate.Itemdata[j].BaseLV = m_SpartaMallItems[i][j].BaseLV;
+ msg_gamemall_itemdate.Itemdata[j].Binding = m_SpartaMallItems[i][j].Binding;
+ msg_gamemall_itemdate.Itemdata[j].Overlap = m_SpartaMallItems[i][j].Overlap;
+ msg_gamemall_itemdate.Itemdata[j].Sell = m_SpartaMallSell.at(i);
+ msg_gamemall_itemdate.Itemdata[j].Discount = mallbaseadd->Discount;
+ msg_gamemall_itemdate.Itemdata[j].New = mallbaseadd->New;
+ msg_gamemall_itemdate.Itemdata[j].Hot = mallbaseadd->Hot;
 
-			msg_gamemall_itemdate.Head.usSize += sizeof(msg_gamemall_itemdate.Itemdata[j]);
+ msg_gamemall_itemdate.Head.usSize += sizeof(msg_gamemall_itemdate.Itemdata[j]);
 		}
 
 		player->s_World->SendMsgToClient(&msg_gamemall_itemdate, player->GetSocket());
@@ -174,8 +174,8 @@ eError CMall::GetAthensAssociationData(CPlayer* player)
 	{
 		if (k > 29)
 		{
-			msg_associationdiscount.Num = 30;
-			break;
+ msg_associationdiscount.Num = 30;
+ break;
 		}
 		msg_associationdiscount.Data[k].level = (*iter).second.level;
 		msg_associationdiscount.Data[k].StoneDiscount = (*iter).second.StoneDiscount;
@@ -199,38 +199,38 @@ eError CMall::GetAthensAssociationData(CPlayer* player)
 
 		for (int j = 0; j < 16; j++)
 		{
-			MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensAssociationItems[k].Base);
-			if (!Associatonbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensAssociationItems[k].Base);
+ if (!Associatonbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_associationmall_itemdate.Itemdata[j].Base = m_AthensAssociationItems[k].Base;
-			for (int m = 0; m < 5; m++)
-			{
-				msg_associationmall_itemdate.Itemdata[j].Append[m] = m_AthensAssociationItems[k].Append[m];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensAssociationItems[k].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_AthensAssociationItems[k].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_AthensAssociationItems[k].Trade.size();
-			msg_associationmall_itemdate.Itemdata[j].AppendLV = m_AthensAssociationItems[k].AppendLV;
-			msg_associationmall_itemdate.Itemdata[j].BaseLV = m_AthensAssociationItems[k].BaseLV;
-			msg_associationmall_itemdate.Itemdata[j].Binding = m_AthensAssociationItems[k].Binding;
-			msg_associationmall_itemdate.Itemdata[j].Overlap = m_AthensAssociationItems[k].Overlap;
-			msg_associationmall_itemdate.Itemdata[j].Sell = 0;
-			msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
-			msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
-			msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
-			k++;
+ msg_associationmall_itemdate.Itemdata[j].Base = m_AthensAssociationItems[k].Base;
+ for (int m = 0; m < 5; m++)
+ {
+ 	msg_associationmall_itemdate.Itemdata[j].Append[m] = m_AthensAssociationItems[k].Append[m];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensAssociationItems[k].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_AthensAssociationItems[k].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_AthensAssociationItems[k].Trade.size();
+ msg_associationmall_itemdate.Itemdata[j].AppendLV = m_AthensAssociationItems[k].AppendLV;
+ msg_associationmall_itemdate.Itemdata[j].BaseLV = m_AthensAssociationItems[k].BaseLV;
+ msg_associationmall_itemdate.Itemdata[j].Binding = m_AthensAssociationItems[k].Binding;
+ msg_associationmall_itemdate.Itemdata[j].Overlap = m_AthensAssociationItems[k].Overlap;
+ msg_associationmall_itemdate.Itemdata[j].Sell = 0;
+ msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
+ msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
+ msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
+ k++;
 		}
 		msg_associationmall_itemdate.Head.usSize = sizeof(MSG_MALL_ITEMDATA);
 		player->s_World->SendMsgToClient(&msg_associationmall_itemdate, player->GetSocket());
@@ -245,38 +245,38 @@ eError CMall::GetAthensAssociationData(CPlayer* player)
 
 		for (int j = 0; j < Num; j++)
 		{
-			MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensAssociationItems[k].Base);
-			if (!Associatonbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_AthensAssociationItems[k].Base);
+ if (!Associatonbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_associationmall_itemdate.Itemdata[j].Base = m_AthensAssociationItems[k].Base;
-			for (int m = 0; m < 5; m++)
-			{
-				msg_associationmall_itemdate.Itemdata[j].Append[m] = m_AthensAssociationItems[k].Append[m];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensAssociationItems[k].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_AthensAssociationItems[k].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_AthensAssociationItems[k].Trade.size();
-			msg_associationmall_itemdate.Itemdata[j].AppendLV = m_AthensAssociationItems[k].AppendLV;
-			msg_associationmall_itemdate.Itemdata[j].BaseLV = m_AthensAssociationItems[k].BaseLV;
-			msg_associationmall_itemdate.Itemdata[j].Binding = m_AthensAssociationItems[k].Binding;
-			msg_associationmall_itemdate.Itemdata[j].Overlap = m_AthensAssociationItems[k].Overlap;
-			msg_associationmall_itemdate.Itemdata[j].Sell = 0;
-			msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
-			msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
-			msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
-			k++;
+ msg_associationmall_itemdate.Itemdata[j].Base = m_AthensAssociationItems[k].Base;
+ for (int m = 0; m < 5; m++)
+ {
+ 	msg_associationmall_itemdate.Itemdata[j].Append[m] = m_AthensAssociationItems[k].Append[m];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_AthensAssociationItems[k].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_AthensAssociationItems[k].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_AthensAssociationItems[k].Trade.size();
+ msg_associationmall_itemdate.Itemdata[j].AppendLV = m_AthensAssociationItems[k].AppendLV;
+ msg_associationmall_itemdate.Itemdata[j].BaseLV = m_AthensAssociationItems[k].BaseLV;
+ msg_associationmall_itemdate.Itemdata[j].Binding = m_AthensAssociationItems[k].Binding;
+ msg_associationmall_itemdate.Itemdata[j].Overlap = m_AthensAssociationItems[k].Overlap;
+ msg_associationmall_itemdate.Itemdata[j].Sell = 0;
+ msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
+ msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
+ msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
+ k++;
 		}
 		msg_associationmall_itemdate.Head.usSize = sizeof(MSG_MALL_ITEMDATA);
 		player->s_World->SendMsgToClient(&msg_associationmall_itemdate, player->GetSocket());
@@ -297,8 +297,8 @@ eError CMall::GetSpartaAssociationData(CPlayer* player)
 	{
 		if (k > 29)
 		{
-			msg_associationdiscount.Num = 30;
-			break;
+ msg_associationdiscount.Num = 30;
+ break;
 		}
 		msg_associationdiscount.Data[k].level = (*iter).second.level;
 		msg_associationdiscount.Data[k].StoneDiscount = (*iter).second.StoneDiscount;
@@ -322,38 +322,38 @@ eError CMall::GetSpartaAssociationData(CPlayer* player)
 
 		for (int j = 0; j < 16; j++)
 		{
-			MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaAssociationItems[k].Base);
-			if (!Associatonbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaAssociationItems[k].Base);
+ if (!Associatonbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_associationmall_itemdate.Itemdata[j].Base = m_SpartaAssociationItems[k].Base;
-			for (int m = 0; m < 5; m++)
-			{
-				msg_associationmall_itemdate.Itemdata[j].Append[m] = m_SpartaAssociationItems[k].Append[m];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaAssociationItems[k].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_SpartaAssociationItems[k].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaAssociationItems[k].Trade.size();
-			msg_associationmall_itemdate.Itemdata[j].AppendLV = m_SpartaAssociationItems[k].AppendLV;
-			msg_associationmall_itemdate.Itemdata[j].BaseLV = m_SpartaAssociationItems[k].BaseLV;
-			msg_associationmall_itemdate.Itemdata[j].Binding = m_SpartaAssociationItems[k].Binding;
-			msg_associationmall_itemdate.Itemdata[j].Overlap = m_SpartaAssociationItems[k].Overlap;
-			msg_associationmall_itemdate.Itemdata[j].Sell = 0;
-			msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
-			msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
-			msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
-			k++;
+ msg_associationmall_itemdate.Itemdata[j].Base = m_SpartaAssociationItems[k].Base;
+ for (int m = 0; m < 5; m++)
+ {
+ 	msg_associationmall_itemdate.Itemdata[j].Append[m] = m_SpartaAssociationItems[k].Append[m];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaAssociationItems[k].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_SpartaAssociationItems[k].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaAssociationItems[k].Trade.size();
+ msg_associationmall_itemdate.Itemdata[j].AppendLV = m_SpartaAssociationItems[k].AppendLV;
+ msg_associationmall_itemdate.Itemdata[j].BaseLV = m_SpartaAssociationItems[k].BaseLV;
+ msg_associationmall_itemdate.Itemdata[j].Binding = m_SpartaAssociationItems[k].Binding;
+ msg_associationmall_itemdate.Itemdata[j].Overlap = m_SpartaAssociationItems[k].Overlap;
+ msg_associationmall_itemdate.Itemdata[j].Sell = 0;
+ msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
+ msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
+ msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
+ k++;
 		}
 		msg_associationmall_itemdate.Head.usSize = sizeof(MSG_MALL_ITEMDATA);
 		player->s_World->SendMsgToClient(&msg_associationmall_itemdate, player->GetSocket());
@@ -368,38 +368,38 @@ eError CMall::GetSpartaAssociationData(CPlayer* player)
 
 		for (int j = 0; j < Num; j++)
 		{
-			MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaAssociationItems[k].Base);
-			if (!Associatonbaseadd)
-			{
-				return NO_MSG_ERRO;
-			}
+ MallBase* Associatonbaseadd = ItemManager::Instance()->GetMallItemAppend(m_SpartaAssociationItems[k].Base);
+ if (!Associatonbaseadd)
+ {
+ 	return NO_MSG_ERRO;
+ }
 
-			msg_associationmall_itemdate.Itemdata[j].Base = m_SpartaAssociationItems[k].Base;
-			for (int m = 0; m < 5; m++)
-			{
-				msg_associationmall_itemdate.Itemdata[j].Append[m] = m_SpartaAssociationItems[k].Append[m];
-			}
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaAssociationItems[k].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_SpartaAssociationItems[k].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaAssociationItems[k].Trade.size();
-			msg_associationmall_itemdate.Itemdata[j].AppendLV = m_SpartaAssociationItems[k].AppendLV;
-			msg_associationmall_itemdate.Itemdata[j].BaseLV = m_SpartaAssociationItems[k].BaseLV;
-			msg_associationmall_itemdate.Itemdata[j].Binding = m_SpartaAssociationItems[k].Binding;
-			msg_associationmall_itemdate.Itemdata[j].Overlap = m_SpartaAssociationItems[k].Overlap;
-			msg_associationmall_itemdate.Itemdata[j].Sell = 0;
-			msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
-			msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
-			msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
-			k++;
+ msg_associationmall_itemdate.Itemdata[j].Base = m_SpartaAssociationItems[k].Base;
+ for (int m = 0; m < 5; m++)
+ {
+ 	msg_associationmall_itemdate.Itemdata[j].Append[m] = m_SpartaAssociationItems[k].Append[m];
+ }
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_SpartaAssociationItems[k].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_SpartaAssociationItems[k].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_associationmall_itemdate.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_associationmall_itemdate.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_associationmall_itemdate.Itemdata[j].BuyTypeNum = m_SpartaAssociationItems[k].Trade.size();
+ msg_associationmall_itemdate.Itemdata[j].AppendLV = m_SpartaAssociationItems[k].AppendLV;
+ msg_associationmall_itemdate.Itemdata[j].BaseLV = m_SpartaAssociationItems[k].BaseLV;
+ msg_associationmall_itemdate.Itemdata[j].Binding = m_SpartaAssociationItems[k].Binding;
+ msg_associationmall_itemdate.Itemdata[j].Overlap = m_SpartaAssociationItems[k].Overlap;
+ msg_associationmall_itemdate.Itemdata[j].Sell = 0;
+ msg_associationmall_itemdate.Itemdata[j].Discount = Associatonbaseadd->Discount;
+ msg_associationmall_itemdate.Itemdata[j].New = Associatonbaseadd->New;
+ msg_associationmall_itemdate.Itemdata[j].Hot = Associatonbaseadd->Hot;
+ k++;
 		}
 		msg_associationmall_itemdate.Head.usSize = sizeof(MSG_MALL_ITEMDATA);
 		player->s_World->SendMsgToClient(&msg_associationmall_itemdate, player->GetSocket());
@@ -458,7 +458,7 @@ eError CMall::AthensMallSell(CPlayer* player, int index, int num, int count, int
 	{
 		if (iTypeNum >= 3)
 		{
-			break;
+ break;
 		}
 		item.m_BuyType[iTypeNum] = itor->first;
 		item.m_BuyConsume[iTypeNum] = itor->second;
@@ -499,13 +499,13 @@ eError CMall::AthensMallSell(CPlayer* player, int index, int num, int count, int
 	{
 		for (int i = 0; i < count; i++)
 		{
-			//item.m_Overlap = item.GetItemBaseAttribute()->Overlap;
+ //item.m_Overlap = item.GetItemBaseAttribute()->Overlap;
 
-			isAddSucess = player->AddItem(&item);
-			if (!isAddSucess)
-			{
-				break;
-			}
+ isAddSucess = player->AddItem(&item);
+ if (!isAddSucess)
+ {
+ 	break;
+ }
 		}
 	}
 
@@ -575,7 +575,7 @@ eError CMall::SpartaMallSell(CPlayer* player, int index, int num, int count, int
 	{
 		if (iTypeNum >= 3)
 		{
-			break;
+ break;
 		}
 		item.m_BuyType[iTypeNum] = itor->first;
 		item.m_BuyConsume[iTypeNum] = itor->second;
@@ -616,13 +616,13 @@ eError CMall::SpartaMallSell(CPlayer* player, int index, int num, int count, int
 	{
 		for (int i = 0; i < count; i++)
 		{
-			//item.m_Overlap = item.GetItemBaseAttribute()->Overlap;
+ //item.m_Overlap = item.GetItemBaseAttribute()->Overlap;
 
-			isAddSucess = player->AddItem(&item);
-			if (!isAddSucess)
-			{
-				break;
-			}
+ isAddSucess = player->AddItem(&item);
+ if (!isAddSucess)
+ {
+ 	break;
+ }
 		}
 	}
 
@@ -691,7 +691,7 @@ eError CMall::AthensAssociatonSell(CPlayer* player, int index, int num, int coun
 	{
 		if (iTypeNum >= 3)
 		{
-			break;
+ break;
 		}
 		item.m_BuyType[iTypeNum] = itor->first;
 		item.m_BuyConsume[iTypeNum] = itor->second;
@@ -742,11 +742,11 @@ eError CMall::AthensAssociatonSell(CPlayer* player, int index, int num, int coun
 	{
 		for (int i = 0; i < count; i++)
 		{
-			isAddSucess = player->AddItem(&item);
-			if (!isAddSucess)
-			{
-				break;
-			}
+ isAddSucess = player->AddItem(&item);
+ if (!isAddSucess)
+ {
+ 	break;
+ }
 		}
 	}
 
@@ -815,7 +815,7 @@ eError CMall::SpartaAssociatonSell(CPlayer* player, int index, int num, int coun
 	{
 		if (iTypeNum >= 3)
 		{
-			break;
+ break;
 		}
 		item.m_BuyType[iTypeNum] = itor->first;
 		item.m_BuyConsume[iTypeNum] = itor->second;
@@ -866,11 +866,11 @@ eError CMall::SpartaAssociatonSell(CPlayer* player, int index, int num, int coun
 	{
 		for (int i = 0; i < count; i++)
 		{
-			isAddSucess = player->AddItem(&item);
-			if (!isAddSucess)
-			{
-				break;
-			}
+ isAddSucess = player->AddItem(&item);
+ if (!isAddSucess)
+ {
+ 	break;
+ }
 		}
 	}
 
@@ -971,57 +971,57 @@ void CMall::LoadAthensMallItemList(const char* name)
 		int size = PyList_Size(list);
 
 		if (size == 0)
-			continue;
+ continue;
 
 		for (int j = 0; j < size; j++)
 		{
-			NPCItemData data;
+ NPCItemData data;
 
-			PyObject* listitem = PyList_GetItem(list, j);
+ PyObject* listitem = PyList_GetItem(list, j);
 
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
-			PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
-			PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
+ PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
 
-			data.Base = PyInt_AsLong(Base);
-			data.BaseLV = PyInt_AsLong(BaseLV);
-			data.AppendLV = PyInt_AsLong(AppendLV);
-			data.Overlap = PyInt_AsLong(Overlap);
-			data.Binding = PyInt_AsLong(Binding);
-			//2008-4-17			data.Money   = PyInt_AsLong(Money);
+ data.Base = PyInt_AsLong(Base);
+ data.BaseLV = PyInt_AsLong(BaseLV);
+ data.AppendLV = PyInt_AsLong(AppendLV);
+ data.Overlap = PyInt_AsLong(Overlap);
+ data.Binding = PyInt_AsLong(Binding);
+ //2008-4-17 data.Money   = PyInt_AsLong(Money);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				data.Append[z] = PyInt_AsLong(append);
-			}
+ 	data.Append[z] = PyInt_AsLong(append);
+ }
 
-			//消耗类型
-			int  Num = PyList_Size(Type);
-			for (int a = 0; a < Num; a++)
-			{
-				PyObject* append = PyList_GetItem(Type, a);
-				data.Trade[(NPCItemData::ITEM_SELL_TYPE)PyInt_AsLong(append)] = PyInt_AsLong(PyList_GetItem(Consume, a));
-			}
+ //消耗类型
+ int  Num = PyList_Size(Type);
+ for (int a = 0; a < Num; a++)
+ {
+ 	PyObject* append = PyList_GetItem(Type, a);
+ 	data.Trade[(NPCItemData::ITEM_SELL_TYPE)PyInt_AsLong(append)] = PyInt_AsLong(PyList_GetItem(Consume, a));
+ }
 
-			datas.push_back(data);
+ datas.push_back(data);
 
-			Item item;
-			ItemManager::Instance()->CreateItem(&data, &item);
+ Item item;
+ ItemManager::Instance()->CreateItem(&data, &item);
 
-			if (item.IsClear())
-			{
-				printf("Item Error , ID=%d", data.Base);
-				ASSERT(0);
-			}
+ if (item.IsClear())
+ {
+ 	printf("Item Error , ID=%d", data.Base);
+ 	ASSERT(0);
+ }
 		}
 
 		m_AthensMallItems.push_back(datas);
@@ -1094,57 +1094,57 @@ void CMall::LoadSpartaMallItemList(const char* name)
 		int size = PyList_Size(list);
 
 		if (size == 0)
-			continue;
+ continue;
 
 		for (int j = 0; j < size; j++)
 		{
-			NPCItemData data;
+ NPCItemData data;
 
-			PyObject* listitem = PyList_GetItem(list, j);
+ PyObject* listitem = PyList_GetItem(list, j);
 
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
-			PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
-			PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
+ PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
 
-			data.Base = PyInt_AsLong(Base);
-			data.BaseLV = PyInt_AsLong(BaseLV);
-			data.AppendLV = PyInt_AsLong(AppendLV);
-			data.Overlap = PyInt_AsLong(Overlap);
-			data.Binding = PyInt_AsLong(Binding);
-			//2008-4-17			data.Money   = PyInt_AsLong(Money);
+ data.Base = PyInt_AsLong(Base);
+ data.BaseLV = PyInt_AsLong(BaseLV);
+ data.AppendLV = PyInt_AsLong(AppendLV);
+ data.Overlap = PyInt_AsLong(Overlap);
+ data.Binding = PyInt_AsLong(Binding);
+ //2008-4-17 data.Money   = PyInt_AsLong(Money);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				data.Append[z] = PyInt_AsLong(append);
-			}
+ 	data.Append[z] = PyInt_AsLong(append);
+ }
 
-			//消耗类型
-			int  Num = PyList_Size(Type);
-			for (int a = 0; a < Num; a++)
-			{
-				PyObject* append = PyList_GetItem(Type, a);
-				data.Trade[(NPCItemData::ITEM_SELL_TYPE)PyInt_AsLong(append)] = PyInt_AsLong(PyList_GetItem(Consume, a));
-			}
+ //消耗类型
+ int  Num = PyList_Size(Type);
+ for (int a = 0; a < Num; a++)
+ {
+ 	PyObject* append = PyList_GetItem(Type, a);
+ 	data.Trade[(NPCItemData::ITEM_SELL_TYPE)PyInt_AsLong(append)] = PyInt_AsLong(PyList_GetItem(Consume, a));
+ }
 
-			datas.push_back(data);
+ datas.push_back(data);
 
-			Item item;
-			ItemManager::Instance()->CreateItem(&data, &item);
+ Item item;
+ ItemManager::Instance()->CreateItem(&data, &item);
 
-			if (item.IsClear())
-			{
-				printf("Item Error , ID=%d", data.Base);
-				ASSERT(0);
-			}
+ if (item.IsClear())
+ {
+ 	printf("Item Error , ID=%d", data.Base);
+ 	ASSERT(0);
+ }
 		}
 
 		m_SpartaMallItems.push_back(datas);
@@ -1215,57 +1215,57 @@ void CMall::LoadAthensAssociationItemList(const char* name)
 		int size = PyList_Size(list);
 
 		if (size == 0)
-			continue;
+ continue;
 
 		for (int j = 0; j < size; j++)
 		{
-			NPCItemData data;
+ NPCItemData data;
 
-			PyObject* listitem = PyList_GetItem(list, j);
+ PyObject* listitem = PyList_GetItem(list, j);
 
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
-			PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
-			PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
+ PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
 
-			data.Base = PyInt_AsLong(Base);
-			data.BaseLV = PyInt_AsLong(BaseLV);
-			data.AppendLV = PyInt_AsLong(AppendLV);
-			data.Overlap = PyInt_AsLong(Overlap);
-			data.Binding = PyInt_AsLong(Binding);
-			//2008-4-17			data.Money   = PyInt_AsLong(Money);
+ data.Base = PyInt_AsLong(Base);
+ data.BaseLV = PyInt_AsLong(BaseLV);
+ data.AppendLV = PyInt_AsLong(AppendLV);
+ data.Overlap = PyInt_AsLong(Overlap);
+ data.Binding = PyInt_AsLong(Binding);
+ //2008-4-17 data.Money   = PyInt_AsLong(Money);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				data.Append[z] = PyInt_AsLong(append);
-			}
+ 	data.Append[z] = PyInt_AsLong(append);
+ }
 
-			//消耗类型
-			int  Num = PyList_Size(Type);
-			for (int a = 0; a < Num; a++)
-			{
-				PyObject* append = PyList_GetItem(Type, a);
-				data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
-			}
+ //消耗类型
+ int  Num = PyList_Size(Type);
+ for (int a = 0; a < Num; a++)
+ {
+ 	PyObject* append = PyList_GetItem(Type, a);
+ 	data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
+ }
 
-			m_AthensAssociationItems.push_back(data);
+ m_AthensAssociationItems.push_back(data);
 
-			Item item;
-			ItemManager::Instance()->CreateItem(&data, &item);
+ Item item;
+ ItemManager::Instance()->CreateItem(&data, &item);
 
-			if (item.IsClear())
-			{
-				printf("Item Error , ID=%d", data.Base);
-				ASSERT(0);
-			}
+ if (item.IsClear())
+ {
+ 	printf("Item Error , ID=%d", data.Base);
+ 	ASSERT(0);
+ }
 		}
 	}
 
@@ -1334,57 +1334,57 @@ void CMall::LoadSpartaAssociationItemList(const char* name)
 		int size = PyList_Size(list);
 
 		if (size == 0)
-			continue;
+ continue;
 
 		for (int j = 0; j < size; j++)
 		{
-			NPCItemData data;
+ NPCItemData data;
 
-			PyObject* listitem = PyList_GetItem(list, j);
+ PyObject* listitem = PyList_GetItem(list, j);
 
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
-			PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
-			PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLV");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
+ PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
 
-			data.Base = PyInt_AsLong(Base);
-			data.BaseLV = PyInt_AsLong(BaseLV);
-			data.AppendLV = PyInt_AsLong(AppendLV);
-			data.Overlap = PyInt_AsLong(Overlap);
-			data.Binding = PyInt_AsLong(Binding);
-			//2008-4-17			data.Money   = PyInt_AsLong(Money);
+ data.Base = PyInt_AsLong(Base);
+ data.BaseLV = PyInt_AsLong(BaseLV);
+ data.AppendLV = PyInt_AsLong(AppendLV);
+ data.Overlap = PyInt_AsLong(Overlap);
+ data.Binding = PyInt_AsLong(Binding);
+ //2008-4-17 data.Money   = PyInt_AsLong(Money);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				data.Append[z] = PyInt_AsLong(append);
-			}
+ 	data.Append[z] = PyInt_AsLong(append);
+ }
 
-			//消耗类型
-			int  Num = PyList_Size(Type);
-			for (int a = 0; a < Num; a++)
-			{
-				PyObject* append = PyList_GetItem(Type, a);
-				data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
-			}
+ //消耗类型
+ int  Num = PyList_Size(Type);
+ for (int a = 0; a < Num; a++)
+ {
+ 	PyObject* append = PyList_GetItem(Type, a);
+ 	data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
+ }
 
-			m_SpartaAssociationItems.push_back(data);
+ m_SpartaAssociationItems.push_back(data);
 
-			Item item;
-			ItemManager::Instance()->CreateItem(&data, &item);
+ Item item;
+ ItemManager::Instance()->CreateItem(&data, &item);
 
-			if (item.IsClear())
-			{
-				printf("Item Error , ID=%d", data.Base);
-				ASSERT(0);
-			}
+ if (item.IsClear())
+ {
+ 	printf("Item Error , ID=%d", data.Base);
+ 	ASSERT(0);
+ }
 		}
 	}
 
@@ -1599,44 +1599,44 @@ bool CMall::CheckMallConsume(CPlayer* player, Item* pItem)
 	{
 		if (i >= 3)
 		{
-			break;
+ break;
 		}
 
 		switch (pItem->m_BuyType[i])
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			if (pItem->m_BuyConsume[i] > player->GetlPrestige())
-			{
-				return false;
-			}
+ if (pItem->m_BuyConsume[i] > player->GetlPrestige())
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
-			{
-				return false;
-			}
+ if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			if (player->GetlStone() < pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100))
-			{
-				return false;
-			}
+ if (player->GetlStone() < pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100))
+ {
+ 	return false;
+ }
 		}
 		break;
 		default:
 		{
-			//如果有不是这些货币类型的，当条件不符合
-			return false;
+ //如果有不是这些货币类型的，当条件不符合
+ return false;
 		}
 		break;
 		}
@@ -1653,22 +1653,22 @@ void CMall::UpdataMallConsume(CPlayer* player, Item* pItem)
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); //修改声望
+ player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); //修改声望
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
+ player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			player->SetlStone(player->GetlStone() - pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100));
+ player->SetlStone(player->GetlStone() - pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100));
 		}
 		break;
 		}
@@ -1682,44 +1682,44 @@ bool CMall::CheckAssociaConsume(CPlayer* player, Item* pItem)
 	{
 		if (i >= 3)
 		{
-			break;
+ break;
 		}
 
 		switch (pItem->m_BuyType[i])
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			if (pItem->m_BuyConsume[i] > player->GetlPrestige())  //cdx_gwo 需要家公会等级折扣
-			{
-				return false;
-			}
+ if (pItem->m_BuyConsume[i] > player->GetlPrestige())  //cdx_gwo 需要家公会等级折扣
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
-			{
-				return false;
-			}
+ if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			if (player->GetlStone() < pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100)) //cdx_gwo 需要家公会等级折扣
-			{
-				return false;
-			}
+ if (player->GetlStone() < pItem->m_Overlap * int(pItem->m_BuyConsume[i] * pItem->Discount / 100)) //cdx_gwo 需要家公会等级折扣
+ {
+ 	return false;
+ }
 		}
 		break;
 		default:
 		{
-			//如果有不是这些货币类型的，当条件不符合
-			return false;
+ //如果有不是这些货币类型的，当条件不符合
+ return false;
 		}
 		break;
 		}
@@ -1736,22 +1736,22 @@ void CMall::UpdataAssociaConsume(CPlayer* player, Item* pItem)
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); ////cdx_gwo 需要家公会等级折扣
+ player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); ////cdx_gwo 需要家公会等级折扣
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
+ player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			player->SetlStone(player->GetlStone() - (UINT)pItem->m_Overlap * (pItem->m_BuyConsume[i] * pItem->Discount / 100)); //cdx_gwo 需要家公会等级折扣
+ player->SetlStone(player->GetlStone() - (UINT)pItem->m_Overlap * (pItem->m_BuyConsume[i] * pItem->Discount / 100)); //cdx_gwo 需要家公会等级折扣
 		}
 		break;
 		}

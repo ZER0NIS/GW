@@ -44,7 +44,7 @@ distribution.
 #include "..\inc\SvrBase.h"
 #else
 #include <assert.h>
-#define		ASSERT			assert
+#define		ASSERT assert
 #endif
  /*	The support for explicit isn't that universal, and it isn't really
 	 required - it is used to check that the TiXmlString class isn't incorrectly
@@ -183,7 +183,7 @@ public:
 
 		for (const char* p = c_str() + offset; *p != '\0'; ++p)
 		{
-			if (*p == tofind) return static_cast<size_type>(p - c_str());
+ if (*p == tofind) return static_cast<size_type>(p - c_str());
 		}
 		return npos;
 	}
@@ -231,21 +231,21 @@ private:
 	{
 		if (cap)
 		{
-			// Lee: the original form:
-			//	rep_ = static_cast<Rep*>(operator new(sizeof(Rep) + cap));
-			// doesn't work in some cases of new being overloaded. Switching
-			// to the normal allocation, although use an 'int' for systems
-			// that are overly picky about structure alignment.
-			const size_type bytesNeeded = sizeof(Rep) + cap;
-			const size_type intsNeeded = (bytesNeeded + sizeof(int) - 1) / sizeof(int);
-			rep_ = reinterpret_cast<Rep*>(new int[intsNeeded]);
+ // Lee: the original form:
+ //	rep_ = static_cast<Rep*>(operator new(sizeof(Rep) + cap));
+ // doesn't work in some cases of new being overloaded. Switching
+ // to the normal allocation, although use an 'int' for systems
+ // that are overly picky about structure alignment.
+ const size_type bytesNeeded = sizeof(Rep) + cap;
+ const size_type intsNeeded = (bytesNeeded + sizeof(int) - 1) / sizeof(int);
+ rep_ = reinterpret_cast<Rep*>(new int[intsNeeded]);
 
-			rep_->str[rep_->size = sz] = '\0';
-			rep_->capacity = cap;
+ rep_->str[rep_->size = sz] = '\0';
+ rep_->capacity = cap;
 		}
 		else
 		{
-			rep_ = &nullrep_;
+ rep_ = &nullrep_;
 		}
 	}
 
@@ -253,9 +253,9 @@ private:
 	{
 		if (rep_ != &nullrep_)
 		{
-			// The rep_ is really an array of ints. (see the allocator, above).
-			// Cast it back before delete, so the compiler won't incorrectly call destructors.
-			delete[](reinterpret_cast<int*>(rep_));
+ // The rep_ is really an array of ints. (see the allocator, above).
+ // Cast it back before delete, so the compiler won't incorrectly call destructors.
+ delete[](reinterpret_cast<int*>(rep_));
 		}
 	}
 
@@ -265,7 +265,7 @@ private:
 
 inline bool operator == (const TiXmlString& a, const TiXmlString& b)
 {
-	return    (a.length() == b.length())				// optimization on some platforms
+	return    (a.length() == b.length()) 	// optimization on some platforms
 		&& (strcmp(a.c_str(), b.c_str()) == 0);	// actual compare
 }
 inline bool operator < (const TiXmlString& a, const TiXmlString& b)

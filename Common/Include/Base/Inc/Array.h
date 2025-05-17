@@ -28,10 +28,10 @@ class CArrayTemplate : public CObject
 {
 	//变量定义
 protected:
-	TYPE* m_pData;							//数组指针
-	INT_PTR							m_nMaxCount;						//缓冲数目
-	INT_PTR							m_nGrowCount;						//增长数目
-	INT_PTR							m_nElementCount;					//元素数目
+	TYPE* m_pData;  	//数组指针
+	INT_PTR  	m_nMaxCount;  //缓冲数目
+	INT_PTR  	m_nGrowCount;  //增长数目
+	INT_PTR  	m_nElementCount; 		//元素数目
 
 	//函数定义
 public:
@@ -227,8 +227,8 @@ void CArrayTemplate<TYPE, ARG_TYPE>::FreeExtra()
 		TYPE* pNewData = NULL;
 		if (m_nElementCount != 0)
 		{
-			pNewData = (TYPE*) new BYTE[m_nElementCount * sizeof(TYPE)];
-			memcpy(pNewData, m_pData, m_nElementCount * sizeof(TYPE));
+ pNewData = (TYPE*) new BYTE[m_nElementCount * sizeof(TYPE)];
+ memcpy(pNewData, m_pData, m_nElementCount * sizeof(TYPE));
 		}
 		delete[](BYTE*)m_pData;
 		m_pData = pNewData;
@@ -403,14 +403,14 @@ void CArrayTemplate<TYPE, ARG_TYPE>::InsertAt(INT_PTR nIndex, const CArrayTempla
 		//申请数组
 		if (nIndex < m_nElementCount)
 		{
-			INT_PTR nOldCount = m_nElementCount;
-			SetSize(m_nElementCount + Src.m_nElementCount);
-			for (INT_PTR i = 0; i < nCount; i++) (m_pData + nOldCount + i)->~TYPE();
-			memmove(m_pData + nIndex + nCount, m_pData + nIndex, (nOldCount - nIndex) * sizeof(TYPE));
-			memset(m_pData + nIndex, 0, Src.m_nElementCount * sizeof(TYPE));
+ INT_PTR nOldCount = m_nElementCount;
+ SetSize(m_nElementCount + Src.m_nElementCount);
+ for (INT_PTR i = 0; i < nCount; i++) (m_pData + nOldCount + i)->~TYPE();
+ memmove(m_pData + nIndex + nCount, m_pData + nIndex, (nOldCount - nIndex) * sizeof(TYPE));
+ memset(m_pData + nIndex, 0, Src.m_nElementCount * sizeof(TYPE));
 #pragma push_macro("new")
 #undef new
-			for (INT_PTR i = 0; i < Src.m_nElementCount; i++) ::new (m_pData + nIndex + i) TYPE();
+ for (INT_PTR i = 0; i < Src.m_nElementCount; i++) ::new (m_pData + nIndex + i) TYPE();
 #pragma pop_macro("new")
 		}
 		else SetSize(nIndex + nCount);
@@ -509,8 +509,8 @@ void CArrayTemplate<TYPE, ARG_TYPE>::AllocMemory(INT_PTR nNewCount)
 		INT_PTR nGrowCount = m_nGrowCount;
 		if (nGrowCount == 0)
 		{
-			nGrowCount = m_nElementCount >> 3;
-			nGrowCount = (nGrowCount < 4) ? 4 : ((nGrowCount > 1024) ? 1024 : nGrowCount);
+ nGrowCount = m_nElementCount >> 3;
+ nGrowCount = (nGrowCount < 4) ? 4 : ((nGrowCount > 1024) ? 1024 : nGrowCount);
 		}
 		nNewCount += nGrowCount;
 

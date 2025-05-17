@@ -89,7 +89,7 @@ namespace cnet
 		if (l > m_q)
 		{
 			// 	::LeaveCriticalSection(&m_CriSec);
-				//没有足够的缓冲
+			   //没有足够的缓冲
 			return false;
 		}
 		if (m_b + l > m_max)

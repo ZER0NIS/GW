@@ -238,7 +238,7 @@ void CLogger::OutLog(const char* pszEvent, const LOG_LEVEL eLevel, char* pszMsg)
 		FILE* fp = ::fopen(szLogFile, "a+");
 		if (!fp)
 		{
-			return;
+ return;
 		}
 
 		// Write log file
@@ -250,43 +250,43 @@ void CLogger::OutLog(const char* pszEvent, const LOG_LEVEL eLevel, char* pszMsg)
 		// Log file is too large
 		if (dwLogSize >= _MAX_LOGSIZE)
 		{
-			char szBackupFile[2 * 4096] = "";
-			::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", pszEvent, pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, sbase::TimeGet(sbase::TIME_DAYTIME));
+ char szBackupFile[2 * 4096] = "";
+ ::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", pszEvent, pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, sbase::TimeGet(sbase::TIME_DAYTIME));
 
-			::rename(szLogFile, szBackupFile);
+ ::rename(szLogFile, szBackupFile);
 		}
 #else
 
 		if (pTime->tm_mday != this->GetFileCreateDay())
 		{
-			if (!this->Open())
-			{
-				::fprintf(stdout, "%s Logger Open Failed\n", m_strLoggerName.c_str());
-				return;
-			}
+ if (!this->Open())
+ {
+ 	::fprintf(stdout, "%s Logger Open Failed\n", m_strLoggerName.c_str());
+ 	return;
+ }
 		}
 		char szLogBuf[MAX_LOGBUFFER] = { 0 };
 		int nLen = sprintf_s(szLogBuf, MAX_LOGBUFFER, "Event:%s-- %s LogLevel=%d-- %s\n", pszEvent, pszMsg, eLevel, ::ctime(&ltime));
 		if (nLen > 0)
 		{
-			::write(m_fd, szLogBuf, nLen);
+ ::write(m_fd, szLogBuf, nLen);
 
-			DWORD dwLogSize = ::filelength(m_fd);
+ DWORD dwLogSize = ::filelength(m_fd);
 
-			// Log file is too large
-			if (dwLogSize >= _MAX_LOGSIZE)
-			{
-				char szBackupFile[MAX_LOGBUFFER] = "";
-				::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", m_strFileKey.c_str(), pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, sbase::TimeGet(sbase::TIME_DAYTIME));
+ // Log file is too large
+ if (dwLogSize >= _MAX_LOGSIZE)
+ {
+ 	char szBackupFile[MAX_LOGBUFFER] = "";
+ 	::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", m_strFileKey.c_str(), pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, sbase::TimeGet(sbase::TIME_DAYTIME));
 
-				this->Close();
-				::rename(m_strCurFileName.c_str(), szBackupFile);
-				if (!this->Open())
-				{
-					::fprintf(stdout, "%s Logger Open Failed\n", m_strLoggerName.c_str());
-					return;
-				}
-			}
+ 	this->Close();
+ 	::rename(m_strCurFileName.c_str(), szBackupFile);
+ 	if (!this->Open())
+ 	{
+ 		::fprintf(stdout, "%s Logger Open Failed\n", m_strLoggerName.c_str());
+ 		return;
+ 	}
+ }
 		}
 #endif
 	}
@@ -296,20 +296,20 @@ void CLogger::OutLog(const char* pszEvent, const LOG_LEVEL eLevel, char* pszMsg)
 		if (!sbase::LogStrCheck(pszMsg))
 		{
 #ifdef _DEBUG
-			char szOutput[MAX_LOGBUFFER] = { 0 };
-			sprintf_s(szOutput, MAX_LOGBUFFER, "非法字符 Content:%s FILE :%s Line:%d\n", pszMsg, __FILE__, __LINE__);
-			::OutputDebugStringA(szOutput);
+ char szOutput[MAX_LOGBUFFER] = { 0 };
+ sprintf_s(szOutput, MAX_LOGBUFFER, "非法字符 Content:%s FILE :%s Line:%d\n", pszMsg, __FILE__, __LINE__);
+ ::OutputDebugStringA(szOutput);
 #endif
-			return;
+ return;
 		}
 		if (m_strProcedureFormat.empty())
 		{
 #ifdef _DEBUG
-			char szOutput[MAX_LOGBUFFER] = { 0 };
-			sprintf_s(szOutput, MAX_LOGBUFFER, "日志调用存储过程失败 Content:%s FILE :%s Line:%d\n", pszMsg, __FILE__, __LINE__);
-			::OutputDebugStringA(szOutput);
+ char szOutput[MAX_LOGBUFFER] = { 0 };
+ sprintf_s(szOutput, MAX_LOGBUFFER, "日志调用存储过程失败 Content:%s FILE :%s Line:%d\n", pszMsg, __FILE__, __LINE__);
+ ::OutputDebugStringA(szOutput);
 #endif
-			return;
+ return;
 		}
 
 		CLogSystem::Instance()->Log2DB(m_strProcedureFormat.c_str(), pszEvent, eLevel, pszMsg);
@@ -347,7 +347,7 @@ bool CLogger::AddAppender(const LOG_APPENDER eAppenderType, const char* pszParam
 
 		if (!this->Open())
 		{
-			return false;
+ return false;
 		}
 	}
 

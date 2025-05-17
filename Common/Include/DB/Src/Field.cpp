@@ -26,10 +26,10 @@ namespace rade_db
 		CField::operator=(const CField& field)
 	{
 		if (this == &field)
-			return *this;
+ return *this;
 
 		if (m_info.unType != field.m_info.unType)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		//m_info		= field.m_info;
 		m_i64Val = field.m_i64Val;
@@ -43,23 +43,23 @@ namespace rade_db
 	CField::operator bool() const
 	{
 		if (m_info.unType != FIELD_TYPE_TINY)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		if (m_i64Val != 0)
-			return true;
+ return true;
 		else
-			return false;
+ return false;
 	}
 
 	CField::operator char() const
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_SHORT
-			|| m_info.unType == FIELD_TYPE_LONG
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_SHORT
+ || m_info.unType == FIELD_TYPE_LONG
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -67,12 +67,12 @@ namespace rade_db
 	CField::operator unsigned char() const
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_SHORT
-			|| m_info.unType == FIELD_TYPE_LONG
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_SHORT
+ || m_info.unType == FIELD_TYPE_LONG
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -80,11 +80,11 @@ namespace rade_db
 	CField::operator short() const
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONG
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONG
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -92,11 +92,11 @@ namespace rade_db
 	CField::operator unsigned short() const
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONG
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONG
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -104,10 +104,10 @@ namespace rade_db
 	CField::operator long() const
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -115,10 +115,10 @@ namespace rade_db
 	CField::operator unsigned long() const
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -126,10 +126,10 @@ namespace rade_db
 	CField::operator int() const
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -137,10 +137,10 @@ namespace rade_db
 	CField::operator unsigned int() const
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_LONGLONG
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_LONGLONG
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -148,9 +148,9 @@ namespace rade_db
 	CField::operator __int64() const
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -158,9 +158,9 @@ namespace rade_db
 	CField::operator unsigned __int64() const
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_FLOAT
-			|| m_info.unType == FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_FLOAT
+ || m_info.unType == FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_i64Val;
 	}
@@ -168,7 +168,7 @@ namespace rade_db
 	CField::operator float() const
 	{
 		if (m_info.unType != FIELD_TYPE_FLOAT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_dVal;
 	}
@@ -176,8 +176,8 @@ namespace rade_db
 	CField::operator double() const
 	{
 		if (m_info.unType != FIELD_TYPE_DOUBLE
-			&& m_info.unType != FIELD_TYPE_FLOAT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ && m_info.unType != FIELD_TYPE_FLOAT)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		return m_dVal;
 	}
@@ -185,9 +185,9 @@ namespace rade_db
 	CField::operator char* () const
 	{
 		if (m_info.unType == FIELD_TYPE_STRING || m_info.unType == FIELD_TYPE_VAR_STRING ||
-			m_info.unType == MYSQL_TYPE_TINY_BLOB || m_info.unType == MYSQL_TYPE_MEDIUM_BLOB ||
-			m_info.unType == MYSQL_TYPE_LONG_BLOB || m_info.unType == MYSQL_TYPE_BLOB)
-			return (char*)m_strVal.c_str();
+ m_info.unType == MYSQL_TYPE_TINY_BLOB || m_info.unType == MYSQL_TYPE_MEDIUM_BLOB ||
+ m_info.unType == MYSQL_TYPE_LONG_BLOB || m_info.unType == MYSQL_TYPE_BLOB)
+ return (char*)m_strVal.c_str();
 
 		ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 		return (char*)m_strVal.c_str();
@@ -196,8 +196,8 @@ namespace rade_db
 	CField::operator const char* () const
 	{
 		if (m_info.unType == FIELD_TYPE_STRING || m_info.unType == FIELD_TYPE_VAR_STRING ||
-			m_info.unType == FIELD_TYPE_DATETIME || m_info.unType == FIELD_TYPE_TIME)
-			return m_strVal.c_str();
+ m_info.unType == FIELD_TYPE_DATETIME || m_info.unType == FIELD_TYPE_TIME)
+ return m_strVal.c_str();
 
 		ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 		return m_strVal.c_str();
@@ -208,7 +208,7 @@ namespace rade_db
 		CField::operator = (bool bOp)
 	{
 		if (m_info.unType != (FIELD_TYPE_TINY))
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		//m_bVal = bOp;
 		m_i64Val = bOp;
@@ -220,7 +220,7 @@ namespace rade_db
 		CField::operator = (char cOp)
 	{
 		if (UNSIGNED_FLAG & m_info.unAttr)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = cOp;
 		m_bChanged = true;
@@ -231,7 +231,7 @@ namespace rade_db
 		CField::operator = (unsigned char ucOp)
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr))
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = ucOp;
 		m_bChanged = true;
@@ -242,8 +242,8 @@ namespace rade_db
 		CField::operator = (short sOp)
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = sOp;
 		m_bChanged = true;
@@ -254,8 +254,8 @@ namespace rade_db
 		CField::operator = (unsigned short usOp)
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = usOp;
 		m_bChanged = true;
@@ -266,9 +266,9 @@ namespace rade_db
 		CField::operator = (long lOp)
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = lOp;
 		m_bChanged = true;
@@ -279,9 +279,9 @@ namespace rade_db
 		CField::operator = (unsigned long ulOp)
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = ulOp;
 		m_bChanged = true;
@@ -292,9 +292,9 @@ namespace rade_db
 		CField::operator = (int iOp)
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = iOp;
 		m_bChanged = true;
@@ -305,9 +305,9 @@ namespace rade_db
 		CField::operator = (unsigned int uiOp)
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = uiOp;
 		m_bChanged = true;
@@ -318,10 +318,10 @@ namespace rade_db
 		CField::operator = (__int64 i64Op)
 	{
 		if ((UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT
-			|| m_info.unType == FIELD_TYPE_LONG)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT
+ || m_info.unType == FIELD_TYPE_LONG)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = i64Op;
 		m_bChanged = true;
@@ -332,10 +332,10 @@ namespace rade_db
 		CField::operator = (unsigned __int64 ui64Op)
 	{
 		if (!(UNSIGNED_FLAG & m_info.unAttr)
-			|| m_info.unType == FIELD_TYPE_TINY
-			|| m_info.unType == FIELD_TYPE_SHORT
-			|| m_info.unType == FIELD_TYPE_LONG)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType == FIELD_TYPE_TINY
+ || m_info.unType == FIELD_TYPE_SHORT
+ || m_info.unType == FIELD_TYPE_LONG)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_i64Val = ui64Op;
 		m_bChanged = true;
@@ -346,8 +346,8 @@ namespace rade_db
 		CField::operator = (float fOp)
 	{
 		if (m_info.unType != FIELD_TYPE_FLOAT
-			|| m_info.unType != FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ || m_info.unType != FIELD_TYPE_DOUBLE)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_dVal = fOp;
 		m_bChanged = true;
@@ -358,7 +358,7 @@ namespace rade_db
 		CField::operator = (double dbOp)
 	{
 		if (m_info.unType != FIELD_TYPE_DOUBLE)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_dVal = dbOp;
 		m_bChanged = true;
@@ -369,8 +369,8 @@ namespace rade_db
 		CField::operator = (const char* pszVal)
 	{
 		if (m_info.unType != FIELD_TYPE_STRING
-			&& m_info.unType != FIELD_TYPE_VAR_STRING)
-			ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
+ && m_info.unType != FIELD_TYPE_VAR_STRING)
+ ASSERT(!("WARNNING: datatype mismatch , return unstable value"));
 
 		m_strVal = pszVal;
 		m_bChanged = true;
@@ -382,18 +382,18 @@ namespace rade_db
 	{
 		switch (m_info.unType)
 		{
-			//case FIELD_TYPE_CHAR:
+ //case FIELD_TYPE_CHAR:
 		case FIELD_TYPE_TINY:
 		case FIELD_TYPE_SHORT:
 		case FIELD_TYPE_LONG:
 		case FIELD_TYPE_LONGLONG:
-			m_i64Val = szValue ? _atoi64(szValue) : 0;
-			break;
+ m_i64Val = szValue ? _atoi64(szValue) : 0;
+ break;
 
 		case FIELD_TYPE_FLOAT:
 		case FIELD_TYPE_DOUBLE:
-			m_dVal = szValue ? atof(szValue) : 0.0f;
-			break;
+ m_dVal = szValue ? atof(szValue) : 0.0f;
+ break;
 
 		case FIELD_TYPE_STRING:
 		case FIELD_TYPE_VAR_STRING:
@@ -403,12 +403,12 @@ namespace rade_db
 		case MYSQL_TYPE_BLOB:
 		case FIELD_TYPE_TIME:
 		case FIELD_TYPE_DATETIME:
-			m_strVal = szValue ? szValue : "";
-			break;
+ m_strVal = szValue ? szValue : "";
+ break;
 
 		default:
-			sbase::LogSave("rade_db", "ERROR: CField::SetValue unknow field type:%u", m_info.unType);
-			return false;
+ sbase::LogSave("rade_db", "ERROR: CField::SetValue unknow field type:%u", m_info.unType);
+ return false;
 		}
 
 		m_bChanged = true;

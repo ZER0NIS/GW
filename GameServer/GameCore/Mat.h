@@ -72,7 +72,7 @@ public:
 	{
 		if (!g_pPeizhi)
 		{
-			g_pPeizhi = new CPeizhi();
+ g_pPeizhi = new CPeizhi();
 		}
 		return g_pPeizhi;
 	}

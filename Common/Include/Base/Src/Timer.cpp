@@ -16,13 +16,13 @@ namespace sbase
 	{
 		if (this->IsExpire(nSecs))
 		{
-			if (::time(NULL) >= m_tUpdateTime + nSecs * 2)
-				return this->Update(), true;
-			else
-				return (m_tUpdateTime += nSecs), true;
+ if (::time(NULL) >= m_tUpdateTime + nSecs * 2)
+ 	return this->Update(), true;
+ else
+ 	return (m_tUpdateTime += nSecs), true;
 		}
 		else
-			return false;
+ return false;
 	}
 
 	bool	CTimer::IsExpire(void)
@@ -34,7 +34,7 @@ namespace sbase
 	bool	CTimer::TimeOver(void)
 	{
 		if (IsActive() && IsExpire())
-			return Clear(), true;
+ return Clear(), true;
 		return false;
 	}
 
@@ -46,13 +46,13 @@ namespace sbase
 	{
 		if (this->IsExpire(nMilliSecs))
 		{
-			if (::clock() >= m_tUpdateTime + nMilliSecs * 2)
-				return this->Update(), true;
-			else
-				return (m_tUpdateTime += nMilliSecs), true;
+ if (::clock() >= m_tUpdateTime + nMilliSecs * 2)
+ 	return this->Update(), true;
+ else
+ 	return (m_tUpdateTime += nMilliSecs), true;
 		}
 		else
-			return false;
+ return false;
 	}
 
 	DWORD	CTimer::GetRemainSecsToZero()

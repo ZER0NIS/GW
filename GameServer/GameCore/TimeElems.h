@@ -36,7 +36,7 @@ public:
 	TTimeElement& operator=(const TTimeElement& Element)
 	{
 		if (this == &Element)
-			return *this;
+ return *this;
 
 		this->m_Data = Element.m_Data;
 		this->m_StartTime = Element.m_StartTime;
@@ -52,14 +52,14 @@ public:
 	{
 		if (time(NULL) - m_StartTime >= m_Data->GetPersistTime())
 		{
-			m_Data->Resume(pObj);
-			return false;
+ m_Data->Resume(pObj);
+ return false;
 		}
 		else
 		{
-			m_Data->DealWith(pObj, m_StartTime, m_PassTime, m_Done);
-			m_Done = true;
-			return true;
+ m_Data->DealWith(pObj, m_StartTime, m_PassTime, m_Done);
+ m_Done = true;
+ return true;
 		}
 	}
 protected:

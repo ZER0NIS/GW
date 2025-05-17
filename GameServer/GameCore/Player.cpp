@@ -216,10 +216,10 @@ void CPlayer::Init()
 
 	InitTeam_New();//队伍信息清空
 
-	GoldOpendNum = 0;			//宝箱开启次数
-	m_GoldBoxId = 0;			//正在开启的宝箱ID
+	GoldOpendNum = 0; //宝箱开启次数
+	m_GoldBoxId = 0; //正在开启的宝箱ID
 	memset(&m_InDialItemID, 0, sizeof(m_InDialItemID));	//入围物品ID
-	m_SumRand = 0;				//入围物品总几率
+	m_SumRand = 0; 	//入围物品总几率
 
 	m_Kills = 0;
 	m_OverQuests = 0;
@@ -529,10 +529,10 @@ ULONG CPlayer::SetAtttibute()
 	m_BaseData.m_lDodge = CPeizhi::Instance()->GetDefaultValue(PLAYER_MISS);
 	/* by lion 为了解决当前值 最大值不匹配问题
 		if ( m_ObjectData.m_lHP >= m_BaseData.m_lMaxHP )
-			m_ObjectData.m_lHP = m_BaseData.m_lMaxHP;
+ m_ObjectData.m_lHP = m_BaseData.m_lMaxHP;
 
 		if ( m_ObjectData.m_lMP >=  m_BaseData.m_lMaxMP  )
-			m_ObjectData.m_lMP = m_BaseData.m_lMaxMP;
+ m_ObjectData.m_lMP = m_BaseData.m_lMaxMP;
 	*/
 	//add by lion 有可能不对 同步当前HP MP
 	m_ObjectData.m_lHP = GetMaxHP();
@@ -548,10 +548,10 @@ void CPlayer::SynTeamData(void* buf)
 	// 	{
 	// 		for ( int a = 0; a < MAX_TEAM_NUMBER; a++ )
 	// 		{
-	// 			if ( m_pTeam[a] != this && !GetRegion()->GetMap()->IsTwoCellCross( GetCurrentCell(), m_pTeam[a]->GetCurrentCell() ) )
-	// 			{
-	// 				CGameObject::s_World->SendMsgToClient( buf , m_pTeam[a]->GetSocket() );
-	// 			}
+	//  if ( m_pTeam[a] != this && !GetRegion()->GetMap()->IsTwoCellCross( GetCurrentCell(), m_pTeam[a]->GetCurrentCell() ) )
+	//  {
+	//  	CGameObject::s_World->SendMsgToClient( buf , m_pTeam[a]->GetSocket() );
+	//  }
 	// 		}
 	// 	}
 	//修改by C.D 20071226
@@ -960,15 +960,15 @@ const char* CPlayer::PackEquipInfo()
 		}
 		// 		for ( int i = 0; i< MAX_EQUIPAPPEND_COUNT; i++)
 		// 		{
-		// 			if (  abs( EquipData.AppendValue[i] - ( -1 ) ) >= 0.00000001f )
-		// 			{
-		// 				sprintf( convert, "%0.3f", EquipData.AppendValue[i] );
-		// 				TempStr += string(convert) + string(",");
-		// 			}
-		// 			else
-		// 			{
-		// 				TempStr +=string(",");
-		// 			}
+		//  if (  abs( EquipData.AppendValue[i] - ( -1 ) ) >= 0.00000001f )
+		//  {
+		//  	sprintf( convert, "%0.3f", EquipData.AppendValue[i] );
+		//  	TempStr += string(convert) + string(",");
+		//  }
+		//  else
+		//  {
+		//  	TempStr +=string(",");
+		//  }
 		// 		}
 
 		TempStr += string("1,1,");
@@ -1682,7 +1682,7 @@ void CPlayer::SynchronousClientSkill(bool IsMagic)
 			msg_passiveskill_info.Skill[a].cType = itertor->first;
 			msg_passiveskill_info.Skill[a].Rank = itertor->second.Grade;
 			msg_passiveskill_info.Skill[a].EquipLV = itertor->second.EquipLV;
-			//			msg_passiveskill_info.Skill[a].Exp   = itertor->second.Degree_Practice;
+			// msg_passiveskill_info.Skill[a].Exp   = itertor->second.Degree_Practice;
 			a++;
 		}
 		CGameObject::s_World->SendMsgToClient(&msg_passiveskill_info, GetSocket());
@@ -2217,7 +2217,7 @@ double RandOne0_1(double& seed)
 	seed = RandCoef2053 * (seed)+RandCoef13849;	//乘、加系数
 	seed = ((unsigned long)seed) % MODUL65536;		//以为模对种子取余
 	double rand = (seed) / (double)MODUL65536;		//使随机数在[0,1]区间
-	return(rand);									//返回随机值
+	return(rand);   //返回随机值
 }
 
 //-------------------------------------------------------------------------------------
@@ -2258,7 +2258,7 @@ double AverageRandom(double min, double max)
 
 size_t
 Rand_ab_One(size_t a, size_t b, size_t& seed)
-{			//a,b为区间左右端点，seed为种子
+{ //a,b为区间左右端点，seed为种子
 	size_t rand = 0;
 	size_t stk = b - a + 1;
 	size_t stl = 2;
@@ -2790,7 +2790,7 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			RoleInfo.cCamp = tempRecord->Field(2);
 			RoleInfo.ucLV = tempRecord->Field(3);
 			RoleInfo.ucProfession = tempRecord->Field(4);//by lion 职业
-			//			RoleInfo.ucScholarLV  = tempRecord->Field( 4 );
+			// RoleInfo.ucScholarLV  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle = tempRecord->Field(5);
 			RoleInfo.ucFaceShap = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2814,7 +2814,7 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			RoleInfo.cCamp1 = tempRecord->Field(2);
 			RoleInfo.ucLV1 = tempRecord->Field(3);
 			RoleInfo.ucProfession1 = tempRecord->Field(4);//by lion 职业
-			//			RoleInfo.ucScholarLV1  = tempRecord->Field( 4 );
+			// RoleInfo.ucScholarLV1  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle1 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap1 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2838,7 +2838,7 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			RoleInfo.cCamp2 = tempRecord->Field(2);
 			RoleInfo.ucLV2 = tempRecord->Field(3);
 			RoleInfo.ucProfession2 = tempRecord->Field(4);//by lion 职业
-			//			RoleInfo.ucScholarLV2  = tempRecord->Field( 4 );
+			// RoleInfo.ucScholarLV2  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle2 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap2 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2862,7 +2862,7 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			RoleInfo.cCamp3 = tempRecord->Field(2);
 			RoleInfo.ucLV3 = tempRecord->Field(3);
 			RoleInfo.ucProfession3 = tempRecord->Field(4);//by lion 职业
-			//			RoleInfo.ucScholarLV3  = tempRecord->Field( 4 );
+			// RoleInfo.ucScholarLV3  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle3 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap3 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -3979,7 +3979,7 @@ bool  CPlayer::BackUp_Quest(void)
 // 	{
 // 		if ( CGameObject::s_World->g_pPlayer[i].IsActive()  && ( CGameObject::s_World->g_pPlayer[i].GetlFaction() == GetlFaction( ) ) )
 // 		{
-// 			this->TalkToPlayer(  &CGameObject::s_World->g_pPlayer[i], pBuf, nSize, ucType );
+//  this->TalkToPlayer(  &CGameObject::s_World->g_pPlayer[i], pBuf, nSize, ucType );
 // 		}
 // 	}
 // }
@@ -3994,10 +3994,10 @@ bool  CPlayer::BackUp_Quest(void)
 // 	{
 // 		this->TalkToPlayer( m_pTeamLeader,  pBuf, nSize, ucType);
 // 		for ( vector<CPlayer*>::iterator iter = m_Teammates.begin();
-// 			iter != m_Teammates.end();
-// 			iter++ )
+//  iter != m_Teammates.end();
+//  iter++ )
 // 		{
-// 			this->TalkToPlayer( (*iter),  pBuf, nSize, ucType);
+//  this->TalkToPlayer( (*iter),  pBuf, nSize, ucType);
 // 		}
 // 	}
 // 	//////////20071226
@@ -4730,8 +4730,8 @@ bool CPlayer::BroadcastConMemberInfo()
 //----------------------------------------------------------------------
 void CPlayer::ChangePlayeBuniness(int NewBuniness)
 {
-	m_PassiveSkill.clear();				//清空被动技能表
-	InitClassPassiveSkill();			//初始化职业技能信息
+	m_PassiveSkill.clear(); 	//清空被动技能表
+	InitClassPassiveSkill(); //初始化职业技能信息
 	if (NewBuniness >= m_ClassCount) { ASSERT(0); }		//没有这个职业
 
 	m_ObjectData.m_lClass = NewBuniness;

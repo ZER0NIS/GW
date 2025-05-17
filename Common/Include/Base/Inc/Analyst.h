@@ -44,14 +44,14 @@ namespace sbase
 		void	SizeAdd(const char* szKey, I64 size);
 		void	AmountAdd(const char* szKey, I64 nAmount);
 	public:
-		void			ReStart();				// Clear all history
-		void			LogToDisk();			// Log to disk
-		void			LogToConsole();			// Log to console
+		void ReStart(); 	// Clear all history
+		void LogToDisk(); // Log to disk
+		void LogToConsole(); // Log to console
 	protected:
-		bool			Create();
-		void			LogTicksToString(Statis_t* pStatis, char* szBuf, int nBufSize);
-		void			LogSizeToString(Statis_t* pStatis, char* szBuf, int nBufSize);
-		void			ClearData(Statis_t* pStatis);
+		bool Create();
+		void LogTicksToString(Statis_t* pStatis, char* szBuf, int nBufSize);
+		void LogSizeToString(Statis_t* pStatis, char* szBuf, int nBufSize);
+		void ClearData(Statis_t* pStatis);
 	private:
 		typedef std::map<std::string, Statis_t*> STATIS_MAP;
 		STATIS_MAP m_mapStatis;
@@ -67,12 +67,12 @@ namespace sbase
 	public:
 		CAnalystTick(OBJID idx)
 		{
-			m_idx = idx;
-			CSysTimer::Instance().Sys_TickInit();
+ m_idx = idx;
+ CSysTimer::Instance().Sys_TickInit();
 		}
 		~CAnalystTick()
 		{
-			CAnalyst::Instance().TicksAdd(m_idx, CSysTimer::Instance().Sys_GetTicks());
+ CAnalyst::Instance().TicksAdd(m_idx, CSysTimer::Instance().Sys_GetTicks());
 		}
 
 	private:

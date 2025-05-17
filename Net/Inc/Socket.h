@@ -41,36 +41,36 @@ namespace net
 
 		// interface
 	public:
-		bool			Send(const void* buf, int nSize);
+		bool Send(const void* buf, int nSize);
 		const char* Recv(int& nLen, bool bDetectData = false);
 
-		void			Close(void);
-		void			ClrPacket(int nLen);
-		int				SetBufSize(int nSendBuf, int nRecvBuf);
+		void Close(void);
+		void ClrPacket(int nLen);
+		int 	SetBufSize(int nSendBuf, int nRecvBuf);
 		const char* GetPeerIP(void);
 
-		bool			IsOpen(void) { return (m_sock != INVALID_SOCKET); }
-		bool			HaveData(void) { return (m_nLen > 0); }
-		SOCKET			Socket(void) { return m_sock; }
+		bool IsOpen(void) { return (m_sock != INVALID_SOCKET); }
+		bool HaveData(void) { return (m_nLen > 0); }
+		SOCKET Socket(void) { return m_sock; }
 		bool            ResolvePacket(void);
 		const char* GetBufStart(void) { return m_iBuffer.GetStart(); }
 		size_t          GetBufByteNum(void) { return m_iBuffer.GetLength(); }
-		//int				DumpError		(const char* pszInfo);
+		//int 	DumpError		(const char* pszInfo);
 
 	private:
-		SOCKET			m_sock;
-		fd_set			m_fdset;
+		SOCKET m_sock;
+		fd_set m_fdset;
 
-		int				m_nLen;
+		int 	m_nLen;
 		CircularBuffer  m_iBuffer;
-		//char			m_bufMsg[RCV_BUFFER_SIZE];
+		//char m_bufMsg[RCV_BUFFER_SIZE];
 
 		std::string		m_strIP;
 
 		// Encryptor
 	public:
 		IEncryptor* QueryEncryptor(ENCRYPTOR_TYPE nType);
-		void			ChgEncryptor(ENCRYPTOR_TYPE nType, IEncryptor* pEncryptor);
+		void ChgEncryptor(ENCRYPTOR_TYPE nType, IEncryptor* pEncryptor);
 
 	private:
 		IEncryptor* m_pEncryptorSnd;

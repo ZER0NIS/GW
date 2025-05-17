@@ -7,9 +7,9 @@ namespace sbase
 		class Mutex
 		{
 		public:
-			Mutex(void);
+ Mutex(void);
 		public:
-			~Mutex(void);
+ ~Mutex(void);
 		};
 	}
 }

@@ -31,28 +31,28 @@ namespace rade_db
 	public:
 		virtual	unsigned long Release(void) { delete this; return 0; }
 
-		virtual			operator bool() const;
+		virtual operator bool() const;
 
-		virtual			operator char() const;
-		virtual			operator unsigned char() const;
+		virtual operator char() const;
+		virtual operator unsigned char() const;
 
-		virtual			operator short() const;
-		virtual			operator unsigned short() const;
+		virtual operator short() const;
+		virtual operator unsigned short() const;
 
-		virtual			operator long() const;
-		virtual			operator unsigned long() const;
+		virtual operator long() const;
+		virtual operator unsigned long() const;
 
-		virtual			operator int() const;
-		virtual			operator unsigned int() const;
+		virtual operator int() const;
+		virtual operator unsigned int() const;
 
-		virtual			operator __int64() const;
-		virtual			operator unsigned __int64() const;
+		virtual operator __int64() const;
+		virtual operator unsigned __int64() const;
 
-		virtual			operator float() const;
-		virtual			operator double() const;
+		virtual operator float() const;
+		virtual operator double() const;
 
-		virtual			operator char* () const;
-		virtual			operator const char* () const;
+		virtual operator char* () const;
+		virtual operator const char* () const;
 
 		virtual IData& operator = (bool bOp);
 
@@ -83,20 +83,20 @@ namespace rade_db
 		unsigned int	GetAttr(void) const { return m_info.unAttr; }
 		unsigned int	GetLen(void) const { return m_info.unLen; }
 
-		bool			SetValue(const char* pszValue);
-		bool			IsChanged(void) const { return m_bChanged; }
-		void			TagChanged(bool bChange) { m_bChanged = bChange; }
+		bool SetValue(const char* pszValue);
+		bool IsChanged(void) const { return m_bChanged; }
+		void TagChanged(bool bChange) { m_bChanged = bChange; }
 
 	private:
 		const FieldInfo& m_info;
 
 		union
 		{
-			__int64		m_i64Val;
-			double		m_dVal;
+ __int64		m_i64Val;
+ double		m_dVal;
 		};
 		std::string		m_strVal;
 
-		bool			m_bChanged;
+		bool m_bChanged;
 	};
 }

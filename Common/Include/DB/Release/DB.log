@@ -1,51 +1,52 @@
 ﻿  Database.cpp
+  Field.cpp
   Record.cpp
-E:\GW\Common\Include\DB\Src\Record.cpp(131,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(131,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(131,22): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(131,22):
       considere el uso de ' %llu' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(131,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(131,22):
       considere el uso de ' %I64u' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(133,24): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(133,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(133,22): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(133,22):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(133,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(133,22):
       considere el uso de ' %I64d' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(138,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(138,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(138,22): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(138,22):
       considere el uso de ' %llu' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(138,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(138,22):
       considere el uso de ' %I64u' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(140,24): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(140,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(140,22): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(140,22):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(140,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(140,22):
       considere el uso de ' %I64d' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(145,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(145,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(145,22): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(145,22):
       considere el uso de ' %llu' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(145,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(145,22):
       considere el uso de ' %I64u' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(147,24): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(147,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(147,22): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(147,22):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(147,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(147,22):
       considere el uso de ' %I64d' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(152,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(152,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(152,22): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(152,22):
       considere el uso de ' %llu' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(152,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(152,22):
       considere el uso de ' %I64u' en la cadena de formato
   
-E:\GW\Common\Include\DB\Src\Record.cpp(154,24): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
-      E:\GW\Common\Include\DB\Src\Record.cpp(154,24):
+E:\GW\Common\Include\DB\Src\Record.cpp(154,22): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(154,22):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\Common\Include\DB\Src\Record.cpp(154,24):
+      E:\GW\Common\Include\DB\Src\Record.cpp(154,22):
       considere el uso de ' %I64d' en la cadena de formato
   
   Recordset.cpp

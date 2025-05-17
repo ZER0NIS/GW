@@ -50,32 +50,32 @@ namespace cnet
 		LastSendIssued++;
 
 		rc = WSASend(
-			s,
-			&wbuf,
-			1,
-			&bytes,
-			0,
-			&Sendobj->ol,
-			NULL
+ s,
+ &wbuf,
+ 1,
+ &bytes,
+ 0,
+ &Sendobj->ol,
+ NULL
 		);
 
 		if (rc == SOCKET_ERROR)
 		{
-			rc = NO_ERROR;
-			if ((err = WSAGetLastError()) != WSA_IO_PENDING)
-			{
+ rc = NO_ERROR;
+ if ((err = WSAGetLastError()) != WSA_IO_PENDING)
+ {
 #ifdef _DEBUG
-				if (err == WSAENOBUFS)
-					DebugBreak();
+ 	if (err == WSAENOBUFS)
+ 		DebugBreak();
 #endif
-				printf("ErrorCode:%d\n", err);
-				rc = SOCKET_ERROR;
-			}
+ 	printf("ErrorCode:%d\n", err);
+ 	rc = SOCKET_ERROR;
+ }
 		}
 		if (rc == NO_ERROR)
 		{
-			InterlockedIncrement(&OutstandingSend);
-			InterlockedIncrement(&m_pIOCP->m_OutstandingSends);
+ InterlockedIncrement(&OutstandingSend);
+ InterlockedIncrement(&m_pIOCP->m_OutstandingSends);
 		}
 		LeaveCriticalSection(&SockCritSec);
 
@@ -99,27 +99,27 @@ namespace cnet
 		EnterCriticalSection(&SockCritSec);
 
 		rc = WSARecv(
-			s,
-			&wbuf,
-			1,
-			&bytes,
-			&flags,
-			&Recvobj->ol,
-			NULL
+ s,
+ &wbuf,
+ 1,
+ &bytes,
+ &flags,
+ &Recvobj->ol,
+ NULL
 		);
 
 		if (rc == SOCKET_ERROR)
 		{
-			rc = NO_ERROR;
-			if (WSAGetLastError() != WSA_IO_PENDING)
-			{
-				//dbgprint("PostRecv: WSARecv* failed: %d\n", WSAGetLastError());
-				rc = SOCKET_ERROR;
-			}
+ rc = NO_ERROR;
+ if (WSAGetLastError() != WSA_IO_PENDING)
+ {
+ 	//dbgprint("PostRecv: WSARecv* failed: %d\n", WSAGetLastError());
+ 	rc = SOCKET_ERROR;
+ }
 		}
 		if (rc == NO_ERROR)
 		{
-			InterlockedIncrement(&OutstandingRecv);
+ InterlockedIncrement(&OutstandingRecv);
 		}
 
 		LeaveCriticalSection(&SockCritSec);
@@ -148,26 +148,26 @@ namespace cnet
 		int OLen = 0;
 		while ((OLen = (int)m_oBuffer.GetLength()) != 0)
 		{
-			PerIOData* pPerIOData = m_pIOCP->GetBufferObj(DEFAULT_BUFFER_SIZE);
-			if (NULL == pPerIOData)
-			{
-				LeaveCriticalSection(&SockCritSec);
-				return false;
-			}
+ PerIOData* pPerIOData = m_pIOCP->GetBufferObj(DEFAULT_BUFFER_SIZE);
+ if (NULL == pPerIOData)
+ {
+ 	LeaveCriticalSection(&SockCritSec);
+ 	return false;
+ }
 
-			int len = (OLen - DEFAULT_BUFFER_SIZE >= 0) ? DEFAULT_BUFFER_SIZE : OLen;
-			pPerIOData->operation = OP_WRITE;
-			m_oBuffer.Read(pPerIOData->buf, len);
-			//memcpy( pPerIOData->buf,m_oBuffer.GetStart(),len);
-			pPerIOData->buflen = len;
-			pPerIOData->pSocket = this;
-			pPerIOData->IoOrder = IoCountIssued;
+ int len = (OLen - DEFAULT_BUFFER_SIZE >= 0) ? DEFAULT_BUFFER_SIZE : OLen;
+ pPerIOData->operation = OP_WRITE;
+ m_oBuffer.Read(pPerIOData->buf, len);
+ //memcpy( pPerIOData->buf,m_oBuffer.GetStart(),len);
+ pPerIOData->buflen = len;
+ pPerIOData->pSocket = this;
+ pPerIOData->IoOrder = IoCountIssued;
 
-			InsertPendingSend(pPerIOData);
-			//m_oBuffer.Remove(len);
+ InsertPendingSend(pPerIOData);
+ //m_oBuffer.Remove(len);
 
-			if (IoCountIssued > LastSendIssued && LastSendIssued == IOCompleted)
-				result = (DoSends() != NO_ERROR) ? false : true;
+ if (IoCountIssued > LastSendIssued && LastSendIssued == IOCompleted)
+ 	result = (DoSends() != NO_ERROR) ? false : true;
 		}
 		LeaveCriticalSection(&SockCritSec);
 
@@ -198,26 +198,26 @@ namespace cnet
 
 		while ((sendobj))
 		{
-			if (sendobj->IoOrder == LastSendIssued)
-			{
-				if (prev == NULL)
-				{
-					OutOfOrderSends = NULL;
-				}
-				else
-				{
-					prev->next = sendobj->next;
-				}
+ if (sendobj->IoOrder == LastSendIssued)
+ {
+ 	if (prev == NULL)
+ 	{
+ 		OutOfOrderSends = NULL;
+ 	}
+ 	else
+ 	{
+ 		prev->next = sendobj->next;
+ 	}
 
-				if (PostSend(sendobj) != NO_ERROR)
-				{
-					m_pIOCP->FreeBufferObj(sendobj);
-					ret = SOCKET_ERROR;
-				}
-				break;
-			}
-			prev = sendobj;
-			sendobj = sendobj->next;
+ 	if (PostSend(sendobj) != NO_ERROR)
+ 	{
+ 		m_pIOCP->FreeBufferObj(sendobj);
+ 		ret = SOCKET_ERROR;
+ 	}
+ 	break;
+ }
+ prev = sendobj;
+ sendobj = sendobj->next;
 		}
 
 		LeaveCriticalSection(&SockCritSec);
@@ -230,7 +230,7 @@ namespace cnet
 		//char* pChar = Encrypt(pMsg, iLen);
 
 		if (m_oBuffer.Space() < iLen)
-			Write();
+ Write();
 
 		return m_oBuffer.Write(pMsg, iLen);
 	}
@@ -239,7 +239,7 @@ namespace cnet
 	{
 		if (s != INVALID_SOCKET)
 		{
-			closesocket(s);
+ closesocket(s);
 		}
 
 		s = INVALID_SOCKET;
@@ -256,13 +256,13 @@ namespace cnet
 		size_t nLen = m_iBuffer.GetLength();
 		if (nLen > 0 && m_iBuffer.GetStart())
 		{
-			*Paket = m_iBuffer.GetStart();
-			return (long)nLen;
+ *Paket = m_iBuffer.GetStart();
+ return (long)nLen;
 		}
 		else
 		{
-			*Paket = NULL;
-			return 0;
+ *Paket = NULL;
+ return 0;
 		}
 
 		//size_t nLen = m_iBuffer.GetLength();
@@ -293,13 +293,13 @@ namespace cnet
 		size_t nLen = m_iBuffer.GetLength();
 		if (nLen > 0 && m_iBuffer.GetStart())
 		{
-			*Paket = m_iBuffer.GetStart();
-			return (long)nLen;
+ *Paket = m_iBuffer.GetStart();
+ return (long)nLen;
 		}
 		else
 		{
-			*Paket = NULL;
-			return 0;
+ *Paket = NULL;
+ return 0;
 		}
 	}
 
@@ -307,23 +307,23 @@ namespace cnet
 	{
 		if (m_strIP.empty())
 		{
-			sockaddr_in	inAddr;
-			::memset(&inAddr, 0, sizeof(inAddr));
-			int		nLen = sizeof(inAddr);
-			if (::getpeername(s, (sockaddr*)&inAddr, &nLen))
-			{
-				//CSocket::DumpError("CSocket::GetPeerIP(), call ::getpeername() error");
-				printf("CSocket::GetPeerIP(), call ::getpeername() error");
+ sockaddr_in	inAddr;
+ ::memset(&inAddr, 0, sizeof(inAddr));
+ int		nLen = sizeof(inAddr);
+ if (::getpeername(s, (sockaddr*)&inAddr, &nLen))
+ {
+ 	//CSocket::DumpError("CSocket::GetPeerIP(), call ::getpeername() error");
+ 	printf("CSocket::GetPeerIP(), call ::getpeername() error");
 
-				//this->Close();
-				return NULL;
-			}
+ 	//this->Close();
+ 	return NULL;
+ }
 
-			char* pszIP = ::inet_ntoa(inAddr.sin_addr);
-			if (!pszIP)
-				return NULL;
+ char* pszIP = ::inet_ntoa(inAddr.sin_addr);
+ if (!pszIP)
+ 	return NULL;
 
-			m_strIP = pszIP;
+ m_strIP = pszIP;
 		}
 
 		return m_strIP.c_str();
@@ -359,9 +359,9 @@ namespace cnet
 		ptr = OutOfOrderSends;
 		while (ptr)
 		{
-			prev = ptr;
-			ptr = ptr->next;
-			m_pIOCP->FreeBufferObj(prev);
+ prev = ptr;
+ ptr = ptr->next;
+ m_pIOCP->FreeBufferObj(prev);
 		}
 		OutOfOrderSends = NULL;
 		LeaveCriticalSection(&SockCritSec);

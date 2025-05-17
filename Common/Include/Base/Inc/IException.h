@@ -15,7 +15,7 @@ namespace sbase
 	{
 	public:
 		virtual const char*	    GetName() const         = 0;
-		virtual bool			TraceStack(char* buf)   = 0;
+		virtual bool TraceStack(char* buf)   = 0;
 		virtual EXCEPTION_POINTERS* GetExceptionInfo(void) = 0;
 	};
 }

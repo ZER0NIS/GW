@@ -39,13 +39,13 @@ CNetClient::CNetClient()
 	m_pNetSocket = NULL;
 	m_eStatus = STATUS_NONE;
 }
-ULONG			CNetClient::Release(void)
+ULONG CNetClient::Release(void)
 {
 	delete this;
 	return 0;
 }
 
-void			CNetClient::SetHost(const char* szIP, USHORT usPort)
+void CNetClient::SetHost(const char* szIP, USHORT usPort)
 {
 	IF_OK(szIP && usPort)
 	{
@@ -54,7 +54,7 @@ void			CNetClient::SetHost(const char* szIP, USHORT usPort)
 	}
 }
 
-bool			CNetClient::Connect(void)
+bool CNetClient::Connect(void)
 {
 	//if (m_pNetSocket && m_eStatus == STATUS_DISCONNECTED)
 	//{
@@ -87,7 +87,7 @@ bool			CNetClient::Connect(void)
 		m_pNetSocket = net::ClientSocketCreate(*this, m_strServerIP.c_str(), m_usServerPort, 1, pEncryptorSnd, pEncryptorRcv);
 		if (m_pNetSocket != NULL)
 		{
-			m_eStatus = STATUS_CONNECTED;
+ m_eStatus = STATUS_CONNECTED;
 		}
 	}
 
@@ -124,7 +124,7 @@ CNetClient::PickMsg()
 	}
 }
 
-void			CNetClient::DisConnect(void)
+void CNetClient::DisConnect(void)
 {
 	SAFE_RELEASE(m_pNetSocket);
 	m_eStatus = STATUS_DISCONNECTED;
@@ -157,23 +157,23 @@ int	 CNetClient::OnRcvMsg(const void* buf, int nLen)
 		//接收到一个完整包
 		if (pHead->usSize <= BufNum)
 		{
-			sbase::CMsg* pMsg = new sbase::CMsg();
+ sbase::CMsg* pMsg = new sbase::CMsg();
 
-			if (pMsg->Create(buf, pHead->usSize))
-			{
-				//cout<<"服务器消息返回..."<<endl;
-				m_setMsg.push_back(pMsg);
-				return pMsg->GetSize();
-			}
-			else
-			{
-				SAFE_DELETE(pMsg);
-			}
+ if (pMsg->Create(buf, pHead->usSize))
+ {
+ 	//cout<<"服务器消息返回..."<<endl;
+ 	m_setMsg.push_back(pMsg);
+ 	return pMsg->GetSize();
+ }
+ else
+ {
+ 	SAFE_DELETE(pMsg);
+ }
 		}
 		//半包处理
 		else
 		{
-			return 0;
+ return 0;
 		}
 	}
 

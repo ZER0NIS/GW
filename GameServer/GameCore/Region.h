@@ -39,13 +39,13 @@ struct tarSceneConvey
 #define MAX_LEVEL_LIMIT 30      //等级30以下不能PK
 
 struct MagicRegion {
-	int		playerID;			// magic caster
-	int		magicID;			// magic id
-	float	vCenter[3];			// magic center position
-	float	fRadius;			// radius
-	int		flags;				// target info
-	int		lastTime;			// last time
-	int		iCount;				// count for magic
+	int		playerID; // magic caster
+	int		magicID; // magic id
+	float	vCenter[3]; // magic center position
+	float	fRadius; // radius
+	int		flags; 	// target info
+	int		lastTime; // last time
+	int		iCount; 	// count for magic
 	int     targetID;           // target id
 };
 
@@ -68,13 +68,13 @@ typedef list< MagicRegion* > MgcRgnList;
 typedef list< MagicRegion* >::iterator MgcRgnIterator;
 
 // 坐标转换
-#define REGION_WIDTH						64.0f
-#define REGION_HEIGHT						64.0f
-#define REGION_SIZE							8
-#define CONVERT_REGION_WIDTH_POS(x)			(x+REGION_WIDTH/2.0f)/8.0f
+#define REGION_WIDTH  64.0f
+#define REGION_HEIGHT  64.0f
+#define REGION_SIZE  	8
+#define CONVERT_REGION_WIDTH_POS(x) (x+REGION_WIDTH/2.0f)/8.0f
 #define CONVERT_REGION_HEIGHT_POS(x)		(x+REGION_HEIGHT/2.0f)/8.0f
 
-#define MAX_REGION_MONSTER					1000
+#define MAX_REGION_MONSTER 		1000
 
 class CCell;
 class CMap;
@@ -203,46 +203,46 @@ private:	// 协助操作
 private:	// 数据区
 	sbase::CCriticalSection	m_xLock;
 	// 链表方式
-	PlayerList			m_listPlayer;
-	NPCList				m_listNPC;
-	MonsterList			m_listMonster;
-	ObjectList			m_listObject;
+	PlayerList m_listPlayer;
+	NPCList 	m_listNPC;
+	MonsterList m_listMonster;
+	ObjectList m_listObject;
 
 	// 数组方式，用于优化处理
 	CMonster* m_pMonsterQueue[MAX_REGION_MONSTER];
-	long				m_lMonsterQueue;
-	long				m_lMonsterCount;
+	long 	m_lMonsterQueue;
+	long 	m_lMonsterCount;
 
-	MgcRgnList			m_lstMgcRgnActive;
-	MgcRgnList			m_lstMgcRgnFree;
+	MgcRgnList m_lstMgcRgnActive;
+	MgcRgnList m_lstMgcRgnFree;
 
 	SceneConveyList		m_listConvey;
 
-	MagicRegion			m_MagicRegion[MAX_MAGIC_REGION];
-	PlayerList			m_Player[REGION_SIZE][REGION_SIZE];
-	NPCList				m_NPC[REGION_SIZE][REGION_SIZE];
-	MonsterList			m_Monster[REGION_SIZE][REGION_SIZE];
+	MagicRegion m_MagicRegion[MAX_MAGIC_REGION];
+	PlayerList m_Player[REGION_SIZE][REGION_SIZE];
+	NPCList 	m_NPC[REGION_SIZE][REGION_SIZE];
+	MonsterList m_Monster[REGION_SIZE][REGION_SIZE];
 
-	long				m_lID;
+	long 	m_lID;
 	long                m_LogicID;
-	string				m_strName;
-	string				m_strNameCH;
-	string				m_strNumenName;		// Numen/Boss
+	string 	m_strName;
+	string 	m_strNameCH;
+	string 	m_strNumenName;		// Numen/Boss
 
 	CMap* m_pMap;
 	Revival             m_Athens, m_Sparta;
 	CWorld* m_pWorld;
 public:
-	void				SetName(const char* pName) { m_strName = pName; }
-	void				SetNameCH(const char* pName) { m_strNameCH = pName; }
-	void				SetNumenName(const char* pName) { m_strNumenName = pName; }
+	void 	SetName(const char* pName) { m_strName = pName; }
+	void 	SetNameCH(const char* pName) { m_strNameCH = pName; }
+	void 	SetNumenName(const char* pName) { m_strNumenName = pName; }
 
 	void                SetAthensRevival(long lMapID, float X, float Z) { m_Athens.MapID = lMapID; m_Athens.X = X; m_Athens.Z = Z; }
 	void                SetSpartaRevival(long lMapID, float X, float Z) { m_Sparta.MapID = lMapID; m_Sparta.X = X; m_Sparta.Z = Z; }
 	Revival* GetAthensRevival() { return &m_Athens; }
 	Revival* GetSpartaRevival() { return &m_Sparta; }
 
-	string				GetName(void) { return m_strName; }
-	string				GetNameCH(void) { return m_strNameCH; }
-	string				GetNumenName(void) { return m_strNumenName; }
+	string 	GetName(void) { return m_strName; }
+	string 	GetNameCH(void) { return m_strNameCH; }
+	string 	GetNumenName(void) { return m_strNumenName; }
 };

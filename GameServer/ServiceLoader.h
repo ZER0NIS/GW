@@ -27,7 +27,7 @@
 
 #include "../Common/Include/Pipe/IPipe.h"
 
-#define  PIPE_TIMER			1000
+#define  PIPE_TIMER 1000
 #define	 REGISTER_DB_TIMER	1000*30
 #define  CHECKT_PIPE_TIMER	30000
 
@@ -133,11 +133,11 @@ protected:
 private:
 	sbase::CCriticalSection	m_xLock;
 	sbase::CThread* m_pThread;
-	sbase::CTimerMS			m_ConsortiaTimer;
+	sbase::CTimerMS m_ConsortiaTimer;
 
-	sbase::CTimerMS			m_RegTimer;
+	sbase::CTimerMS m_RegTimer;
 
-	sbase::CTimerMS			m_CheckTimer;
+	sbase::CTimerMS m_CheckTimer;
 	char m_szDBIp[32];
 	char m_szUserName[16];
 	char m_szUserPwd[16];
@@ -195,19 +195,19 @@ public:
 #define CMD_FORMAT(a) a,(sizeof(a)-1)
 static KeyCommand Commands[] =
 {
-	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",             			0},
-	{CMD_FORMAT("exit"),          &CommandService::Key_Exit,         	"Shutdown immediately ",         			1},
-	{CMD_FORMAT("quit"),          &CommandService::Key_Quit,         	"Shutdown several minutes later",			2},
-	{CMD_FORMAT("list"),          &CommandService::Key_List,         	"Display the player information", 			3},
-	{CMD_FORMAT("fps"),           &CommandService::Key_Fps,          	"Display the AI speed",            			4},
-	{CMD_FORMAT("resource"),      &CommandService::Key_Resource,     	"Display the resource information",			5},
+	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",              0},
+	{CMD_FORMAT("exit"),          &CommandService::Key_Exit,         	"Shutdown immediately ",          1},
+	{CMD_FORMAT("quit"),          &CommandService::Key_Quit,         	"Shutdown several minutes later", 2},
+	{CMD_FORMAT("list"),          &CommandService::Key_List,         	"Display the player information",  3},
+	{CMD_FORMAT("fps"),           &CommandService::Key_Fps,          	"Display the AI speed",             4},
+	{CMD_FORMAT("resource"),      &CommandService::Key_Resource,     	"Display the resource information", 5},
 	{CMD_FORMAT("reset"),         &CommandService::Key_Reset,        	"Reset the resource of game world",   		6},
-	{CMD_FORMAT("role"),          &CommandService::Key_Role,         	"Display the role information",    			7},
+	{CMD_FORMAT("role"),          &CommandService::Key_Role,         	"Display the role information",     7},
 	{CMD_FORMAT("accounts"),      &CommandService::Key_Accounts,        "Display the accounts information",    		8},
 	{CMD_FORMAT("queue"),         &CommandService::Key_Queue,           "Shoe the message queue number", 	    	9},
 	{CMD_FORMAT("reloadselling"), &CommandService::Key_Reloadselling,   "Reset the selling",               		 	10},
-	{CMD_FORMAT("reloadquest"),   &CommandService::Key_Reloadquest,     "Reset the quest",              			11},
-	{CMD_FORMAT("broadcast"),     &CommandService::Key_Broadcast,       "Broadcast system message",        			12},
+	{CMD_FORMAT("reloadquest"),   &CommandService::Key_Reloadquest,     "Reset the quest",               11},
+	{CMD_FORMAT("broadcast"),     &CommandService::Key_Broadcast,       "Broadcast system message",         12},
 	{CMD_FORMAT("send"),          &CommandService::Key_Send,            "Send message to player",            		13},
 	{CMD_FORMAT("saveall"),       &CommandService::Key_SaveAll,         "Save player data all of game world",   	14},
 	{CMD_FORMAT("kick"),          &CommandService::Key_Kick,            "Kick player",        	            		15},
@@ -238,7 +238,7 @@ public:
 		map< string, string >::iterator  itor = m_valid_map.find(strAccounts);
 		if (itor != m_valid_map.end())
 		{
-			return itor->second;
+ return itor->second;
 		}
 
 		return string("");
@@ -255,22 +255,22 @@ public:
 		map<  snet::CSocket*, string >::iterator  itor = m_Soket_map.find(PSocket);
 		if (itor != m_Soket_map.end())
 		{
-			Accounts = itor->second;
-			m_Soket_map.erase(itor);
+ Accounts = itor->second;
+ m_Soket_map.erase(itor);
 		}
 
 		sbase::CSingleLock xLock1(&m_xLock);
 		map< string, string >::iterator  itor1 = m_valid_map.find(Accounts);
 		if (itor1 != m_valid_map.end())
 		{
-			m_valid_map.erase(itor1);
+ m_valid_map.erase(itor1);
 		}
 	}
 	static void CacheSocket(snet::CSocket* PSocket, string strAccounts)
 	{
 		if (m_valid_map.find(strAccounts) != m_valid_map.end())
 		{
-			m_Soket_map[PSocket] = strAccounts;
+ m_Soket_map[PSocket] = strAccounts;
 		}
 	}
 
@@ -292,19 +292,19 @@ private:
 	cnet::CIOCP* m_pNetClient;
 	cnet::CSocket* m_pClientSck;
 
-	char			m_strServerIP[64];
-	UINT			m_nServerPort;
-	BYTE			m_ID;
-	string			m_Name;
+	char m_strServerIP[64];
+	UINT m_nServerPort;
+	BYTE m_ID;
+	string m_Name;
 	UINT            m_nListenPort;
 	UINT            m_nPlayerNum;
 
 	//自己的状态
 	STATE_TYPE      m_eState;
 
-	bool			m_bIsConnect;
+	bool m_bIsConnect;
 
-	string			m_strHostIp;
+	string m_strHostIp;
 
 	static map< string, string > m_valid_map;	//登入服务器返回的检验码
 	static map< snet::CSocket*, string>  m_Soket_map;
@@ -360,17 +360,17 @@ private:
 	cnet::CIOCP* m_pNetClient;
 	cnet::CSocket* m_pClientSocket;
 
-	char			m_strServerIP[64];
-	UINT			m_nServerPort;
+	char m_strServerIP[64];
+	UINT m_nServerPort;
 
-	bool			m_bIsConnect;
-	bool			m_bConnectDB;
+	bool m_bIsConnect;
+	bool m_bConnectDB;
 
 	sbase::CThread* m_pThread;
 
-	sbase::CTimerMS			m_ConsortiaTimer;
+	sbase::CTimerMS m_ConsortiaTimer;
 
-	sbase::CTimerMS			m_PlayerTimer;
+	sbase::CTimerMS m_PlayerTimer;
 
 	sbase::CCriticalSection m_xLock;
 };

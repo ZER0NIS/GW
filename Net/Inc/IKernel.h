@@ -15,7 +15,7 @@ namespace serve
 	class IKernel
 	{
 	public:
-		virtual USHORT	Release(void)				= 0;
+		virtual USHORT	Release(void) 	= 0;
 		virtual IPort*	QueryShellPort(void) const	= 0;
 		virtual void    CloseSocket(SOCKET socket)    = 0;
 	};

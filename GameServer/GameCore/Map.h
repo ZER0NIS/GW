@@ -77,7 +77,7 @@ public:
 		int z = m_Grid_Z - 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//up
@@ -85,7 +85,7 @@ public:
 		z = m_Grid_Z - 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//right-up
@@ -93,7 +93,7 @@ public:
 		z = m_Grid_Z - 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//left
@@ -101,7 +101,7 @@ public:
 		z = m_Grid_Z;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//center
@@ -109,7 +109,7 @@ public:
 		z = m_Grid_Z;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//right
@@ -117,7 +117,7 @@ public:
 		z = m_Grid_Z;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//left-down
@@ -125,7 +125,7 @@ public:
 		z = m_Grid_Z + 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//down
@@ -133,7 +133,7 @@ public:
 		z = m_Grid_Z + 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 
 		//right-down
@@ -141,7 +141,7 @@ public:
 		z = m_Grid_Z + 1;
 		if (x >= 0 && z >= 0 && x <= NUMBER_OF_REGION_GRID - 1 && z <= NUMBER_OF_REGION_GRID - 1)
 		{
-			VeCMap.push_back(BYTE((z << 4) | x));
+ VeCMap.push_back(BYTE((z << 4) | x));
 		}
 		return VeCMap;
 	}
@@ -182,11 +182,11 @@ public:
 		std::vector<BYTE>::iterator itor = Area2.begin();
 		for (; itor != Area2.end(); itor++)
 		{
-			std::vector<BYTE>::iterator iter = std::find(Area1.begin(), Area1.end(), (*itor));
-			if (iter == Area1.end())
-			{
-				VecCell.push_back(GetCell((*itor)));
-			}
+ std::vector<BYTE>::iterator iter = std::find(Area1.begin(), Area1.end(), (*itor));
+ if (iter == Area1.end())
+ {
+ 	VecCell.push_back(GetCell((*itor)));
+ }
 		}
 		return VecCell;
 	}

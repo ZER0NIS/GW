@@ -29,7 +29,7 @@ CAnalyst::~CAnalyst()
 	for (int i = 0; i < m_setStatis.size(); i++) {
 		Statis_t* pStatis = m_setStatis[i];
 		if (pStatis->name)
-			delete[]pStatis->name;
+ delete[]pStatis->name;
 		delete pStatis;
 	}
 
@@ -37,9 +37,9 @@ CAnalyst::~CAnalyst()
 	for (iter = m_mapStatis.begin(); iter != m_mapStatis.end(); ++iter) {
 		Statis_t* pStatis = iter->second;
 		if (pStatis != NULL) {
-			if (pStatis->name)
-				delete[]pStatis->name;
-			delete pStatis;
+ if (pStatis->name)
+ 	delete[]pStatis->name;
+ delete pStatis;
 		}
 	}
 }
@@ -50,7 +50,7 @@ bool CAnalyst::Create()
 	for (int i = 0; i < ANALYST_MAX_ITEM; i++) {
 		Statis_t* pStatis = new Statis_t;
 		if (pStatis == NULL)
-			return false;
+ return false;
 		memset(pStatis, 0, sizeof(Statis_t));
 		m_setStatis.push_back(pStatis);
 	}
@@ -67,7 +67,7 @@ void CAnalyst::ReStart()
 	for (int i = 0; i < m_setStatis.size(); i++) {
 		Statis_t* pStatis = m_setStatis[i];
 		if (pStatis)
-			ClearData(pStatis);
+ ClearData(pStatis);
 	}
 
 	STATIS_MAP::iterator iter;
@@ -75,7 +75,7 @@ void CAnalyst::ReStart()
 		Statis_t* pStatis = iter->second;
 		if (pStatis)
 		{
-			ClearData(pStatis);
+ ClearData(pStatis);
 		}
 	}
 }
@@ -250,19 +250,19 @@ void CAnalyst::LogToDisk()
 	for (int i = 0; i < m_setStatis.size(); i++) {
 		Statis_t* pStatis = m_setStatis[i];
 		if (pStatis->mask == ANALYST_MASK_INVALID)
-			continue;
+ continue;
 
 		// Ticks
 		if (pStatis->mask & ANALYST_MASK_TICKS) {
-			LogTicksToString(pStatis, szBuf, BUFLEN);
-			sbase::LogSave(szAnalystLog, szBuf);
-			nTotalTick += pStatis->totalTicks;
+ LogTicksToString(pStatis, szBuf, BUFLEN);
+ sbase::LogSave(szAnalystLog, szBuf);
+ nTotalTick += pStatis->totalTicks;
 		}
 
 		// Size
 		if (pStatis->mask & ANALYST_MASK_SIZE) {
-			LogSizeToString(pStatis, szBuf, BUFLEN);
-			sbase::LogSave(szAnalystLog, szBuf);
+ LogSizeToString(pStatis, szBuf, BUFLEN);
+ sbase::LogSave(szAnalystLog, szBuf);
 		}
 	}
 
@@ -271,18 +271,18 @@ void CAnalyst::LogToDisk()
 		Statis_t* pStatis = iter->second;
 
 		if (pStatis != NULL) {
-			// Ticks
-			if (pStatis->mask & ANALYST_MASK_TICKS) {
-				LogTicksToString(pStatis, szBuf, BUFLEN);
-				sbase::LogSave(szAnalystLog, szBuf);
-				nTotalTick += pStatis->totalTicks;
-			}
+ // Ticks
+ if (pStatis->mask & ANALYST_MASK_TICKS) {
+ 	LogTicksToString(pStatis, szBuf, BUFLEN);
+ 	sbase::LogSave(szAnalystLog, szBuf);
+ 	nTotalTick += pStatis->totalTicks;
+ }
 
-			// Size
-			if (pStatis->mask & ANALYST_MASK_SIZE) {
-				LogSizeToString(pStatis, szBuf, BUFLEN);
-				sbase::LogSave(szAnalystLog, szBuf);
-			}
+ // Size
+ if (pStatis->mask & ANALYST_MASK_SIZE) {
+ 	LogSizeToString(pStatis, szBuf, BUFLEN);
+ 	sbase::LogSave(szAnalystLog, szBuf);
+ }
 		}
 	}
 

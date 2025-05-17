@@ -34,15 +34,15 @@ void CPlayer::Explorer()//探索任务验证
 	{
 		if ((*iter)->Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_MAP_EXPOLORER))
 		{
-			static int retIndex = -1;
-			if (-1 != (retIndex = (*iter)->Explorer(GetRegion()->GetID(), this->GetPosX(), this->GetPosZ())))
-			{
-				msg_npc_questexplorerresult.QuestID = (*iter)->Quest->QuestID;
-				msg_npc_questexplorerresult.NPCID = (*iter)->Quest->NPCID;
-				msg_npc_questexplorerresult.Index = retIndex;
+ static int retIndex = -1;
+ if (-1 != (retIndex = (*iter)->Explorer(GetRegion()->GetID(), this->GetPosX(), this->GetPosZ())))
+ {
+ 	msg_npc_questexplorerresult.QuestID = (*iter)->Quest->QuestID;
+ 	msg_npc_questexplorerresult.NPCID = (*iter)->Quest->NPCID;
+ 	msg_npc_questexplorerresult.Index = retIndex;
 
-				s_World->SendMsgToClient(&msg_npc_questexplorerresult, m_pSocket);
-			}
+ 	s_World->SendMsgToClient(&msg_npc_questexplorerresult, m_pSocket);
+ }
 		}
 	}
 }
@@ -55,21 +55,21 @@ void CPlayer::FindQuest()
 	{
 		if (m_Quests[i].CanAccept() && m_Quests[i].Quest)
 		{
-			if (msg_findquestresult.Count >= QUEST_FIND_COUNT)
-			{
-				s_World->SendMsgToClient(&msg_findquestresult, m_pSocket);
-				return;
-			}
+ if (msg_findquestresult.Count >= QUEST_FIND_COUNT)
+ {
+ 	s_World->SendMsgToClient(&msg_findquestresult, m_pSocket);
+ 	return;
+ }
 
-			//if (m_Quests[i].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED))
-			//	continue;
-			if (m_Quests[i].Quest->QuestSort == QUEST_SORT_RANDOM)//随机（任务道具）不可被查找
-				continue;
-			if (false == QuestConsortiaLimit(m_Quests[i].Quest->QuestID))//公会长可查看
-				continue;
+ //if (m_Quests[i].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED))
+ //	continue;
+ if (m_Quests[i].Quest->QuestSort == QUEST_SORT_RANDOM)//随机（任务道具）不可被查找
+ 	continue;
+ if (false == QuestConsortiaLimit(m_Quests[i].Quest->QuestID))//公会长可查看
+ 	continue;
 
-			msg_findquestresult.Quest[msg_findquestresult.Count] = m_Quests[i].Quest->QuestID;
-			msg_findquestresult.Count++;
+ msg_findquestresult.Quest[msg_findquestresult.Count] = m_Quests[i].Quest->QuestID;
+ msg_findquestresult.Count++;
 		}
 	}
 
@@ -136,15 +136,15 @@ bool CPlayer::QuestStatusUpdata(int id)
 	{
 		if (GetQuest(m_Quests[id].Quest->PrevQuestId)->Status != QUEST_STATUS_OVER)
 		{
-			if (m_Quests[id].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_LOOP))//链式任务下一个任务查找
-			{
-				if (GetQuest(m_Quests[id].Quest->PrevQuestId)->Completed <= m_Quests[id].Completed)
-					return true;
-			}
-			else
-			{
-				return true;
-			}
+ if (m_Quests[id].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_LOOP))//链式任务下一个任务查找
+ {
+ 	if (GetQuest(m_Quests[id].Quest->PrevQuestId)->Completed <= m_Quests[id].Completed)
+ 		return true;
+ }
+ else
+ {
+ 	return true;
+ }
 		}
 	}
 	else
@@ -181,13 +181,13 @@ bool CPlayer::IfLoopQuestAccepted(int m_questid)
 		//链式任务第一个任务
 		for (vector<SQuestStatus*>::iterator iter = m_AcceptQuests.begin(); iter != m_AcceptQuests.end(); iter++)
 		{
-			if ((*iter)->Quest && (*iter)->Quest->QuestID == nqid)
-				return true;
+ if ((*iter)->Quest && (*iter)->Quest->QuestID == nqid)
+ 	return true;
 		}
 
 		QuestInfo* qi = QuestManager::Instance()->FindQuest(qid);
 		if (qi == NULL)
-			return false;
+ return false;
 
 		nqid = qi->NextQuestId;
 		nqid = (m_ObjectData.m_lFaction == 1 ? nqid - QUEST_COUNT : nqid);
@@ -204,28 +204,28 @@ void CPlayer::AccpetConsortiaQuest(int index, int q_type)
 	case 201://对话
 	case 1201:
 		if (sqs->CanAccept() && sqs->Quest
-			&& IsConsortiaQuest(sqs->Quest->QuestID)
-			&& sqs->Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_SPEAKTO))
+ && IsConsortiaQuest(sqs->Quest->QuestID)
+ && sqs->Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_SPEAKTO))
 		{
-			//del warning
-			if (sqs->Quest->MaxLevel < (int)GetRank())
-				return;
+ //del warning
+ if (sqs->Quest->MaxLevel < (int)GetRank())
+ 	return;
 
-			sqs->Accept();
-			SendAcceptQuestMsg(sqs);
+ sqs->Accept();
+ SendAcceptQuestMsg(sqs);
 		}
 		break;
 	case 202://杀怪
 	case 1202:
 		if (sqs->CanAccept() && sqs->Quest
-			&& IsConsortiaQuest(sqs->Quest->QuestID)
-			&& sqs->Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_KILL_OR_CAST))
+ && IsConsortiaQuest(sqs->Quest->QuestID)
+ && sqs->Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_KILL_OR_CAST))
 		{
-			if (sqs->Quest->MaxLevel < (int)GetRank())
-				return;
+ if (sqs->Quest->MaxLevel < (int)GetRank())
+ 	return;
 
-			sqs->Accept();
-			SendAcceptQuestMsg(sqs);
+ sqs->Accept();
+ SendAcceptQuestMsg(sqs);
 		}
 		break;
 	case 103:
@@ -249,16 +249,16 @@ void CPlayer::H_ConsortiaQuest(int q_type)
 		stdext::hash_map< ConsortiaElem*, CConsortiaMgr::Member >::iterator itor = CGameObject::s_World->g_pConsortiaManager->m_ConsortiaMemberMap.find(m_pConsortia);
 		if (itor != CGameObject::s_World->g_pConsortiaManager->m_ConsortiaMemberMap.end())
 		{
-			if (m_Quests[i].Quest && m_Quests[i].Quest->ReqConsortiaLV > lev)
-				continue;//公会级别限制
+ if (m_Quests[i].Quest && m_Quests[i].Quest->ReqConsortiaLV > lev)
+ 	continue;//公会级别限制
 
-			CConsortiaMgr::Member member = itor->second;
-			for (CConsortiaMgr::Member::iterator iter = member.begin(); iter != member.end(); iter++)
-			{
-				CPlayer* pPlayer = GetPlayerFromRoleName(iter->first);
-				if (NULL != pPlayer)
-					pPlayer->AccpetConsortiaQuest(i, q_type);
-			}
+ CConsortiaMgr::Member member = itor->second;
+ for (CConsortiaMgr::Member::iterator iter = member.begin(); iter != member.end(); iter++)
+ {
+ 	CPlayer* pPlayer = GetPlayerFromRoleName(iter->first);
+ 	if (NULL != pPlayer)
+ 		pPlayer->AccpetConsortiaQuest(i, q_type);
+ }
 		}
 	}
 }
@@ -276,32 +276,32 @@ void CPlayer::LoadQuest()
 		m_Quests[i].Reward = QuestManager::Instance()->FindQuestReward(id);
 
 		if (!m_Quests[i].Quest || !m_Quests[i].Reward)
-			m_Quests[i].Status = QUEST_STATUS_NONE;
+ m_Quests[i].Status = QUEST_STATUS_NONE;
 
 		// 		if (m_Quests[i].Status == QUEST_STATUS_NONE)
-		// 			continue;
+		//  continue;
 
 		bool b = QuestStatusUpdata(i);
 
 		if (m_Quests[i].Status == QUEST_STATUS_UNAVAILABLE && b)
-			m_UnavailableQuests.push_back(m_Quests + i);
+ m_UnavailableQuests.push_back(m_Quests + i);
 
 		if (m_Quests[i].Status == QUEST_STATUS_AVAILABLE)
-			m_AvailableQuests.push_back(m_Quests + i);
+ m_AvailableQuests.push_back(m_Quests + i);
 
 		if (m_Quests[i].Quest)
 		{
-			//如果不是计时任务
-			if (!m_Quests[i].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED))
-				continue;
+ //如果不是计时任务
+ if (!m_Quests[i].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED))
+ 	continue;
 
-			m_TimeQuestsMap[id] = m_Quests + i;
+ m_TimeQuestsMap[id] = m_Quests + i;
 
-			//如果是刷新过了
-			if (m_Quests[i].TimeUpdata > m_Quests[i].Quest->TimeUpdata)
-				continue;
+ //如果是刷新过了
+ if (m_Quests[i].TimeUpdata > m_Quests[i].Quest->TimeUpdata)
+ 	continue;
 
-			m_Quests[i].UpdataTime();
+ m_Quests[i].UpdataTime();
 		}
 	}
 
@@ -327,16 +327,16 @@ void CPlayer::LoadQuest()
 
 		for (int j = 0; j < QUEST_OBJECTIVES_COUNT; j++)
 		{
-			msg_player_acceptquests.Quests[i].Item[j] = (*iter)->Quest->Item[j];
-			msg_player_acceptquests.Quests[i].Creature[j] = (*iter)->Quest->Creature[j];
-			msg_player_acceptquests.Quests[i].ItemCount[j] = (*iter)->Quest->ItemCount[j];
-			msg_player_acceptquests.Quests[i].CreatureCount[j] = (*iter)->Quest->CreatureCount[j];
-			msg_player_acceptquests.Quests[i].ItemCompletedCount[j] = (*iter)->ItemCount[j];
-			msg_player_acceptquests.Quests[i].CreatureCompletedCount[j] = (*iter)->CreatureCount[j];
+ msg_player_acceptquests.Quests[i].Item[j] = (*iter)->Quest->Item[j];
+ msg_player_acceptquests.Quests[i].Creature[j] = (*iter)->Quest->Creature[j];
+ msg_player_acceptquests.Quests[i].ItemCount[j] = (*iter)->Quest->ItemCount[j];
+ msg_player_acceptquests.Quests[i].CreatureCount[j] = (*iter)->Quest->CreatureCount[j];
+ msg_player_acceptquests.Quests[i].ItemCompletedCount[j] = (*iter)->ItemCount[j];
+ msg_player_acceptquests.Quests[i].CreatureCompletedCount[j] = (*iter)->CreatureCount[j];
 		}
 		for (int j = 0; j < QUEST_EXPLORER_COUNT; j++)
 		{
-			msg_player_acceptquests.Quests[i].ExplorerState[j] = (*iter)->ExplorerComp[j];
+ msg_player_acceptquests.Quests[i].ExplorerState[j] = (*iter)->ExplorerComp[j];
 		}
 
 		memcpy(msg_player_acceptquests.Quests[i].RewardItem, (*iter)->Quest->RewardItem, sizeof(ItemData) * QUEST_REWARDS_COUNT);
@@ -345,11 +345,11 @@ void CPlayer::LoadQuest()
 
 		if (i == 3)
 		{
-			msg_player_acceptquests.Count = i;
-			s_World->SendMsgToClient(&msg_player_acceptquests, m_pSocket);
-			//数据太大...
+ msg_player_acceptquests.Count = i;
+ s_World->SendMsgToClient(&msg_player_acceptquests, m_pSocket);
+ //数据太大...
 
-			i = 0;
+ i = 0;
 		}
 	}
 
@@ -366,15 +366,15 @@ void CPlayer::LoadQuest()
 		std::vector<BYTE>::iterator  AreaItor = Area.begin();
 		for (; AreaItor != Area.end(); AreaItor++)
 		{
-			CCell* pCurCell = GetRegion()->GetMap()->GetCell(*AreaItor);
-			MapNPC& NPCMap = pCurCell->GetNPCMap();
-			MapNPC::iterator itor = NPCMap.begin();
+ CCell* pCurCell = GetRegion()->GetMap()->GetCell(*AreaItor);
+ MapNPC& NPCMap = pCurCell->GetNPCMap();
+ MapNPC::iterator itor = NPCMap.begin();
 
-			for (; itor != NPCMap.end(); itor++)
-			{
-				CNPC* pNPC = itor->second;
-				pNPC->GetQuestList(this);
-			}
+ for (; itor != NPCMap.end(); itor++)
+ {
+ 	CNPC* pNPC = itor->second;
+ 	pNPC->GetQuestList(this);
+ }
 		}
 	}
 	m_MsgFlag[MSG_QUEST_FLAG] = true;
@@ -385,7 +385,7 @@ SQuestStatus* CPlayer::GetAcceptQuest(int id)
 	for (vector<SQuestStatus*>::iterator iter = m_AcceptQuests.begin(); iter != m_AcceptQuests.end(); iter++)
 	{
 		if ((*iter)->Quest->QuestID == id)
-			return (*iter);
+ return (*iter);
 	}
 
 	return NULL;
@@ -473,12 +473,12 @@ bool CPlayer::UseQuestItem(int questid)
 		num = m_Bags[index].UseQuestItem(questid);
 		if (-1 != num)
 		{
-			msg_useorequip_item.Index = (USHORT)index;
-			msg_useorequip_item.Num = (USHORT)num;
-			msg_useorequip_item.uiID = GetID();
-			msg_useorequip_item.False = false;
-			s_World->SendMsgToClient(&msg_useorequip_item, m_pSocket);
-			return true;
+ msg_useorequip_item.Index = (USHORT)index;
+ msg_useorequip_item.Num = (USHORT)num;
+ msg_useorequip_item.uiID = GetID();
+ msg_useorequip_item.False = false;
+ s_World->SendMsgToClient(&msg_useorequip_item, m_pSocket);
+ return true;
 		}
 	}
 	return false;
@@ -491,10 +491,10 @@ bool CPlayer::CanAcceptQuest(int id, bool db /* = false */)
 		SQuestStatus* sqs = GetQuest(id);
 
 		if (!sqs)
-			return false;
+ return false;
 
 		if (sqs->CanAccept())
-			return true;
+ return true;
 
 		return false;
 	}
@@ -505,11 +505,11 @@ bool CPlayer::CanAcceptQuest(int id, bool db /* = false */)
 		QuestInfo* qi = QuestManager::Instance()->FindQuest(id);
 
 		if (!qi)
-			return false;
+ return false;
 
 		if (qi->RequiredBelief != QUEST_BELIEF_NONE &&
-			qi->RequiredBelief != m_ObjectData.m_usBelief)
-			return false;
+ qi->RequiredBelief != m_ObjectData.m_usBelief)
+ return false;
 
 		return true;
 	}
@@ -591,16 +591,16 @@ eError CPlayer::CompleteQuest(int id, int choice)
 		ItemManager::Instance()->CreateItem(&sqs->Quest->RewardItem[choice], &item);
 
 		if (item.IsClear())
-			return MSG_ERRO_0200;
+ return MSG_ERRO_0200;
 
 		if (GetFreeItemOverlap(&item) >= item.m_Overlap)
 		{
-			AddItem(&item);
+ AddItem(&item);
 		}
 		else
 		{
-			//SendServerError(ItemFull , this);
-			return MSG_ERRO_0201;
+ //SendServerError(ItemFull , this);
+ return MSG_ERRO_0201;
 		}
 	}
 	SetSkillPoint(GetSkillPoint() + sqs->Reward->SkillPoint);
@@ -632,29 +632,29 @@ eError CPlayer::CompleteQuest(int id, int choice)
 
 		if (CanAcceptQuest(sqs->Quest->NextQuestId))
 		{
-			//更新后续任务
-			QuestInfo* qi = QuestManager::Instance()->FindQuest(sqs->Quest->NextQuestId);
+ //更新后续任务
+ QuestInfo* qi = QuestManager::Instance()->FindQuest(sqs->Quest->NextQuestId);
 
-			msg_npc_nextquest.SpecialFlags = qi->SpecialFlags;
-			msg_npc_nextquest.QuestSort = qi->QuestSort;
+ msg_npc_nextquest.SpecialFlags = qi->SpecialFlags;
+ msg_npc_nextquest.QuestSort = qi->QuestSort;
 
-			msg_npc_nextquest.NPCID = qi->NPCID;
-			msg_npc_nextquest.QuestID = qi->QuestID;
-			msg_npc_nextquest.Money = qi->Money;
-			msg_npc_nextquest.Bijou = qi->Bijou;
-			msg_npc_nextquest.RewardMoney = qi->RewardMoney;
-			msg_npc_nextquest.RewardBijou = qi->RewardBijou;
+ msg_npc_nextquest.NPCID = qi->NPCID;
+ msg_npc_nextquest.QuestID = qi->QuestID;
+ msg_npc_nextquest.Money = qi->Money;
+ msg_npc_nextquest.Bijou = qi->Bijou;
+ msg_npc_nextquest.RewardMoney = qi->RewardMoney;
+ msg_npc_nextquest.RewardBijou = qi->RewardBijou;
 
-			for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
-			{
-				msg_npc_nextquest.Item[i] = qi->Item[i];
-				msg_npc_nextquest.Creature[i] = qi->Creature[i];
-				msg_npc_nextquest.ItemCount[i] = qi->ItemCount[i];
-				msg_npc_nextquest.CreatureCount[i] = qi->CreatureCount[i];
-			}
+ for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
+ {
+ 	msg_npc_nextquest.Item[i] = qi->Item[i];
+ 	msg_npc_nextquest.Creature[i] = qi->Creature[i];
+ 	msg_npc_nextquest.ItemCount[i] = qi->ItemCount[i];
+ 	msg_npc_nextquest.CreatureCount[i] = qi->CreatureCount[i];
+ }
 
-			memcpy(msg_npc_nextquest.RewardItem, qi->RewardItem, sizeof(ItemData) * QUEST_REWARDS_COUNT);
-			s_World->SendMsgToClient(&msg_npc_nextquest, m_pSocket);
+ memcpy(msg_npc_nextquest.RewardItem, qi->RewardItem, sizeof(ItemData) * QUEST_REWARDS_COUNT);
+ s_World->SendMsgToClient(&msg_npc_nextquest, m_pSocket);
 		}
 	}
 
@@ -668,10 +668,10 @@ eError CPlayer::CompleteQuest(int id, int choice)
 
 		if (CanAcceptQuest(*iter))
 		{
-			msg_npc_questsavailable.NPCID[msg_npc_questsavailable.Count] = qi->NPCID;
-			msg_npc_questsavailable.QuestID[msg_npc_questsavailable.Count] = qi->QuestID;
+ msg_npc_questsavailable.NPCID[msg_npc_questsavailable.Count] = qi->NPCID;
+ msg_npc_questsavailable.QuestID[msg_npc_questsavailable.Count] = qi->QuestID;
 
-			msg_npc_questsavailable.Count++;
+ msg_npc_questsavailable.Count++;
 		}
 	}
 	if (msg_npc_questsavailable.Count)
@@ -705,36 +705,36 @@ void CPlayer::QuestUpdata()
 		q_id = ((SQuestStatus*)(*iter))->Quest->QuestID;
 
 		if (IsConsortiaQuest(q_id) && !HaveConsortia())
-			continue;
+ continue;
 
 		q_id = m_ObjectData.m_lFaction == 1 ? q_id - QUEST_COUNT : q_id;
 		if (QuestTeamLimit(q_id) == false)
-			continue;
+ continue;
 
 		switch ((*iter)->UpData(this->GetRank()))
 		{
 		case QUEST_STATUS_COMPLETE:
 		{
-			//任务完成，不是回报。
+ //任务完成，不是回报。
 
-			msg_npc_completequest.QuestID = (*iter)->Reward->QuestID;
-			msg_npc_completequest.RewardNPCID = (*iter)->Reward->NPCID;
+ msg_npc_completequest.QuestID = (*iter)->Reward->QuestID;
+ msg_npc_completequest.RewardNPCID = (*iter)->Reward->NPCID;
 
-			s_World->SendMsgToClient(&msg_npc_completequest, m_pSocket);
+ s_World->SendMsgToClient(&msg_npc_completequest, m_pSocket);
 		}
 		break;
 		case QUEST_STATUS_FAILD:
 		{
-			//任务失败
+ //任务失败
 
-			msg_npc_questfaild.QuestID = (*iter)->Reward->QuestID;
-			msg_npc_questfaild.RewardNPCID = (*iter)->Reward->NPCID;
+ msg_npc_questfaild.QuestID = (*iter)->Reward->QuestID;
+ msg_npc_questfaild.RewardNPCID = (*iter)->Reward->NPCID;
 
-			s_World->SendMsgToClient(&msg_npc_questfaild, m_pSocket);
+ s_World->SendMsgToClient(&msg_npc_questfaild, m_pSocket);
 		}
 		break;
 		default:
-			break;
+ break;
 		}
 	}
 }
@@ -789,20 +789,20 @@ void CPlayer::QuestKILL(int id)
 		int q_id = ((SQuestStatus*)(*iter))->Quest->QuestID;
 		q_id = m_ObjectData.m_lFaction == 1 ? q_id - QUEST_COUNT : q_id;
 		if (QuestTeamLimit(q_id) == false)
-			continue;
+ continue;
 
 		if ((*iter)->Kill(id))
 		{
-			//杀怪计数
+ //杀怪计数
 
-			msg_npc_questkillorcast.Kill = true;
-			msg_npc_questkillorcast.QuestID = (*iter)->Quest->QuestID;
-			msg_npc_questkillorcast.NPCID = (*iter)->Quest->NPCID;
-			msg_npc_questkillorcast.KillOrCastID = id;
+ msg_npc_questkillorcast.Kill = true;
+ msg_npc_questkillorcast.QuestID = (*iter)->Quest->QuestID;
+ msg_npc_questkillorcast.NPCID = (*iter)->Quest->NPCID;
+ msg_npc_questkillorcast.KillOrCastID = id;
 
-			s_World->SendMsgToClient(&msg_npc_questkillorcast, m_pSocket);
+ s_World->SendMsgToClient(&msg_npc_questkillorcast, m_pSocket);
 
-			//return;
+ //return;
 		}
 	}
 }
@@ -814,20 +814,20 @@ void CPlayer::QuestCast(int id)
 		int q_id = ((SQuestStatus*)(*iter))->Quest->QuestID;
 		q_id = m_ObjectData.m_lFaction == 1 ? q_id - QUEST_COUNT : q_id;
 		if (QuestTeamLimit(q_id) == false)
-			continue;
+ continue;
 
 		if ((*iter)->Cast(id))
 		{
-			//收集计数
+ //收集计数
 
-			msg_npc_questkillorcast.Kill = false;
-			msg_npc_questkillorcast.QuestID = (*iter)->Quest->QuestID;
-			msg_npc_questkillorcast.NPCID = (*iter)->Quest->NPCID;
-			msg_npc_questkillorcast.KillOrCastID = id;
+ msg_npc_questkillorcast.Kill = false;
+ msg_npc_questkillorcast.QuestID = (*iter)->Quest->QuestID;
+ msg_npc_questkillorcast.NPCID = (*iter)->Quest->NPCID;
+ msg_npc_questkillorcast.KillOrCastID = id;
 
-			s_World->SendMsgToClient(&msg_npc_questkillorcast, m_pSocket);
+ s_World->SendMsgToClient(&msg_npc_questkillorcast, m_pSocket);
 
-			//return;
+ //return;
 		}
 	}
 }
@@ -845,15 +845,15 @@ bool CPlayer::QuestTeamLimit(int qid)//组队限制检查
 		break;
 	case 1://两人用以上任务
 		if (num < 2)
-			return false;
+ return false;
 		break;
 	case 2://五人任务
 		if (num < 5)
-			return false;
+ return false;
 		break;
 	case 3://夫妻任务
 		if (!ifCouples)
-			return false;
+ return false;
 		break;
 	default:
 		return true;
@@ -875,8 +875,8 @@ bool CPlayer::QuestClassLimit(int qid)//职业限制检查
 		bChkCls = false;
 		if (this->GetlClass() == (*it))
 		{
-			bChkCls = true;
-			break;
+ bChkCls = true;
+ break;
 		}
 	}
 
@@ -900,9 +900,9 @@ bool CPlayer::QuestConsortiaLimit(int qid)//公会限制
 	if (IsConsortiaQuest(qid))
 	{
 		if (IsThisDuty(CONSORTIA_CHAIRMAN))
-			return true;
+ return true;
 		else
-			return false;
+ return false;
 	}
 
 	return true;
@@ -917,9 +917,9 @@ void CPlayer::SendQuestToMembers(SQuestStatus* sqs)
 	//		CConsortiaMgr::Member member = itor->second;
 	//		for ( CConsortiaMgr::Member::iterator iter = member.begin(); iter != member.end(); iter++ )
 	//		{
-	//			CPlayer *pPlayer = GetPlayerFromRoleName(  iter->first );
-	//			if ( NULL != pPlayer)
-	//				pPlayer->SendAcceptQuestMsg(sqs);
+	// CPlayer *pPlayer = GetPlayerFromRoleName(  iter->first );
+	// if ( NULL != pPlayer)
+	// 	pPlayer->SendAcceptQuestMsg(sqs);
 	//		}
 	//	}
 	//}
@@ -953,7 +953,7 @@ eError CPlayer::ChkQsB4Accept(SQuestStatus* sqs)
 	if (sqs->Quest->QuestSort == QUEST_SORT_RANDOM)
 	{
 		if (false == UseQuestItem(sqs->Quest->QuestID))
-			return NO_MSG_ERRO;
+ return NO_MSG_ERRO;
 	}
 
 	return MSG_ERRO_016B;
@@ -1007,38 +1007,38 @@ void CPlayer::ReflashUnavilableVec()
 		//先判断前序任务
 
 		if (m_UnavailableQuests[i]->Quest->TimeOver)
-			continue;
+ continue;
 
 		if (m_UnavailableQuests[i]->Quest->RequiredBelief != QUEST_BELIEF_NONE &&
-			m_UnavailableQuests[i]->Quest->RequiredBelief != m_ObjectData.m_usBelief)
-			continue;
+ m_UnavailableQuests[i]->Quest->RequiredBelief != m_ObjectData.m_usBelief)
+ continue;
 
 		if (m_UnavailableQuests[i]->Quest->PrevQuestId != -1)
 		{
-			if (GetQuest(m_UnavailableQuests[i]->Quest->PrevQuestId)->Status != QUEST_STATUS_OVER)
-				continue;
+ if (GetQuest(m_UnavailableQuests[i]->Quest->PrevQuestId)->Status != QUEST_STATUS_OVER)
+ 	continue;
 		}
 
 		if (GetcRank() >= m_UnavailableQuests[i]->Quest->MinLevel && GetcRank() <= m_UnavailableQuests[i]->Quest->MaxLevel)
 		{
-			int qid = m_UnavailableQuests[i]->Quest->QuestID;
-			qid = m_ObjectData.m_lFaction == 1 ? qid - QUEST_COUNT : qid;
-			if (false == QuestClassLimit(qid) /*|| false == QuestConsortiaLimit(m_UnavailableQuests[i]->Quest->QuestID)*/)
-				continue;
-			msg_npc_questsavailable.NPCID[msg_npc_questsavailable.Count] = m_UnavailableQuests[i]->Quest->NPCID;
-			msg_npc_questsavailable.QuestID[msg_npc_questsavailable.Count] = m_UnavailableQuests[i]->Quest->QuestID;
+ int qid = m_UnavailableQuests[i]->Quest->QuestID;
+ qid = m_ObjectData.m_lFaction == 1 ? qid - QUEST_COUNT : qid;
+ if (false == QuestClassLimit(qid) /*|| false == QuestConsortiaLimit(m_UnavailableQuests[i]->Quest->QuestID)*/)
+ 	continue;
+ msg_npc_questsavailable.NPCID[msg_npc_questsavailable.Count] = m_UnavailableQuests[i]->Quest->NPCID;
+ msg_npc_questsavailable.QuestID[msg_npc_questsavailable.Count] = m_UnavailableQuests[i]->Quest->QuestID;
 
-			msg_npc_questsavailable.Count++;
+ msg_npc_questsavailable.Count++;
 
-			m_UnavailableQuests[i]->Status = QUEST_STATUS_AVAILABLE;
+ m_UnavailableQuests[i]->Status = QUEST_STATUS_AVAILABLE;
 
-			m_UnavailableQuests.erase(m_UnavailableQuests.begin() + i); i--;
+ m_UnavailableQuests.erase(m_UnavailableQuests.begin() + i); i--;
 		}
 
 		if (msg_npc_questsavailable.Count == QUEST_PLAYER_COUNT)
 		{
-			s_World->SendMsgToClient(&msg_npc_questsavailable, m_pSocket);
-			msg_npc_questsavailable.Count = 0;
+ s_World->SendMsgToClient(&msg_npc_questsavailable, m_pSocket);
+ msg_npc_questsavailable.Count = 0;
 		}
 	}
 
@@ -1057,18 +1057,18 @@ void CPlayer::ReflashAvilaVec()
 	for (size_t i = 0; i < m_AvailableQuests.size(); i++)
 	{
 		if (!m_AvailableQuests[i]->CanAccept())
-			continue;
+ continue;
 
 		if (GetcRank() > m_AvailableQuests[i]->Quest->MaxLevel)
 		{
-			msg_npc_questsunavailable.NPCID[msg_npc_questsunavailable.Count] = m_AvailableQuests[i]->Quest->NPCID;
-			msg_npc_questsunavailable.QuestID[msg_npc_questsunavailable.Count] = m_AvailableQuests[i]->Quest->QuestID;
+ msg_npc_questsunavailable.NPCID[msg_npc_questsunavailable.Count] = m_AvailableQuests[i]->Quest->NPCID;
+ msg_npc_questsunavailable.QuestID[msg_npc_questsunavailable.Count] = m_AvailableQuests[i]->Quest->QuestID;
 
-			msg_npc_questsunavailable.Count++;
+ msg_npc_questsunavailable.Count++;
 
-			m_AvailableQuests[i]->Status = QUEST_STATUS_UNAVAILABLE;
+ m_AvailableQuests[i]->Status = QUEST_STATUS_UNAVAILABLE;
 
-			m_AvailableQuests.erase(m_AvailableQuests.begin() + i); i--;
+ m_AvailableQuests.erase(m_AvailableQuests.begin() + i); i--;
 		}
 	}
 
@@ -1105,31 +1105,31 @@ void CPlayer::CancelConsortiaQuest()
 	for (vector<SQuestStatus*>::iterator iter = m_AcceptQuests.begin(); iter != m_AcceptQuests.end();)
 	{
 		if (NULL == (*iter)->Quest)
-			continue;
+ continue;
 
 		SQuestStatus* sqs = (*iter);
 
 		if (sqs->Quest->QuestSort == QUEST_SORT_CONSORTIA)
 		{
-			sqs->Cancel();
+ sqs->Cancel();
 
-			if (GetcRank() > sqs->Quest->MaxLevel)
-				sqs->Status = QUEST_STATUS_UNAVAILABLE;
+ if (GetcRank() > sqs->Quest->MaxLevel)
+ 	sqs->Status = QUEST_STATUS_UNAVAILABLE;
 
-			if (sqs->Status == QUEST_STATUS_AVAILABLE)
-				msg_npc_cancelquest.Available = true;
-			else
-				msg_npc_cancelquest.Available = false;
+ if (sqs->Status == QUEST_STATUS_AVAILABLE)
+ 	msg_npc_cancelquest.Available = true;
+ else
+ 	msg_npc_cancelquest.Available = false;
 
-			msg_npc_cancelquest.NPCID = sqs->Quest->NPCID;
-			msg_npc_cancelquest.RewardNPCID = sqs->Reward->NPCID;
+ msg_npc_cancelquest.NPCID = sqs->Quest->NPCID;
+ msg_npc_cancelquest.RewardNPCID = sqs->Reward->NPCID;
 
-			iter = m_AcceptQuests.erase(iter);
+ iter = m_AcceptQuests.erase(iter);
 
-			msg_npc_cancelquest.QuestID = sqs->Quest->QuestID;
-			CGameObject::s_World->SendMsgToClient(&msg_npc_cancelquest, m_pSocket);
+ msg_npc_cancelquest.QuestID = sqs->Quest->QuestID;
+ CGameObject::s_World->SendMsgToClient(&msg_npc_cancelquest, m_pSocket);
 		}
 		else
-			++iter;
+ ++iter;
 	}
 }

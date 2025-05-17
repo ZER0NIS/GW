@@ -75,10 +75,10 @@ void Stall::Clear()
 	for (int i = 0; i < MAX_POCKETS; i++)
 		for (int j = 0; j < MAX_GOODS; j++)
 		{
-			if (m_Goods[i][j].item)
-				m_Goods[i][j].item->m_Lock = false;
+ if (m_Goods[i][j].item)
+ 	m_Goods[i][j].item->m_Lock = false;
 
-			m_Goods[i][j].Clear();
+ m_Goods[i][j].Clear();
 		}
 
 	wmemset(m_Text, 0, MAX_NAME);
@@ -156,36 +156,36 @@ void Stall::GetGoods(CPlayer* player)
 	for (int i = 0; i < MAX_POCKETS; i++)
 		for (int j = 0; j < MAX_GOODS; j++)
 		{
-			if (!m_Goods[i][j].item)
-				continue;
+ if (!m_Goods[i][j].item)
+ 	continue;
 
-			msg_stallitem.uiID = m_This->GetID();
-			msg_stallitem.StallID = m_Goods[i][j].StallID;
-			msg_stallitem.Index = j;
-			msg_stallitem.Pocket = i;
-			msg_stallitem.Money = m_Goods[i][j].money;
-			msg_stallitem.Bijou = m_Goods[i][j].bijou;
+ msg_stallitem.uiID = m_This->GetID();
+ msg_stallitem.StallID = m_Goods[i][j].StallID;
+ msg_stallitem.Index = j;
+ msg_stallitem.Pocket = i;
+ msg_stallitem.Money = m_Goods[i][j].money;
+ msg_stallitem.Bijou = m_Goods[i][j].bijou;
 
-			pItemBaseInfo = m_Goods[i][j].item->GetItemBaseAttribute();
-			if (!pItemBaseInfo)
-			{
-				ASSERT(0);
-				return;
-			}
-			msg_stallitem.BaseID = pItemBaseInfo->ID;
-			msg_stallitem.Overlap = m_Goods[i][j].item->m_Overlap;
-			msg_stallitem.BaseLevel = m_Goods[i][j].item->BaseLevel;
-			msg_stallitem.AppLevel = m_Goods[i][j].item->AppLevel;
+ pItemBaseInfo = m_Goods[i][j].item->GetItemBaseAttribute();
+ if (!pItemBaseInfo)
+ {
+ 	ASSERT(0);
+ 	return;
+ }
+ msg_stallitem.BaseID = pItemBaseInfo->ID;
+ msg_stallitem.Overlap = m_Goods[i][j].item->m_Overlap;
+ msg_stallitem.BaseLevel = m_Goods[i][j].item->BaseLevel;
+ msg_stallitem.AppLevel = m_Goods[i][j].item->AppLevel;
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				if (m_Goods[i][j].item->GetItemAppendAttribute(z))
-					msg_stallitem.Append[z] = m_Goods[i][j].item->GetItemAppendAttribute(z)->ID;
-				else
-					msg_stallitem.Append[z] = -1;
-			}
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	if (m_Goods[i][j].item->GetItemAppendAttribute(z))
+ 		msg_stallitem.Append[z] = m_Goods[i][j].item->GetItemAppendAttribute(z)->ID;
+ 	else
+ 		msg_stallitem.Append[z] = -1;
+ }
 
-			player->s_World->SendMsgToClient(&msg_stallitem, player->GetSocket());
+ player->s_World->SendMsgToClient(&msg_stallitem, player->GetSocket());
 		}
 }
 

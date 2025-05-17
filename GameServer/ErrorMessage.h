@@ -13,9 +13,9 @@ enum eError
 	MSG_ERRO_0003,    		        //包含非法字符
 	MSG_ERRO_0004,    		        //角色个数到达上限
 	MSG_ERRO_0005,    		        //重复注册
-	MSG_ERRO_0006,					//你是会长，为了你的会员着想 ，请删除公会后在删除角色
-	MSG_ERRO_0007,					//删除角色失败
-	MSG_ERRO_0008,					//删除角色成功
+	MSG_ERRO_0006, 		//你是会长，为了你的会员着想 ，请删除公会后在删除角色
+	MSG_ERRO_0007, 		//删除角色失败
+	MSG_ERRO_0008, 		//删除角色成功
 
 	//_MSG_DELETE_ROLE error
 	MSG_ERRO_0011 = 0x0011,
@@ -91,10 +91,10 @@ enum eError
 	//_MSG_STALLBUYITEM
 	MSG_ERRO_015A = 0x015A,		//物品不存在 goods->item == NULL
 	MSG_ERRO_015B = 0x015B,		//摆摊成功但是不返回消息
-	MSG_ERRO_015C,				//该物品已经扯回或被人买走，请向摊主咨询
-	MSG_ERRO_015D,				//金额不足
+	MSG_ERRO_015C, 	//该物品已经扯回或被人买走，请向摊主咨询
+	MSG_ERRO_015D, 	//金额不足
 
-	MSG_ERRO_015F,				//非法处理摆摊物品，疑似作弊
+	MSG_ERRO_015F, 	//非法处理摆摊物品，疑似作弊
 
 	//_MSG_TALKNPC
 	MSG_ERRO_016A = 0x016A,       //阵营不符
@@ -142,12 +142,12 @@ enum eError
 	//_MSG_RELATION_REQUEST,
 	MSG_ERRO_021E = 0x021E,      //玩家不在线
 	MSG_ERRO_021F,              //不同阵营
-	MSG_ERRO_0220,				   //该玩家已经是你的好友
-	MSG_ERRO_0221,				   //该玩家已经在你的黑名单列表中
-	MSG_ERRO_0222,				   //好友列表已满
-	MSG_ERRO_0223,				   //黑名单列表已满
-	MSG_ERRO_O224,				   //你已经把该玩家加入黑名单中
-	MSG_ERRO_0225,				   //该玩家已经在你的好友列表中
+	MSG_ERRO_0220, 	   //该玩家已经是你的好友
+	MSG_ERRO_0221, 	   //该玩家已经在你的黑名单列表中
+	MSG_ERRO_0222, 	   //好友列表已满
+	MSG_ERRO_0223, 	   //黑名单列表已满
+	MSG_ERRO_O224, 	   //你已经把该玩家加入黑名单中
+	MSG_ERRO_0225, 	   //该玩家已经在你的好友列表中
 
 	//_MSG_RELATION_RESPONSE,
 	MSG_ERRO_022D = 0x022D,
@@ -246,10 +246,10 @@ enum eError
 	//_MSG_CONSORTIA_MEMBER_DEL,
 	MSG_ERRO_03C2 = 0x03C2,     //理事以下职务没有权限
 	MSG_ERRO_03C3,             //不能删除自己平级或者高于自己的玩家
-	MSG_ERRO_O3C4,			  //公会已经最大等级
-	MSG_ERRO_03C5,			  //你还没有建立公会
-	MSG_ERRO_03C6,			  //公会升级成功
-	MSG_ERRO_03C7,			  //升级公会的资金或宝石不足
+	MSG_ERRO_O3C4,   //公会已经最大等级
+	MSG_ERRO_03C5,   //你还没有建立公会
+	MSG_ERRO_03C6,   //公会升级成功
+	MSG_ERRO_03C7,   //升级公会的资金或宝石不足
 
 	//_MSG_CONSORTIA_LVUP,
 	MSG_ERRO_03D1 = 0x03D1,

@@ -103,8 +103,8 @@ bool Storage::Move(int index, int bagindex, int bagnum)
 	{
 		if (!m_This->GetItem(bagindex, bagnum)->IsClear())
 		{
-			if (m_This->GetItem(bagindex, bagnum)->m_Lock)
-				return false;
+ if (m_This->GetItem(bagindex, bagnum)->m_Lock)
+ 	return false;
 		}
 	}
 	else
@@ -141,10 +141,10 @@ bool Storage::Move(int index, int curbagnum)
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
-			if (m_This->GetItem(i, j) != NULL)
-			{
-				if (m_This->GetItem(i, j)->IsClear()) { NullNum++; }
-			}
+ if (m_This->GetItem(i, j) != NULL)
+ {
+ 	if (m_This->GetItem(i, j)->IsClear()) { NullNum++; }
+ }
 		}
 	}
 
@@ -153,20 +153,20 @@ bool Storage::Move(int index, int curbagnum)
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
-			if (m_This->GetItem(i, j) != NULL)
-			{
-				if (!m_This->GetItem(i, j)->IsClear())
-				{
-					if (m_This->GetItem(i, j)->GetItemBaseAttribute() == NULL || m_Grids[index].GetItemBaseAttribute() == NULL)
-					{
-						continue;
-					}
-					if (m_This->GetItem(i, j)->GetItemBaseAttribute()->ID == m_Grids[index].GetItemBaseAttribute()->ID)
-					{
-						CmpId = 1;
-					}
-				}
-			}
+ if (m_This->GetItem(i, j) != NULL)
+ {
+ 	if (!m_This->GetItem(i, j)->IsClear())
+ 	{
+ 		if (m_This->GetItem(i, j)->GetItemBaseAttribute() == NULL || m_Grids[index].GetItemBaseAttribute() == NULL)
+ 		{
+  continue;
+ 		}
+ 		if (m_This->GetItem(i, j)->GetItemBaseAttribute()->ID == m_Grids[index].GetItemBaseAttribute()->ID)
+ 		{
+  CmpId = 1;
+ 		}
+ 	}
+ }
 		}
 	}
 
@@ -179,20 +179,20 @@ bool Storage::Move(int index, int curbagnum)
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
-			if (m_This->GetItem(i, j) != NULL)
-			{
-				if (m_This->GetItem(i, j)->IsClear())
-				{
-					*m_This->GetItem(i, j) = m_Grids[index];
-					m_Grids[index].Clear();
+ if (m_This->GetItem(i, j) != NULL)
+ {
+ 	if (m_This->GetItem(i, j)->IsClear())
+ 	{
+ 		*m_This->GetItem(i, j) = m_Grids[index];
+ 		m_Grids[index].Clear();
 
-					return true;
-				}
-				else if (m_This->GetItem(i, j)->Push(&m_Grids[index]))
-				{
-					return true;
-				}
-			}
+ 		return true;
+ 	}
+ 	else if (m_This->GetItem(i, j)->Push(&m_Grids[index]))
+ 	{
+ 		return true;
+ 	}
+ }
 		}
 	}
 
@@ -206,7 +206,7 @@ int Storage::GetItemFreeCount()
 	for (int i = 0; i < m_Active; i++)
 	{
 		if (m_Grids[i].IsClear())
-			++count;
+ ++count;
 	}
 
 	return count;
@@ -225,9 +225,9 @@ int Storage::GetItemFreeOverlap(Item* item)
 	for (int i = 0; i < m_Active; i++)
 	{
 		if (m_Grids[i].IsClear())
-			count += item->GetItemBaseAttribute()->Overlap;
+ count += item->GetItemBaseAttribute()->Overlap;
 		else if (m_Grids[i].GetItemBaseAttribute()->ID == item->GetItemBaseAttribute()->ID)
-			count += item->GetItemBaseAttribute()->Overlap - item->m_Overlap;
+ count += item->GetItemBaseAttribute()->Overlap - item->m_Overlap;
 	}
 
 	return count;
@@ -246,7 +246,7 @@ int Storage::GetItemOverlap(Item* item)
 	for (int i = 0; i < m_Active; i++)
 	{
 		if (m_Grids[i].GetItemBaseAttribute()->ID == item->GetItemBaseAttribute()->ID)
-			count += item->m_Overlap;
+ count += item->m_Overlap;
 	}
 
 	return count;

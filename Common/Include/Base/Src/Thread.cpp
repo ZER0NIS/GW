@@ -103,7 +103,7 @@ namespace sbase
 	//	if (m_nStatus == STATUS_SUSPEND && m_hThread)
 	//	{
 	//		if (::ResumeThread(m_hThread) != (DWORD)-1)
-	//			m_nStatus = STATUS_RUNNING;
+	// m_nStatus = STATUS_RUNNING;
 	//	}
 	//}
 
@@ -112,7 +112,7 @@ namespace sbase
 	//	if (m_nStatus == STATUS_RUNNING && m_hThread)
 	//	{
 	//		if (::SuspendThread(m_hThread) != (DWORD)-1)
-	//			m_nStatus = STATUS_SUSPEND;
+	// m_nStatus = STATUS_SUSPEND;
 	//	}
 	//}
 
@@ -159,22 +159,22 @@ namespace sbase
 	//		switch (dwResult)
 	//		{
 	//		case WAIT_OBJECT_0: // Exit event
-	//			bRunning = false;
-	//			break;
+	// bRunning = false;
+	// break;
 
 	//		case WAIT_OBJECT_0 + 1: // Work event
-	//			if (pThread->m_event.OnThreadEvent() == -1)
-	//				bRunning = false;
-	//			break;
+	// if (pThread->m_event.OnThreadEvent() == -1)
+	// 	bRunning = false;
+	// break;
 
 	//		case WAIT_TIMEOUT: // Timeout
-	//			if (pThread->m_event.OnThreadProcess() == -1)
-	//				bRunning = false;
-	//			break;
+	// if (pThread->m_event.OnThreadProcess() == -1)
+	// 	bRunning = false;
+	// break;
 
 	//		default: // Error
-	//			bRunning = false;
-	//			break;
+	// bRunning = false;
+	// break;
 	//		}
 	//	}
 

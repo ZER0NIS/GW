@@ -114,19 +114,19 @@ void CMemoryPool::ReportLeaks()
 
 		while (scanPoint < scanEnd)
 		{
-			// search for and dump any strings
-			if (isprint(*scanPoint))
-			{
-				g_ReportFunc("%c", *scanPoint);
-				needSpace = true;
-			}
-			else if (needSpace)
-			{
-				needSpace = false;
-				g_ReportFunc(" ");
-			}
+ // search for and dump any strings
+ if (isprint(*scanPoint))
+ {
+ 	g_ReportFunc("%c", *scanPoint);
+ 	needSpace = true;
+ }
+ else if (needSpace)
+ {
+ 	needSpace = false;
+ 	g_ReportFunc(" ");
+ }
 
-			scanPoint++;
+ scanPoint++;
 		}
 	}
 
@@ -149,7 +149,7 @@ void CMemoryPool::AddNewBlob()
 	{
 		if (m_NumBlobs != 0)
 		{
-			return;
+ return;
 		}
 	}
 
@@ -199,15 +199,15 @@ void* CMemoryPool::Alloc(unsigned int amount)
 		// returning NULL is fine in GROW_NONE
 		if (m_GrowMode == GROW_NONE)
 		{
-			ASSERT(m_GrowMode == GROW_NONE);
-			return NULL;
+ ASSERT(m_GrowMode == GROW_NONE);
+ return NULL;
 		}
 
 		AddNewBlob();
 
 		if (!m_pHeadOfFreeList)
 		{
-			return NULL;
+ return NULL;
 		}
 	}
 	m_BlocksAllocated++;
@@ -234,7 +234,7 @@ void CMemoryPool::Free(void* memBlock)
 	{
 		if (memBlock >= pCur->m_Data && (char*)memBlock < (pCur->m_Data + pCur->m_NumBytes))
 		{
-			bOK = true;
+ bOK = true;
 		}
 	}
 #endif // _DEBUG

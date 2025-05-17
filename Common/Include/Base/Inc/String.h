@@ -45,14 +45,14 @@ namespace sbase
 
 		bool operator == (const char* pstr)
 		{
-			if (pstr)
-				return (0 == this->compare(pstr));
-			else
-				return false;
+ if (pstr)
+ 	return (0 == this->compare(pstr));
+ else
+ 	return false;
 		}
 		bool operator != (const char* pstr)
 		{
-			return !(operator == (pstr));
+ return !(operator == (pstr));
 		}
 
 		operator const char* () const { return this->c_str(); }

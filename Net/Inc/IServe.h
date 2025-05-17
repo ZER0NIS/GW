@@ -14,9 +14,9 @@ namespace serve
 {
 	//////////////////////////////////////////////////////////////////////
 	//enum PORT		{	PORT_INVALID = (USHORT) -1, PORT_SHELL = 0, PORT_AI, PORT_NETWORK, PORT_ACCOUNT,
-	//					PORT_RESERVED0, PORT_RESERVED1, PORT_RESERVED2, PORT_RESERVED3,PORT_RESERVED4,PORT_RESERVED5,
-	//					PORT_GAME0, PORT_GAME1, PORT_GAME2, PORT_GAME3, PORT_GAME4, PORT_GAME5, PORT_GAME6,
-	//					PORT_ALL , };
+	// 		PORT_RESERVED0, PORT_RESERVED1, PORT_RESERVED2, PORT_RESERVED3,PORT_RESERVED4,PORT_RESERVED5,
+	// 		PORT_GAME0, PORT_GAME1, PORT_GAME2, PORT_GAME3, PORT_GAME4, PORT_GAME5, PORT_GAME6,
+	// 		PORT_ALL , };
 
 	enum PORT { PORT_IN, PORT_OUT, PORT_SHELL, PORT_ALL };
 	//////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ namespace serve
 		virtual USHORT		GetInterval(void) const = 0;
 		virtual USHORT		GetPort(void) const = 0;
 		virtual void		SendMsg(sbase::IMessage& msg, int nPortDes) = 0;
-		virtual int			OnProcess(void) = 0;
+		virtual int OnProcess(void) = 0;
 		virtual void        CloseSock(SOCKET socket) = 0;
 	};
 

@@ -21,7 +21,7 @@ namespace msg
 		assert(Size() < 10000000);
 
 		if (m_vStorage.size() < m_nWritePos + cnt)
-			m_vStorage.resize(m_nWritePos + cnt);
+ m_vStorage.resize(m_nWritePos + cnt);
 		memcpy(&m_vStorage[m_nWritePos], src, cnt);
 		m_nWritePos += cnt;
 	}
@@ -157,10 +157,10 @@ namespace msg
 		value.clear();
 		while (true)
 		{
-			char c = Read<char>();
-			if (c == 0)
-				break;
-			value += c;
+ char c = Read<char>();
+ if (c == 0)
+ 	break;
+ value += c;
 		}
 		return *this;
 	}
@@ -211,11 +211,11 @@ namespace msg
 	{
 		if (m_nReadPos + len <= Size())
 		{
-			memcpy(dest, &m_vStorage[m_nReadPos], len);
+ memcpy(dest, &m_vStorage[m_nReadPos], len);
 		}
 		else
 		{
-			throw error();
+ throw error();
 		}
 		m_nReadPos += len;
 	}
@@ -235,14 +235,14 @@ namespace msg
 	inline void ByteBuffer::Reserve(size_t ressize)
 	{
 		if (ressize > Size())
-			m_vStorage.reserve(ressize);
+ m_vStorage.reserve(ressize);
 	}
 
 	inline void ByteBuffer::PrintStorage()
 	{
 		printf("STORAGE_SIZE: %u\n", Size());
 		for (uint32 i = 0; i < Size(); i++)
-			printf("%u - ", Read<uint8>(i));
+ printf("%u - ", Read<uint8>(i));
 		printf("\n");
 	}
 
@@ -250,7 +250,7 @@ namespace msg
 	{
 		printf("STORAGE_SIZE: %u\n", Size());
 		for (uint32 i = 0; i < Size(); i++)
-			printf("%c", Read<uint8>(i));
+ printf("%c", Read<uint8>(i));
 		printf("\n");
 	}
 
@@ -260,44 +260,44 @@ namespace msg
 		printf("STORAGE_SIZE: %u\n", Size());
 		for (uint32 i = 0; i < Size(); i++)
 		{
-			if ((i == (j * 8)) && ((i != (k * 16))))
-			{
-				if (Read<uint8>(i) < 0x0F)
-				{
-					printf("| 0%X ", Read<uint8>(i));
-				}
-				else
-				{
-					printf("| %X ", Read<uint8>(i));
-				}
+ if ((i == (j * 8)) && ((i != (k * 16))))
+ {
+ 	if (Read<uint8>(i) < 0x0F)
+ 	{
+ 		printf("| 0%X ", Read<uint8>(i));
+ 	}
+ 	else
+ 	{
+ 		printf("| %X ", Read<uint8>(i));
+ 	}
 
-				j++;
-			}
-			else if (i == (k * 16))
-			{
-				if (Read<uint8>(i) < 0x0F)
-				{
-					printf("\n0%X ", Read<uint8>(i));
-				}
-				else
-				{
-					printf("\n%X ", Read<uint8>(i));
-				}
+ 	j++;
+ }
+ else if (i == (k * 16))
+ {
+ 	if (Read<uint8>(i) < 0x0F)
+ 	{
+ 		printf("\n0%X ", Read<uint8>(i));
+ 	}
+ 	else
+ 	{
+ 		printf("\n%X ", Read<uint8>(i));
+ 	}
 
-				k++;
-				j++;
-			}
-			else
-			{
-				if (Read<uint8>(i) < 0x0F)
-				{
-					printf("0%X ", Read<uint8>(i));
-				}
-				else
-				{
-					printf("%X ", Read<uint8>(i));
-				}
-			}
+ 	k++;
+ 	j++;
+ }
+ else
+ {
+ 	if (Read<uint8>(i) < 0x0F)
+ 	{
+ 		printf("0%X ", Read<uint8>(i));
+ 	}
+ 	else
+ 	{
+ 		printf("%X ", Read<uint8>(i));
+ 	}
+ }
 		}
 		printf("\n");
 	}

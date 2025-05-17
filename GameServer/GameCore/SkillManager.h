@@ -40,13 +40,13 @@ public:
 	{
 		if (flag)
 		{
-			char temp[32];
-			memset(temp, 0L, sizeof temp);
-			sprintf(temp, "%s_modulus", Attribute);
-			return IniFile.GetFloatData(Item, temp);
+ char temp[32];
+ memset(temp, 0L, sizeof temp);
+ sprintf(temp, "%s_modulus", Attribute);
+ return IniFile.GetFloatData(Item, temp);
 		}
 		else
-			return 0.0f;
+ return 0.0f;
 	}
 	char* CatStr(char* source, int rank);     //×Ö·û´®´¦Àí
 	bool Init() { memset(m_Convert, 0L, sizeof(m_Convert)); return true; };
@@ -152,7 +152,7 @@ public:
 		std::map<UINT, CStatus*>::iterator itor = m_Status.find(iStausID);
 		if (itor != m_Status.end())
 		{
-			return itor->second;
+ return itor->second;
 		}
 
 		return NULL;

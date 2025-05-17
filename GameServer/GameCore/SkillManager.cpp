@@ -75,7 +75,7 @@ const SKillData* CSkillManager::GetSkill(int ucID, int) const
 		SKILL_LIST::const_iterator itor = m_SkillAll.find(ucID);
 		if (itor != m_SkillAll.end())
 		{
-			return  (*itor).second;
+ return  (*itor).second;
 		}
 	}
 	return NULL;
@@ -123,7 +123,7 @@ bool  CSkillManager::LoadSkillConfig()
 	{
 		sprintf(item, "%d", i);
 		if (!Skill_ini.SearchSection(item))
-			continue;
+ continue;
 
 		SKillData* Skill = new SKillData;
 		strcpy(Skill->Name, Skill_ini.GetString(item, "Name"));
@@ -138,43 +138,43 @@ bool  CSkillManager::LoadSkillConfig()
 		Skill->EquipRequest.clear();
 		while ((c = (int)TempEuipStr.find_first_of(',')) > 0)
 		{
-			std::string NewStr;
-			NewStr.assign(TempEuipStr, 0, c);
-			TempEuipStr.erase(0, c + 1);
-			Skill->EquipRequest.push_back((UINT)atoi(NewStr.c_str()));
+ std::string NewStr;
+ NewStr.assign(TempEuipStr, 0, c);
+ TempEuipStr.erase(0, c + 1);
+ Skill->EquipRequest.push_back((UINT)atoi(NewStr.c_str()));
 		}
 		if (TempEuipStr != "-1") //-1代表没有装备要求
 		{
-			Skill->EquipRequest.push_back(atoi(TempEuipStr.c_str()));
+ Skill->EquipRequest.push_back(atoi(TempEuipStr.c_str()));
 		}
 
 		int b = GetPrivateProfileSection(item, Data, 512, "skill/skill.ini");
 		for (int k = 0; k < b; k++)
 		{
-			if (Data[k] != '\0')
-			{
-				strSectionData = strSectionData + Data[k];
-			}
-			else
-			{
-				if (strSectionData != "")
-				{
-					char One[128];
-					int c = (int)strSectionData.find_first_of('=');
-					std::string tempstr;
-					tempstr.assign(strSectionData, 0, c);
+ if (Data[k] != '\0')
+ {
+ 	strSectionData = strSectionData + Data[k];
+ }
+ else
+ {
+ 	if (strSectionData != "")
+ 	{
+ 		char One[128];
+ 		int c = (int)strSectionData.find_first_of('=');
+ 		std::string tempstr;
+ 		tempstr.assign(strSectionData, 0, c);
 
-					std::map<std::string, UINT>::iterator itor = ALLEffect.find(tempstr);
-					if (itor != ALLEffect.end())
-					{
-						GetPrivateProfileString(item, tempstr.c_str(), "", One, 128, "skill/skill.ini");
-						sscanf(One, "%d,%f", &Effect, &EffectValue);
-						Skill->Effect[Effect] = EffectValue;
-						strSectionData.clear();
-					}
-				}
-				strSectionData.clear();
-			}
+ 		std::map<std::string, UINT>::iterator itor = ALLEffect.find(tempstr);
+ 		if (itor != ALLEffect.end())
+ 		{
+  GetPrivateProfileString(item, tempstr.c_str(), "", One, 128, "skill/skill.ini");
+  sscanf(One, "%d,%f", &Effect, &EffectValue);
+  Skill->Effect[Effect] = EffectValue;
+  strSectionData.clear();
+ 		}
+ 	}
+ 	strSectionData.clear();
+ }
 		}
 
 		m_SkillAll[i] = Skill;
@@ -202,7 +202,7 @@ bool CSkillManager::LoadMagicConfig()
 	{
 		sprintf(item, "%d", i);
 		if (!Magic_ini.SearchSection(item))
-			continue;
+ continue;
 
 		strcpy(magic.cName, Magic_ini.GetString(item, "Name"));
 		magic.ucID = i;
@@ -234,14 +234,14 @@ bool CSkillManager::LoadMagicConfig()
 		magic.m_Status.clear();
 		while ((c = (int)TempStr.find_first_of(',')) > 0)
 		{
-			std::string NewStr;
-			NewStr.assign(TempStr, 0, c);
-			TempStr.erase(0, c + 1);
-			magic.m_Status.push_back((int)atoi(NewStr.c_str()));
+ std::string NewStr;
+ NewStr.assign(TempStr, 0, c);
+ TempStr.erase(0, c + 1);
+ magic.m_Status.push_back((int)atoi(NewStr.c_str()));
 		}
 		if (TempStr != "-1") //-1代表没有状态
 		{
-			magic.m_Status.push_back(atoi(TempStr.c_str()));
+ magic.m_Status.push_back(atoi(TempStr.c_str()));
 		}
 
 		//装备需求
@@ -250,14 +250,14 @@ bool CSkillManager::LoadMagicConfig()
 		magic.EquipRequest.clear();
 		while ((b = (int)TempEuipStr.find_first_of(',')) > 0)
 		{
-			std::string NewStr;
-			NewStr.assign(TempEuipStr, 0, b);
-			TempEuipStr.erase(0, b + 1);
-			magic.EquipRequest.push_back((UINT)atoi(NewStr.c_str()));
+ std::string NewStr;
+ NewStr.assign(TempEuipStr, 0, b);
+ TempEuipStr.erase(0, b + 1);
+ magic.EquipRequest.push_back((UINT)atoi(NewStr.c_str()));
 		}
 		if (TempEuipStr != "-1") //-1代表没有装备要求
 		{
-			magic.EquipRequest.push_back(atoi(TempEuipStr.c_str()));
+ magic.EquipRequest.push_back(atoi(TempEuipStr.c_str()));
 		}
 
 		strcpy(magic.ScriptFun, Magic_ini.GetString(item, "ScriptID"));
@@ -367,7 +367,7 @@ bool CStatusManager::LoadStatusConfig()
 	{
 		sprintf(item, "%d", a);
 		if (!Status_ini.SearchSection(item))
-			continue;
+ continue;
 
 		m_sectionDataList.clear();
 		strSectionData.clear();
@@ -384,69 +384,69 @@ bool CStatusManager::LoadStatusConfig()
 		std::vector<int> IntervalTime;
 		for (int i = 0; i < b; i++)
 		{
-			if (KeyName[i] != '\0')
-			{
-				strSectionData = strSectionData + KeyName[i];
-			}
-			else
-			{
-				if (strSectionData != "")
-				{
-					int c = (int)strSectionData.find_first_of('=');
-					std::string tempstr;
-					tempstr.assign(strSectionData, 0, c);
-					strSectionData.erase(0, c + 1);
-					m_sectionDataList[tempstr] = strSectionData;
-					if (tempstr == "Effect")  //效果
-					{
-						int Index = (int)strSectionData.find_first_of(',');
-						while (Index > 0)
-						{
-							std::string tempstr;
-							tempstr.assign(strSectionData, 0, Index);
-							Effect.push_back(atof(tempstr.c_str()));
-							strSectionData.erase(0, Index + 1);
-							Index = (int)strSectionData.find_first_of(',');
-						}
+ if (KeyName[i] != '\0')
+ {
+ 	strSectionData = strSectionData + KeyName[i];
+ }
+ else
+ {
+ 	if (strSectionData != "")
+ 	{
+ 		int c = (int)strSectionData.find_first_of('=');
+ 		std::string tempstr;
+ 		tempstr.assign(strSectionData, 0, c);
+ 		strSectionData.erase(0, c + 1);
+ 		m_sectionDataList[tempstr] = strSectionData;
+ 		if (tempstr == "Effect")  //效果
+ 		{
+  int Index = (int)strSectionData.find_first_of(',');
+  while (Index > 0)
+  {
+  	std::string tempstr;
+  	tempstr.assign(strSectionData, 0, Index);
+  	Effect.push_back(atof(tempstr.c_str()));
+  	strSectionData.erase(0, Index + 1);
+  	Index = (int)strSectionData.find_first_of(',');
+  }
 
-						Effect.push_back(atof(strSectionData.c_str()));
-					}
-					else if (tempstr == "Values")//数值
-					{
-						int ValuesIndex = (int)strSectionData.find_first_of(',');
-						while (ValuesIndex > 0)
-						{
-							std::string ValuesTempstr;
-							ValuesTempstr.assign(strSectionData, 0, ValuesIndex);
-							Values.push_back(atof(ValuesTempstr.c_str()));
-							strSectionData.erase(0, ValuesIndex + 1);
-							ValuesIndex = (int)strSectionData.find_first_of(',');
-						}
+  Effect.push_back(atof(strSectionData.c_str()));
+ 		}
+ 		else if (tempstr == "Values")//数值
+ 		{
+  int ValuesIndex = (int)strSectionData.find_first_of(',');
+  while (ValuesIndex > 0)
+  {
+  	std::string ValuesTempstr;
+  	ValuesTempstr.assign(strSectionData, 0, ValuesIndex);
+  	Values.push_back(atof(ValuesTempstr.c_str()));
+  	strSectionData.erase(0, ValuesIndex + 1);
+  	ValuesIndex = (int)strSectionData.find_first_of(',');
+  }
 
-						Values.push_back(atof(strSectionData.c_str()));
-					}
-					else if (tempstr == "Interval")//间隔时间
-					{
-						int TimeIndex = (int)strSectionData.find_first_of(',');
-						while (TimeIndex > 0)
-						{
-							std::string TimeTempstr;
-							TimeTempstr.assign(strSectionData, 0, TimeIndex);
-							IntervalTime.push_back(atof(TimeTempstr.c_str()));
-							strSectionData.erase(0, TimeIndex + 1);
-							TimeIndex = (int)strSectionData.find_first_of(',');
-						}
+  Values.push_back(atof(strSectionData.c_str()));
+ 		}
+ 		else if (tempstr == "Interval")//间隔时间
+ 		{
+  int TimeIndex = (int)strSectionData.find_first_of(',');
+  while (TimeIndex > 0)
+  {
+  	std::string TimeTempstr;
+  	TimeTempstr.assign(strSectionData, 0, TimeIndex);
+  	IntervalTime.push_back(atof(TimeTempstr.c_str()));
+  	strSectionData.erase(0, TimeIndex + 1);
+  	TimeIndex = (int)strSectionData.find_first_of(',');
+  }
 
-						IntervalTime.push_back(atof(strSectionData.c_str()));
-					}
-					strSectionData.clear();
-				}
-			}
+  IntervalTime.push_back(atof(strSectionData.c_str()));
+ 		}
+ 		strSectionData.clear();
+ 	}
+ }
 		}
 
 		for (size_t n = 0; n < Effect.size(); n++)
 		{
-			pStatus->AddEffect(m_Effect[Effect[n]], Values[n], IntervalTime[n]);
+ pStatus->AddEffect(m_Effect[Effect[n]], Values[n], IntervalTime[n]);
 		}
 	}
 
@@ -494,19 +494,19 @@ void CStatus::DealWith(CGameObject* pObj, const time_t& StartTime, map<int, int>
 		pEffect = Itor->first;
 		if (m_EffectTimeMap[pEffect] != 0)
 		{
-			int Num = (time(NULL) - StartTime) / m_EffectTimeMap[pEffect];
-			if (Num > PassTime[pEffect->GetID()])
-			{
-				(pObj->*(pEffect->Handler))(Num * Itor->second, false, m_ID);
-				PassTime[pEffect->GetID()] = Num;
-			}
+ int Num = (time(NULL) - StartTime) / m_EffectTimeMap[pEffect];
+ if (Num > PassTime[pEffect->GetID()])
+ {
+ 	(pObj->*(pEffect->Handler))(Num * Itor->second, false, m_ID);
+ 	PassTime[pEffect->GetID()] = Num;
+ }
 		}
 		else
 		{
-			if (!IsRepeated)
-			{
-				(pObj->*(pEffect->Handler))(Itor->second, false, m_ID);
-			}
+ if (!IsRepeated)
+ {
+ 	(pObj->*(pEffect->Handler))(Itor->second, false, m_ID);
+ }
 		}
 	}
 }
@@ -521,11 +521,11 @@ void CStatus::Resume(CGameObject* pObj)
 
 		if (m_EffectTimeMap[pEffect] != 0)
 		{
-			(pObj->*(pEffect->Handler))(0, true, m_ID);
+ (pObj->*(pEffect->Handler))(0, true, m_ID);
 		}
 		else
 		{
-			(pObj->*(pEffect->Handler))(Itor->second, true, m_ID);
+ (pObj->*(pEffect->Handler))(Itor->second, true, m_ID);
 		}
 	}
 }

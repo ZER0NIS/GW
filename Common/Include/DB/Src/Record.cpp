@@ -13,8 +13,8 @@ namespace rade_db
 	{
 		for (UINT i = 0; i < unAmountField; i++)
 		{
-			CField objField(res.GetFieldInfo(i));
-			m_setFields.push_back(objField);
+ CField objField(res.GetFieldInfo(i));
+ m_setFields.push_back(objField);
 		}
 	}
 
@@ -23,11 +23,11 @@ namespace rade_db
 	{
 		for (UINT i = 0; i < unNumFields; i++)
 		{
-			CField objField(res.GetFieldInfo(i));
-			objField.SetValue(row[i]);
-			objField.TagChanged(false);
+ CField objField(res.GetFieldInfo(i));
+ objField.SetValue(row[i]);
+ objField.TagChanged(false);
 
-			m_setFields.push_back(objField);
+ m_setFields.push_back(objField);
 		}
 	}
 
@@ -36,11 +36,11 @@ namespace rade_db
 	{
 		for (UINT i = 0; i < unNumFields; i++)
 		{
-			CField objField(res.GetFieldInfo(i));
-			objField.SetValue(fields[i].def);
-			objField.TagChanged(false);
+ CField objField(res.GetFieldInfo(i));
+ objField.SetValue(fields[i].def);
+ objField.TagChanged(false);
 
-			m_setFields.push_back(objField);
+ m_setFields.push_back(objField);
 		}
 	}
 
@@ -54,8 +54,8 @@ namespace rade_db
 	{
 		if (unIndex > m_setFields.size())
 		{
-			sbase::LogSave("rade_db", "ERROR: index[%u] out of Record.", unIndex);
-			unIndex = 0;
+ sbase::LogSave("rade_db", "ERROR: index[%u] out of Record.", unIndex);
+ unIndex = 0;
 		}
 
 		return m_setFields[unIndex];
@@ -65,14 +65,14 @@ namespace rade_db
 	{
 		if (pszName)
 		{
-			for (UINT i = 0; i < m_setFields.size(); i++)
-			{
-				CField& field = m_setFields[i];
-				if (0 == strcmp(field.GetName(), pszName))
-					return field;
-			}
+ for (UINT i = 0; i < m_setFields.size(); i++)
+ {
+ 	CField& field = m_setFields[i];
+ 	if (0 == strcmp(field.GetName(), pszName))
+ 		return field;
+ }
 
-			sbase::LogSave("rade_db", "ERROR:  not found field[%s] in Record", pszName);
+ sbase::LogSave("rade_db", "ERROR:  not found field[%s] in Record", pszName);
 		}
 
 		return this->Field(static_cast<unsigned int>(0));
@@ -92,7 +92,7 @@ namespace rade_db
 	void CRecord::ClsEditFlag(void)
 	{
 		for (UINT i = 0; i < m_setFields.size(); i++)
-			m_setFields[i].TagChanged(false);
+ m_setFields[i].TagChanged(false);
 	}
 
 	bool CRecord::BuildSQLOperation(char* pszOperationSQL)
@@ -104,77 +104,77 @@ namespace rade_db
 		BOOL bFlag = true;
 		for (UINT i = 0; i < m_setFields.size(); i++)
 		{
-			CField& field = m_setFields[i];
-			if (!field.IsChanged())
-				continue;
+ CField& field = m_setFields[i];
+ if (!field.IsChanged())
+ 	continue;
 
-			switch (field.GetType())
-			{
-			case FIELD_TYPE_STRING:
-			case FIELD_TYPE_VAR_STRING:
-				if (field.m_strVal.length() <= 0)
-					bFlag = false;
-				else
-					sprintf(szFormat, "='%s'", field.m_strVal.c_str());
-				break;
+ switch (field.GetType())
+ {
+ case FIELD_TYPE_STRING:
+ case FIELD_TYPE_VAR_STRING:
+ 	if (field.m_strVal.length() <= 0)
+ 		bFlag = false;
+ 	else
+ 		sprintf(szFormat, "='%s'", field.m_strVal.c_str());
+ 	break;
 
-			case FIELD_TYPE_FLOAT:
-				sprintf(szFormat, "=%.2f", field.m_dVal);
-				break;
+ case FIELD_TYPE_FLOAT:
+ 	sprintf(szFormat, "=%.2f", field.m_dVal);
+ 	break;
 
-			case FIELD_TYPE_DOUBLE:
-				sprintf(szFormat, "=%.2f", field.m_dVal);
-				break;
+ case FIELD_TYPE_DOUBLE:
+ 	sprintf(szFormat, "=%.2f", field.m_dVal);
+ 	break;
 
-			case FIELD_TYPE_TINY:
-				if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
-					sprintf(szFormat, "=%u", field.m_i64Val);
-				else
-					sprintf(szFormat, "=%d", field.m_i64Val);
-				break;
+ case FIELD_TYPE_TINY:
+ 	if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
+ 		sprintf(szFormat, "=%u", field.m_i64Val);
+ 	else
+ 		sprintf(szFormat, "=%d", field.m_i64Val);
+ 	break;
 
-			case FIELD_TYPE_SHORT:
-				if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
-					sprintf(szFormat, "=%u", field.m_i64Val);
-				else
-					sprintf(szFormat, "=%d", field.m_i64Val);
-				break;
+ case FIELD_TYPE_SHORT:
+ 	if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
+ 		sprintf(szFormat, "=%u", field.m_i64Val);
+ 	else
+ 		sprintf(szFormat, "=%d", field.m_i64Val);
+ 	break;
 
-			case FIELD_TYPE_LONG:
-				if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
-					sprintf(szFormat, "=%u", field.m_i64Val);
-				else
-					sprintf(szFormat, "=%ld", field.m_i64Val);
-				break;
+ case FIELD_TYPE_LONG:
+ 	if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
+ 		sprintf(szFormat, "=%u", field.m_i64Val);
+ 	else
+ 		sprintf(szFormat, "=%ld", field.m_i64Val);
+ 	break;
 
-			case FIELD_TYPE_LONGLONG:
-				if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
-					sprintf(szFormat, "=%u", field.m_i64Val);
-				else
-					sprintf(szFormat, "=%ld", field.m_i64Val);
-				break;
+ case FIELD_TYPE_LONGLONG:
+ 	if ((field.GetAttr() & UNSIGNED_FLAG) != 0)
+ 		sprintf(szFormat, "=%u", field.m_i64Val);
+ 	else
+ 		sprintf(szFormat, "=%ld", field.m_i64Val);
+ 	break;
 
-			default:
-				sbase::LogSave("rade_db", "Error: unknow type in CRecord::BuildUpdateOpration()");
-				break;
-			}
+ default:
+ 	sbase::LogSave("rade_db", "Error: unknow type in CRecord::BuildUpdateOpration()");
+ 	break;
+ }
 
-			if (bFlag)
-			{
-				if (!bFirst)
-					strcat(pszOperationSQL, ",");
-				else
-					bFirst = false;
+ if (bFlag)
+ {
+ 	if (!bFirst)
+ 		strcat(pszOperationSQL, ",");
+ 	else
+ 		bFirst = false;
 
-				strcat(pszOperationSQL, field.GetName());
-				strcat(pszOperationSQL, szFormat);
-			}
-			else
-				bFlag = true;
+ 	strcat(pszOperationSQL, field.GetName());
+ 	strcat(pszOperationSQL, szFormat);
+ }
+ else
+ 	bFlag = true;
 		}
 
 		if (pszOperationSQL[0] == '\0')
-			return false;
+ return false;
 
 		return true;
 	}

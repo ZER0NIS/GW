@@ -31,8 +31,8 @@ extern PyObject* AltarCreate(PyObject* self, PyObject* args);    //创建祭坛
 extern PyObject* AltarLevelup(PyObject* self, PyObject* args);  //升级祭坛
 extern PyObject* AltarDel(PyObject* self, PyObject* args);      //删除祭坛
 extern PyObject* OblationLevelup(PyObject* self, PyObject* args); //供奉祭坛
-extern PyObject* GetUnionMaxAltar(PyObject* self, PyObject* args);					//获取玩家公会的最大祭坛
-extern PyObject* GetHavePlayerAltar(PyObject* self, PyObject* args);			//返回玩家现有供奉的祭坛
+extern PyObject* GetUnionMaxAltar(PyObject* self, PyObject* args); 		//获取玩家公会的最大祭坛
+extern PyObject* GetHavePlayerAltar(PyObject* self, PyObject* args); //返回玩家现有供奉的祭坛
 extern PyObject* GetHaveAltars(PyObject* self, PyObject* args);
 extern PyObject* GetPlayerAttr(PyObject* self, PyObject* args);
 extern PyObject* AcceptGiftItem(PyObject* self, PyObject* args);
@@ -82,20 +82,20 @@ static PyTypeObject pyPlayer_type = {
 	0,		/* ob_size */
 	"player",		/* tp_name */
 	sizeof(pyScriptObject),	/* tp_basicsize */
-	0,			/* tp_itemsize */
+	0, /* tp_itemsize */
 	/* methods */
 	0,	/* tp_dealloc */
-	0,			/* tp_print */
+	0, /* tp_print */
 	0,	/* tp_getattr */
 	0,	/* tp_setattr */
-	0,			/* tp_compare */
+	0, /* tp_compare */
 	0,	/* tp_repr */
-	0,			/* tp_as_number */
-	0,			/* tp_as_sequence */
-	0,			/* tp_as_mapping */
-	0,			/* tp_as_hash */
+	0, /* tp_as_number */
+	0, /* tp_as_sequence */
+	0, /* tp_as_mapping */
+	0, /* tp_as_hash */
 	0, 0, 0, 0, 0, Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-	0,			/* tp_doc */
+	0, /* tp_doc */
 	0, 0, 0, 0, 0, 0,
 	0,	/* tp_methods */
 	pyPlayer_members,		/* tp_members */

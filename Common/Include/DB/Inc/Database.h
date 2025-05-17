@@ -55,27 +55,27 @@ namespace rade_db
 		virtual IRecordset* CreateRecordset(const char* pszSQL, MODE eMode);
 		virtual bool            Execute(const char* szSQL, MODE eMode);
 		virtual IRecord* MakeDefaultRecord(const char* szTable, unsigned long id = 0);
-		virtual void			GetStatInfo(DB_INFO& infoDB) { this->UpdateStatInfo(infoDB); }
+		virtual void GetStatInfo(DB_INFO& infoDB) { this->UpdateStatInfo(infoDB); }
 		virtual size_t          GetRequestSize() { return AsyncSQL_RequestIn->size() + AsyncSQL_RequestOut->size(); };
 		virtual size_t          GetResultSize() { return AsyncSQL_Result.size(); }
 		virtual int             ConvertStr(char* pchNew, const char* pchOld);
 
 		// Operation
 	public:
-		bool			IsOpen(void) { return m_bOpen; }
-		bool			Open(const char* szDBServer = NULL, const char* szLoginName = NULL, const char* szPassword = NULL, const char* szDBName = NULL, bool bSQLChk = true);
-		void			Close(void);
-		I64				GetLastInsertedID(void);
+		bool IsOpen(void) { return m_bOpen; }
+		bool Open(const char* szDBServer = NULL, const char* szLoginName = NULL, const char* szPassword = NULL, const char* szDBName = NULL, bool bSQLChk = true);
+		void Close(void);
+		I64 	GetLastInsertedID(void);
 		MYSQL* GetDBHandle(void) { return m_hdbc; }
 	public:
 		MYSQL* Connect(const char* szHost, const char* szUser, const char* szPasswd, const char* szDB,
-			unsigned int uiPort = MYSQL_PORT, char* szSocket = NULL, unsigned int uiFlag = NULL);
+ unsigned int uiPort = MYSQL_PORT, char* szSocket = NULL, unsigned int uiFlag = NULL);
 
 		MYSQL_RES* ExecuteSQL(const char* szSQL);
-		bool			ExecuteSyncSQL(const char* pszSQL);
-		bool			ExecuteAsyncSQL(const char* pszSQL, void* pUser, SQL_RESULT_CALLBACK callback);
+		bool ExecuteSyncSQL(const char* pszSQL);
+		bool ExecuteAsyncSQL(const char* pszSQL, void* pUser, SQL_RESULT_CALLBACK callback);
 		bool            CallBackAsyncSQL();
-		bool			CheckSQL(const char* szSQL);
+		bool CheckSQL(const char* szSQL);
 		void            ChangeRequestVector();
 	private:
 		MYSQL* m_hdbc;
@@ -115,11 +115,11 @@ namespace rade_db
 
 		// Implementation
 	public:
-		void			UpdateStatInfo(DB_INFO& infoDB);
+		void UpdateStatInfo(DB_INFO& infoDB);
 	protected:
-		void			StatisticSQL(const char* pszSQL, DWORD dwRun);
+		void StatisticSQL(const char* pszSQL, DWORD dwRun);
 	private:
-		DB_INFO			m_infoDB;
+		DB_INFO m_infoDB;
 		sbase::CTimerMS	m_tm;
 
 		int m_request_num;

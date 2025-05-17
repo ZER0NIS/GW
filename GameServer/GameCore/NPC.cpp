@@ -63,12 +63,12 @@ void CNPC::ReloadQuests()
 	for (int i = 0; i < QUEST_NPCTAKE_COUNT; i++)
 	{
 		if (m_Quests[i].QuestID != -1)
-			QuestManager::Instance()->EraseQuest(m_Quests[i].QuestID);
+ QuestManager::Instance()->EraseQuest(m_Quests[i].QuestID);
 
 		m_Quests[i].Clear();
 
 		if (m_QuestReward[i].QuestID != -1)
-			QuestManager::Instance()->EraseQuestReward(m_QuestReward[i].QuestID);
+ QuestManager::Instance()->EraseQuestReward(m_QuestReward[i].QuestID);
 
 		m_QuestReward[i].Clear();
 	}
@@ -90,12 +90,12 @@ void CNPC::Clear()
 	for (int i = 0; i < QUEST_NPCTAKE_COUNT; i++)
 	{
 		if (m_Quests[i].QuestID != -1)
-			QuestManager::Instance()->EraseQuest(m_Quests[i].QuestID);
+ QuestManager::Instance()->EraseQuest(m_Quests[i].QuestID);
 
 		m_Quests[i].Clear();
 
 		if (m_QuestReward[i].QuestID != -1)
-			QuestManager::Instance()->EraseQuest(m_QuestReward[i].QuestID);
+ QuestManager::Instance()->EraseQuest(m_QuestReward[i].QuestID);
 
 		m_QuestReward[i].Clear();
 	}
@@ -194,19 +194,19 @@ void CNPC::GetType()
 
 		if (!pFunc)
 		{
-			PyErr_Print();
-			PyErr_Clear();
-			return;
+ PyErr_Print();
+ PyErr_Clear();
+ return;
 		}
 
 		pValue = PyObject_CallObject(pFunc, 0);
 
 		if (!pValue)
 		{
-			PyErr_Print();
-			PyErr_Clear();
+ PyErr_Print();
+ PyErr_Clear();
 
-			return;
+ return;
 		}
 
 		m_SysFlag = PyInt_AsLong(pValue);
@@ -290,62 +290,62 @@ void CNPC::LoadItemList()
 		int size = PyList_Size(list);
 
 		if (size == 0)
-			continue;
+ continue;
 
 		for (int j = 0; j < size; j++)
 		{
-			NPCItemData data;
+ NPCItemData data;
 
-			PyObject* listitem = PyList_GetItem(list, j);
+ PyObject* listitem = PyList_GetItem(list, j);
 
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLv");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
-			PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
-			PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppendLV = PyDict_GetItemString(obj->cl_dict, "AppendLv");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Type = PyDict_GetItemString(obj->cl_dict, "Type");
+ PyObject* Consume = PyDict_GetItemString(obj->cl_dict, "Consume");
 
-			data.Base = PyInt_AsLong(Base);
-			data.BaseLV = PyInt_AsLong(BaseLV);
-			data.AppendLV = PyInt_AsLong(AppendLV);
-			data.Overlap = PyInt_AsLong(Overlap);
-			data.Binding = PyInt_AsLong(Binding);
-			//2008-4-17			data.Money   = PyInt_AsLong(Money);
+ data.Base = PyInt_AsLong(Base);
+ data.BaseLV = PyInt_AsLong(BaseLV);
+ data.AppendLV = PyInt_AsLong(AppendLV);
+ data.Overlap = PyInt_AsLong(Overlap);
+ data.Binding = PyInt_AsLong(Binding);
+ //2008-4-17 data.Money   = PyInt_AsLong(Money);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				data.Append[z] = PyInt_AsLong(append);
-			}
+ 	data.Append[z] = PyInt_AsLong(append);
+ }
 
-			//消耗类型
-			int  Num = PyList_Size(Type);
-			for (int a = 0; a < Num; a++)
-			{
-				PyObject* append = PyList_GetItem(Type, a);
-				data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
-			}
+ //消耗类型
+ int  Num = PyList_Size(Type);
+ for (int a = 0; a < Num; a++)
+ {
+ 	PyObject* append = PyList_GetItem(Type, a);
+ 	data.Trade[NPCItemData::ITEM_SELL_TYPE(PyInt_AsLong(append))] = PyInt_AsLong(PyList_GetItem(Consume, a));
+ }
 
-			datas.push_back(data);
-			m_ItemBases.push_back(data.Base);
-			m_Overlap.push_back(data.Overlap);
-			m_BaseLevel.push_back(data.BaseLV);
-			m_AppendLevel.push_back(data.AppendLV);
+ datas.push_back(data);
+ m_ItemBases.push_back(data.Base);
+ m_Overlap.push_back(data.Overlap);
+ m_BaseLevel.push_back(data.BaseLV);
+ m_AppendLevel.push_back(data.AppendLV);
 
-			Item item;
-			ItemManager::Instance()->CreateItem(&data, &item);
+ Item item;
+ ItemManager::Instance()->CreateItem(&data, &item);
 
-			if (item.IsClear())
-			{
-				printf("Item Error , ID=%d", data.Base);
-				ASSERT(0);
-			}
-			//2008-4-17			m_Money.push_back(data.Money);
+ if (item.IsClear())
+ {
+ 	printf("Item Error , ID=%d", data.Base);
+ 	ASSERT(0);
+ }
+ //2008-4-17 m_Money.push_back(data.Money);
 		}
 
 		m_Items.push_back(datas);
@@ -394,9 +394,9 @@ void CNPC::LoadQuest()
 		PyObject* Quest = NULL;
 
 		if (PyTuple_Check(pValue) == 1)
-			Quest = PyTuple_GetItem(pValue, i);
+ Quest = PyTuple_GetItem(pValue, i);
 		else
-			Quest = pValue;
+ Quest = pValue;
 
 		PyClassObject* obj = (PyClassObject*)Quest;
 
@@ -472,81 +472,81 @@ void CNPC::LoadQuest()
 		int ExplorerMapNum = 0;
 		if (PyTuple_Check(ExplorerMapID) == 1)
 		{
-			ExplorerMapNum = PyTuple_Size(ExplorerMapID);
-			for (int j = 0; j < ExplorerMapNum; j++)
-			{
-				int id = PyInt_AsLong(PyTuple_GetItem(ExplorerMapID, j));
-				int posx = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, j * 2));
-				int posz = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, j * 2 + 1));
+ ExplorerMapNum = PyTuple_Size(ExplorerMapID);
+ for (int j = 0; j < ExplorerMapNum; j++)
+ {
+ 	int id = PyInt_AsLong(PyTuple_GetItem(ExplorerMapID, j));
+ 	int posx = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, j * 2));
+ 	int posz = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, j * 2 + 1));
 
-				if (id != -1) {
-					ExplorerInfo* info = new ExplorerInfo;
-					info->MapID = id;
-					info->PosX = posx;
-					info->PosY = 0;
-					info->PosZ = posz;
-					m_Quests[i].ExplorerInfos.push_back(info);
-				}
-			}
+ 	if (id != -1) {
+ 		ExplorerInfo* info = new ExplorerInfo;
+ 		info->MapID = id;
+ 		info->PosX = posx;
+ 		info->PosY = 0;
+ 		info->PosZ = posz;
+ 		m_Quests[i].ExplorerInfos.push_back(info);
+ 	}
+ }
 		}
 		else
 		{
-			int id = PyInt_AsLong(ExplorerMapID);
-			int posx = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, 0));
-			int posz = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, 1));
+ int id = PyInt_AsLong(ExplorerMapID);
+ int posx = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, 0));
+ int posz = PyInt_AsLong(PyTuple_GetItem(ExplorerMapPosition, 1));
 
-			if (id != -1) {
-				ExplorerInfo* info = new ExplorerInfo;
-				info->MapID = id;
-				info->PosX = posx;
-				info->PosY = 0;
-				info->PosZ = posz;
-				m_Quests[i].ExplorerInfos.push_back(info);
-			}
+ if (id != -1) {
+ 	ExplorerInfo* info = new ExplorerInfo;
+ 	info->MapID = id;
+ 	info->PosX = posx;
+ 	info->PosY = 0;
+ 	info->PosZ = posz;
+ 	m_Quests[i].ExplorerInfos.push_back(info);
+ }
 		}
 		//
 		int NextQuestsNum = 0;
 
 		if (PyTuple_Check(NextQuestsId) == 1)
 		{
-			NextQuestsNum = PyTuple_Size(NextQuestsId);
+ NextQuestsNum = PyTuple_Size(NextQuestsId);
 
-			for (int j = 0; j < NextQuestsNum; j++)
-			{
-				int n = PyInt_AsLong(PyTuple_GetItem(NextQuestsId, j));
+ for (int j = 0; j < NextQuestsNum; j++)
+ {
+ 	int n = PyInt_AsLong(PyTuple_GetItem(NextQuestsId, j));
 
-				if (n != -1)
-					m_Quests[i].NextQuestsID.push_back(n);
-			}
+ 	if (n != -1)
+ 		m_Quests[i].NextQuestsID.push_back(n);
+ }
 		}
 		else
 		{
-			int n = PyInt_AsLong(NextQuestsId);
+ int n = PyInt_AsLong(NextQuestsId);
 
-			if (n != -1)
-				m_Quests[i].NextQuestsID.push_back(n);
+ if (n != -1)
+ 	m_Quests[i].NextQuestsID.push_back(n);
 		}
 
 		int RequiredClassNum = 0;
 
 		if (PyTuple_Check(RequiredClass) == 1)
 		{
-			RequiredClassNum = PyTuple_Size(RequiredClass);
+ RequiredClassNum = PyTuple_Size(RequiredClass);
 
-			for (int j = 0; j < RequiredClassNum; j++)
-			{
-				int n = PyInt_AsLong(PyTuple_GetItem(RequiredClass, j));
+ for (int j = 0; j < RequiredClassNum; j++)
+ {
+ 	int n = PyInt_AsLong(PyTuple_GetItem(RequiredClass, j));
 
-				if (n != -1)
-					m_Quests[i].RequiredClass.push_back(n);
-			}
+ 	if (n != -1)
+ 		m_Quests[i].RequiredClass.push_back(n);
+ }
 		}
 		else
 		{
-			int n = PyInt_AsLong(RequiredClass);
+ int n = PyInt_AsLong(RequiredClass);
 
-			if (n != -1)
-				m_Quests[i].RequiredClass.push_back(n);
+ if (n != -1)
+ 	m_Quests[i].RequiredClass.push_back(n);
 		}
 
 		tm tmin;
@@ -564,19 +564,19 @@ void CNPC::LoadQuest()
 
 		if (tmin.tm_wday != -1 && tmax.tm_wday != -1)
 		{
-			//每周任务
-			m_Quests[i].TimeStatus = QUEST_TIMESTATUS_WEEK;
+ //每周任务
+ m_Quests[i].TimeStatus = QUEST_TIMESTATUS_WEEK;
 
-			m_Quests[i].MinTime = tmin.tm_wday * 86400 + tmin.tm_hour * 3600 + tmin.tm_min * 60 + tmin.tm_sec;
-			m_Quests[i].MaxTime = tmax.tm_wday * 86400 + tmax.tm_hour * 3600 + tmax.tm_min * 60 + tmax.tm_sec;
+ m_Quests[i].MinTime = tmin.tm_wday * 86400 + tmin.tm_hour * 3600 + tmin.tm_min * 60 + tmin.tm_sec;
+ m_Quests[i].MaxTime = tmax.tm_wday * 86400 + tmax.tm_hour * 3600 + tmax.tm_min * 60 + tmax.tm_sec;
 		}
 		else
 		{
-			//每日任务
-			m_Quests[i].TimeStatus = QUEST_TIMESTATUS_DAY;
+ //每日任务
+ m_Quests[i].TimeStatus = QUEST_TIMESTATUS_DAY;
 
-			m_Quests[i].MinTime = tmin.tm_hour * 3600 + tmin.tm_min * 60 + tmin.tm_sec;
-			m_Quests[i].MaxTime = tmax.tm_hour * 3600 + tmax.tm_min * 60 + tmax.tm_sec;
+ m_Quests[i].MinTime = tmin.tm_hour * 3600 + tmin.tm_min * 60 + tmin.tm_sec;
+ m_Quests[i].MaxTime = tmax.tm_hour * 3600 + tmax.tm_min * 60 + tmax.tm_sec;
 		}
 
 		m_Quests[i].MaxNum = PyInt_AsLong(MaxNum);
@@ -592,37 +592,37 @@ void CNPC::LoadQuest()
 
 		for (int j = 0; j < QUEST_OBJECTIVES_COUNT; j++)
 		{
-			m_Quests[i].Item[j] = PyInt_AsLong(PyList_GetItem(Item, j));
-			m_Quests[i].Creature[j] = PyInt_AsLong(PyList_GetItem(Creature, j));
-			m_Quests[i].ItemCount[j] = PyInt_AsLong(PyList_GetItem(ItemCount, j));
-			m_Quests[i].CreatureCount[j] = PyInt_AsLong(PyList_GetItem(CreatureCount, j));
-			m_Quests[i].ItemProbability[j] = PyInt_AsLong(PyList_GetItem(ItemProbability, j));
+ m_Quests[i].Item[j] = PyInt_AsLong(PyList_GetItem(Item, j));
+ m_Quests[i].Creature[j] = PyInt_AsLong(PyList_GetItem(Creature, j));
+ m_Quests[i].ItemCount[j] = PyInt_AsLong(PyList_GetItem(ItemCount, j));
+ m_Quests[i].CreatureCount[j] = PyInt_AsLong(PyList_GetItem(CreatureCount, j));
+ m_Quests[i].ItemProbability[j] = PyInt_AsLong(PyList_GetItem(ItemProbability, j));
 		}
 
 		for (int j = 0; j < QUEST_REWARDS_COUNT; j++)
 		{
-			PyObject* listitem = PyList_GetItem(RewardItem, j);
-			PyClassObject* obj = (PyClassObject*)listitem;
+ PyObject* listitem = PyList_GetItem(RewardItem, j);
+ PyClassObject* obj = (PyClassObject*)listitem;
 
-			PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
-			PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
-			PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
-			PyObject* AppLevel = PyDict_GetItemString(obj->cl_dict, "AppendLv");
-			PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
-			PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
+ PyObject* Base = PyDict_GetItemString(obj->cl_dict, "Base");
+ PyObject* BaseLV = PyDict_GetItemString(obj->cl_dict, "BaseLv");
+ PyObject* Append = PyDict_GetItemString(obj->cl_dict, "Append");
+ PyObject* AppLevel = PyDict_GetItemString(obj->cl_dict, "AppendLv");
+ PyObject* Overlap = PyDict_GetItemString(obj->cl_dict, "Overlap");
+ PyObject* Binding = PyDict_GetItemString(obj->cl_dict, "Binding");
 
-			m_Quests[i].RewardItem[j].Base = PyInt_AsLong(Base);
-			m_Quests[i].RewardItem[j].BaseLV = PyInt_AsLong(BaseLV);
-			m_Quests[i].RewardItem[j].AppendLV = PyInt_AsLong(AppLevel);
-			m_Quests[i].RewardItem[j].Overlap = PyInt_AsLong(Overlap);
-			m_Quests[i].RewardItem[j].Binding = PyInt_AsLong(Binding);
+ m_Quests[i].RewardItem[j].Base = PyInt_AsLong(Base);
+ m_Quests[i].RewardItem[j].BaseLV = PyInt_AsLong(BaseLV);
+ m_Quests[i].RewardItem[j].AppendLV = PyInt_AsLong(AppLevel);
+ m_Quests[i].RewardItem[j].Overlap = PyInt_AsLong(Overlap);
+ m_Quests[i].RewardItem[j].Binding = PyInt_AsLong(Binding);
 
-			for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
-			{
-				PyObject* append = PyList_GetItem(Append, z);
+ for (int z = 0; z < MAX_EQUIPAPPEND_COUNT; z++)
+ {
+ 	PyObject* append = PyList_GetItem(Append, z);
 
-				m_Quests[i].RewardItem[j].Append[z] = PyInt_AsLong(append);
-			}
+ 	m_Quests[i].RewardItem[j].Append[z] = PyInt_AsLong(append);
+ }
 		}
 
 		QuestManager::Instance()->InsertQuest(m_Quests[i].QuestID, &m_Quests[i]);
@@ -673,9 +673,9 @@ void CNPC::LoadQuestReward()
 		PyObject* Quest = NULL;
 
 		if (PyTuple_Check(pValue) == 1)
-			Quest = PyTuple_GetItem(pValue, i);
+ Quest = PyTuple_GetItem(pValue, i);
 		else
-			Quest = pValue;
+ Quest = pValue;
 
 		PyErr_Print();
 
@@ -742,10 +742,10 @@ void CNPC::GetItemList(CPlayer* player)
 	// 	{
 	// 		for (size_t i = 0 ; i < m_ItemBases.size() ; i++)
 	// 		{
-	// 			msg_npc_itemdata.Data[i] = m_ItemBases[i];
-	// 			msg_npc_itemdata.BaseLevel[i] = m_BaseLevel[i];
-	// 			msg_npc_itemdata.AppendLevel[i] = m_AppendLevel[i];
-	// 			msg_npc_itemdata.Overlap[i] = m_Overlap[i];
+	//  msg_npc_itemdata.Data[i] = m_ItemBases[i];
+	//  msg_npc_itemdata.BaseLevel[i] = m_BaseLevel[i];
+	//  msg_npc_itemdata.AppendLevel[i] = m_AppendLevel[i];
+	//  msg_npc_itemdata.Overlap[i] = m_Overlap[i];
 	// 		}
 	// 	}
 	//
@@ -774,27 +774,27 @@ void CNPC::GetItemList(CPlayer* player)
 
 		for (int j = 0; j < m_Items[i].size(); j++)
 		{
-			msg_npc_itemdata.Itemdata[j].Base = m_Items[i][j].Base;
+ msg_npc_itemdata.Itemdata[j].Base = m_Items[i][j].Base;
 
-			std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_Items[i][j].Trade.begin();
-			int iTypeNum = 0;
-			for (; itor != m_Items[i][j].Trade.end(); itor++, iTypeNum++)
-			{
-				if (iTypeNum >= 3)
-				{
-					break;
-				}
-				msg_npc_itemdata.Itemdata[j].BuyType[iTypeNum] = itor->first;
-				msg_npc_itemdata.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
-			}
-			msg_npc_itemdata.Itemdata[j].BuyTypeNum = (char)m_Items[i][j].Trade.size();
-			msg_npc_itemdata.Itemdata[j].AppendLV = m_Items[i][j].AppendLV;
-			msg_npc_itemdata.Itemdata[j].BaseLV = m_Items[i][j].BaseLV;
-			msg_npc_itemdata.Itemdata[j].Binding = m_Items[i][j].Binding;
-			msg_npc_itemdata.Itemdata[j].Overlap = m_Items[i][j].Overlap;
-			msg_npc_itemdata.Itemdata[j].Sell = m_NpcSell.at(i);
+ std::map<NPCItemData::ITEM_SELL_TYPE, int>::iterator itor = m_Items[i][j].Trade.begin();
+ int iTypeNum = 0;
+ for (; itor != m_Items[i][j].Trade.end(); itor++, iTypeNum++)
+ {
+ 	if (iTypeNum >= 3)
+ 	{
+ 		break;
+ 	}
+ 	msg_npc_itemdata.Itemdata[j].BuyType[iTypeNum] = itor->first;
+ 	msg_npc_itemdata.Itemdata[j].BuyConsume[iTypeNum] = itor->second;
+ }
+ msg_npc_itemdata.Itemdata[j].BuyTypeNum = (char)m_Items[i][j].Trade.size();
+ msg_npc_itemdata.Itemdata[j].AppendLV = m_Items[i][j].AppendLV;
+ msg_npc_itemdata.Itemdata[j].BaseLV = m_Items[i][j].BaseLV;
+ msg_npc_itemdata.Itemdata[j].Binding = m_Items[i][j].Binding;
+ msg_npc_itemdata.Itemdata[j].Overlap = m_Items[i][j].Overlap;
+ msg_npc_itemdata.Itemdata[j].Sell = m_NpcSell.at(i);
 
-			msg_npc_itemdata.Head.usSize += sizeof(msg_npc_itemdata.Itemdata[j]);
+ msg_npc_itemdata.Head.usSize += sizeof(msg_npc_itemdata.Itemdata[j]);
 		}
 
 		s_World->SendMsgToClient(&msg_npc_itemdata, player->GetSocket());
@@ -842,14 +842,14 @@ void CNPC::GrantItem(CPlayer* player)
 		pFunc = PyObject_GetAttrString(TupleItem, "Callback");
 		if (!pFunc)
 		{
-			PyErr_Clear();
-			return;
+ PyErr_Clear();
+ return;
 		}
 		PyObject* pArg = Py_BuildValue("(i)", player->GetcKnight());
 		PyObject* AltarRequst = PyEval_CallObject(pFunc, pArg);
 		if (PyBool_Check(AltarRequst))
 		{
-			//回调成功
+ //回调成功
 		}
 		Py_XDECREF(AltarRequst);
 	}
@@ -898,15 +898,15 @@ void CNPC::GrantOfficial(CPlayer* player)
 		pFunc = PyObject_GetAttrString(TupleItem, "Callback");
 		if (!pFunc)
 		{
-			PyErr_Clear();
-			return;
+ PyErr_Clear();
+ return;
 		}
 		PyObject* pArg = Py_BuildValue("(i)", player->GetlPrestige());
 		PyObject* AltarRequst = PyEval_CallObject(pFunc, pArg);
 		Py_XDECREF(pArg);
 		if (PyBool_Check(AltarRequst))
 		{
-			//回调成功
+ //回调成功
 		}
 		Py_XDECREF(AltarRequst);
 	}
@@ -924,21 +924,21 @@ void CNPC::GetQuestList(CPlayer* player)
 
 		for (int i = 0; i < QUEST_NPCTAKE_COUNT; i++)
 		{	//排除随机（道具）任务
-			if (m_Quests[i].QuestID != -1 && m_Quests[i].SpecialFlags != QUEST_SPECIAL_FLAGS_NONE && m_Quests[i].QuestSort != QUEST_SORT_RANDOM)
-			{
-				msg_npc_quests.Quest[i].QuestID = m_Quests[i].QuestID;
+ if (m_Quests[i].QuestID != -1 && m_Quests[i].SpecialFlags != QUEST_SPECIAL_FLAGS_NONE && m_Quests[i].QuestSort != QUEST_SORT_RANDOM)
+ {
+ 	msg_npc_quests.Quest[i].QuestID = m_Quests[i].QuestID;
 
-				if (player->GetlFaction() == 1 && m_Quests[i].QuestID >= QUEST_COUNT)
-				{
-					msg_npc_quests.Quest[msg_npc_quests.Count].Available = player->GetQuest(m_Quests[i].QuestID)->CanAccept();
-					msg_npc_quests.Count++;
-				}
-				else if (player->GetlFaction() == 0 && m_Quests[i].QuestID < QUEST_COUNT)
-				{
-					msg_npc_quests.Quest[msg_npc_quests.Count].Available = player->GetQuest(m_Quests[i].QuestID)->CanAccept();
-					msg_npc_quests.Count++;
-				}
-			}
+ 	if (player->GetlFaction() == 1 && m_Quests[i].QuestID >= QUEST_COUNT)
+ 	{
+ 		msg_npc_quests.Quest[msg_npc_quests.Count].Available = player->GetQuest(m_Quests[i].QuestID)->CanAccept();
+ 		msg_npc_quests.Count++;
+ 	}
+ 	else if (player->GetlFaction() == 0 && m_Quests[i].QuestID < QUEST_COUNT)
+ 	{
+ 		msg_npc_quests.Quest[msg_npc_quests.Count].Available = player->GetQuest(m_Quests[i].QuestID)->CanAccept();
+ 		msg_npc_quests.Count++;
+ 	}
+ }
 		}
 
 		s_World->SendMsgToClient(&msg_npc_quests, player->GetSocket());
@@ -953,19 +953,19 @@ void CNPC::GetQuestList(CPlayer* player)
 
 		for (int i = 0; i < QUEST_NPCTAKE_COUNT; i++)
 		{
-			if (m_QuestReward[i].QuestID != -1)
-			{
-				if (player->GetlFaction() == 1 && m_QuestReward[i].QuestID >= QUEST_COUNT)
-				{
-					msg_npc_questreward.QuestID[msg_npc_questreward.Count] = m_QuestReward[i].QuestID;
-					msg_npc_questreward.Count++;
-				}
-				else if (player->GetlFaction() == 0 && m_QuestReward[i].QuestID < QUEST_COUNT)
-				{
-					msg_npc_questreward.QuestID[msg_npc_questreward.Count] = m_QuestReward[i].QuestID;
-					msg_npc_questreward.Count++;
-				}
-			}
+ if (m_QuestReward[i].QuestID != -1)
+ {
+ 	if (player->GetlFaction() == 1 && m_QuestReward[i].QuestID >= QUEST_COUNT)
+ 	{
+ 		msg_npc_questreward.QuestID[msg_npc_questreward.Count] = m_QuestReward[i].QuestID;
+ 		msg_npc_questreward.Count++;
+ 	}
+ 	else if (player->GetlFaction() == 0 && m_QuestReward[i].QuestID < QUEST_COUNT)
+ 	{
+ 		msg_npc_questreward.QuestID[msg_npc_questreward.Count] = m_QuestReward[i].QuestID;
+ 		msg_npc_questreward.Count++;
+ 	}
+ }
 		}
 
 		player->s_World->SendMsgToClient(&msg_npc_questreward, player->GetSocket());
@@ -1085,7 +1085,7 @@ eError CNPC::Sell(CPlayer* player, int index, int num, int count, int base)
 	{
 		if (iTypeNum >= 3)
 		{
-			break;
+ break;
 		}
 		item.m_BuyType[iTypeNum] = itor->first;
 		item.m_BuyConsume[iTypeNum] = itor->second;
@@ -1245,44 +1245,44 @@ bool CNPC::CheckNpcConsume(CPlayer* player, Item* pItem)
 	{
 		if (i >= 3)
 		{
-			break;
+ break;
 		}
 
 		switch (pItem->m_BuyType[i])
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			if (pItem->m_BuyConsume[i] > player->GetlPrestige())
-			{
-				return false;
-			}
+ if (pItem->m_BuyConsume[i] > player->GetlPrestige())
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
-			{
-				return false;
-			}
+ if (player->GetlMoney() < pItem->m_Overlap * pItem->m_BuyConsume[i])
+ {
+ 	return false;
+ }
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			if (player->GetlStone() < pItem->m_Overlap * pItem->m_BuyConsume[i])
-			{
-				return false;
-			}
+ if (player->GetlStone() < pItem->m_Overlap * pItem->m_BuyConsume[i])
+ {
+ 	return false;
+ }
 		}
 		break;
 		default:
 		{
-			//如果有不是这些货币类型的，当条件不符合
-			return false;
+ //如果有不是这些货币类型的，当条件不符合
+ return false;
 		}
 		break;
 		}
@@ -1302,22 +1302,22 @@ void CNPC::UpdataNpcConsume(CPlayer* player, Item* pItem)
 		{
 		case ITEM_TRADE_PRESTIGE:
 		{
-			player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); //修改声望
+ player->SetlPrestige(player->GetlPrestige() - pItem->m_BuyConsume[i]); //修改声望
 		}
 		break;
 		case ITEM_TRADE_CONSORTIA_CONTRIBUTE:
 		{
-			//公会贡献
+ //公会贡献
 		}
 		break;
 		case ITEM_TRADE_MONEY:
 		{
-			player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
+ player->SetlMoney(player->GetlMoney() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
 		}
 		break;
 		case ITEM_TRADE_BIJOU:
 		{
-			player->SetlStone(player->GetlStone() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
+ player->SetlStone(player->GetlStone() - pItem->m_Overlap * pItem->m_BuyConsume[i]);
 		}
 		break;
 		}
@@ -1394,7 +1394,7 @@ void CNPC::SysList(CPlayer* player, int SysFlag, const int* Oper)
 	for (int a = 0; a < 8; a++)
 	{
 		if (*Oper != -1)
-			Index = a;
+ Index = a;
 		PyObject* Temp = PyInt_FromLong(*Oper);
 		PyTuple_SetItem(NewOper, a, Temp);
 		Oper++;
@@ -1434,9 +1434,9 @@ void CNPC::SysList(CPlayer* player, int SysFlag, const int* Oper)
 	for (int a = 0; a < ResultSize; a++)
 	{
 		if (a == 0)
-			SysList.NextWin = (PyTuple_GetItem(DataRequst, a) == Py_True);
+ SysList.NextWin = (PyTuple_GetItem(DataRequst, a) == Py_True);
 		else
-			SysList.Data[a - 1] = PyInt_AsLong(PyTuple_GetItem(DataRequst, a));
+ SysList.Data[a - 1] = PyInt_AsLong(PyTuple_GetItem(DataRequst, a));
 	}
 
 	if (SysList.NextWin)

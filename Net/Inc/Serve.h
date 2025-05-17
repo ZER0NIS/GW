@@ -12,11 +12,11 @@ namespace serve
 		CServe(IServe* serve, HMODULE hModule = NULL);
 		virtual ~CServe();
 
-		USHORT			Release(void) { delete this; return 0; }
-		USHORT			GetPort(void)	const { return m_serve->GetPort(); }
+		USHORT Release(void) { delete this; return 0; }
+		USHORT GetPort(void)	const { return m_serve->GetPort(); }
 		const char* GetName(void) const { return m_serve->GetName(); }
 		void            CloseSock(SOCKET socket) { m_serve->CloseSock(socket); return; };
-		bool			Run(void);
+		bool Run(void);
 
 	protected:
 		IServe* m_serve;
@@ -32,6 +32,6 @@ namespace serve
 	private:
 		//消息接受线程
 		sbase::CThread* m_pThread;
-		HMODULE			m_hModule;
+		HMODULE m_hModule;
 	};
 }

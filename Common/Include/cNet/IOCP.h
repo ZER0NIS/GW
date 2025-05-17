@@ -90,12 +90,12 @@ namespace cnet
 		CSocket* m_FreeSocketList;
 		CSocket* m_CloseSocketCache;
 		CSocket* m_ConnectionList;
-		PerIOData* m_pFreeIODataList;				// 空闲链表
+		PerIOData* m_pFreeIODataList; 	// 空闲链表
 
-		SOCKET			 m_conSck;
-		char			 m_szServerIP[IP_MAXSIZE];		// 服务器ip
-		int				 m_nServerPort;					// 服务器port
-		bool			 m_ServerIsOk;					// 服务器是否关闭
+		SOCKET  m_conSck;
+		char  m_szServerIP[IP_MAXSIZE];		// 服务器ip
+		int 	 m_nServerPort; 		// 服务器port
+		bool  m_ServerIsOk; 		// 服务器是否关闭
 
 		CRITICAL_SECTION m_CriFreeIOList;
 		CRITICAL_SECTION m_CriFreeSockList;

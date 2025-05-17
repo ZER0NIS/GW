@@ -37,7 +37,7 @@ bool    CPlayer::FindPassiveSkill(int ucSkillID, UINT*)
 	if (itor != m_PassiveSkill.end())
 	{
 		// 		if( Degree != NULL )
-		// 			*Degree = (*itor).second.Degree_Practice;
+		//  *Degree = (*itor).second.Degree_Practice;
 		return  true;
 	}
 	return false;
@@ -87,7 +87,7 @@ void    CPlayer::ChangeActiveSkillStatus(int ucSkillID, TIME_STYLE status)
 		m_ActiveSkill[ucSkillID].Time_interval = (UINT)pActiveSkill->usCoolingTime;
 		if (ucSkillID >= GODSKILL_ID && ucSkillID < GODSKILL_ID + 40)  //神恩技能冷却完毕时间
 		{
-			m_GodLastTime = time(NULL);
+ m_GodLastTime = time(NULL);
 		}
 	}
 }
@@ -180,8 +180,8 @@ bool CPlayer::PassiveSkillUpgrade(UINT SkillID, int* Rank)
 	case 4:
 		// 		if ( m_PassiveSkill[ SkillID ].Degree_Practice % 1000 == 0)
 		// 		{
-		// 			*Rank = m_PassiveSkill[ SkillID ].Degree_Practice / 1000;
-		// 			return true;
+		//  *Rank = m_PassiveSkill[ SkillID ].Degree_Practice / 1000;
+		//  return true;
 		// 		}
 		break;
 	default:
@@ -221,9 +221,9 @@ bool CPlayer::IsEquipThis(const MagicData* pMagic)
 	{
 		if (!m_Equips[i].IsClear())
 		{
-			for (std::vector<UINT>::const_iterator iter = pMagic->EquipRequest.begin(); iter != pMagic->EquipRequest.end(); iter++)
-				if (m_Equips[i].GetItemBaseAttribute()->eSkillFlag == int(*iter))
-					return true;
+ for (std::vector<UINT>::const_iterator iter = pMagic->EquipRequest.begin(); iter != pMagic->EquipRequest.end(); iter++)
+ 	if (m_Equips[i].GetItemBaseAttribute()->eSkillFlag == int(*iter))
+ 		return true;
 		}
 	}
 
@@ -236,9 +236,9 @@ bool CPlayer::IsEquipThis(const SKillData* pSkill)
 	{
 		if (!m_Equips[i].IsClear())
 		{
-			for (std::vector<UINT>::const_iterator iter = pSkill->EquipRequest.begin(); iter != pSkill->EquipRequest.end(); iter++)
-				if (m_Equips[i].GetItemBaseAttribute()->eSkillFlag == int(*iter))
-					return true;
+ for (std::vector<UINT>::const_iterator iter = pSkill->EquipRequest.begin(); iter != pSkill->EquipRequest.end(); iter++)
+ 	if (m_Equips[i].GetItemBaseAttribute()->eSkillFlag == int(*iter))
+ 		return true;
 		}
 	}
 
@@ -390,12 +390,12 @@ bool CPlayer::IsRefresh(TIME_STYLE timeStyle)
 		map< UINT, ACTIVE_INFO > ::iterator itor = m_ActiveSkill.begin();
 		for (; itor != m_ActiveSkill.end(); itor++)
 		{
-			ACTIVE_INFO  active_info = itor->second;
-			int  MagicID = itor->first;
-			if (m_ActiveSkillCool_Timer.IsExpire(active_info.Time_start, active_info.Time_interval) && active_info.Time_style == TIME_STYLE_COOL)
-			{
-				ChangeActiveSkillStatus(MagicID, TIME_STYLE_NONE);
-			}
+ ACTIVE_INFO  active_info = itor->second;
+ int  MagicID = itor->first;
+ if (m_ActiveSkillCool_Timer.IsExpire(active_info.Time_start, active_info.Time_interval) && active_info.Time_style == TIME_STYLE_COOL)
+ {
+ 	ChangeActiveSkillStatus(MagicID, TIME_STYLE_NONE);
+ }
 		}
 		return true;
 	}

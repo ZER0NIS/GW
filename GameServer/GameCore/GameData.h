@@ -45,39 +45,39 @@ enum SkillFalg
 
 // Object动作特征
 enum eObjectState {
-	OBJECT_IDLE = 0,													// 空闲状态
-	OBJECT_FIGHT,														// 战斗状态
-	OBJECT_WALK,														// 行走状态
-	OBJECT_RUN,															// 奔跑状态
-	OBJECT_DEAD,														// 死亡状态
-	OBJECT_PICKUP,														// 拾取状态
-	OBJECT_GHOST,														// 灵魂状态
-	OBJECT_ATTACK = 100,												// 攻击状态
-	OBJECT_CAST,														// 施法状态
-	OBJECT_PERFORM,														// 执行状态
-	OBJECT_BUSYTIME,													// 无法动作
+	OBJECT_IDLE = 0,    	// 空闲状态
+	OBJECT_FIGHT,    		// 战斗状态
+	OBJECT_WALK,    		// 行走状态
+	OBJECT_RUN,     // 奔跑状态
+	OBJECT_DEAD,    		// 死亡状态
+	OBJECT_PICKUP,    		// 拾取状态
+	OBJECT_GHOST,    		// 灵魂状态
+	OBJECT_ATTACK = 100,    // 攻击状态
+	OBJECT_CAST,    		// 施法状态
+	OBJECT_PERFORM,    		// 执行状态
+	OBJECT_BUSYTIME,    	// 无法动作
 };
 
 // Object类型特性
 enum eObjectType {
-	OBJECTTYPE_UNKNOW = 0,												// 未知
-	OBJECTTYPE_PLAYER,													// 玩家
-	OBJECTTYPE_NPC,														// NPC
-	OBJECTTYPE_MONSTER,													// 怪物
-	OBJECTTYPE_BOSS,													// BOSS
-	OBJECTTYPE_PET,														// 宠物
-	OBJECTTYPE_BUILDING,												// 建筑物
-	OBJECTTYPE_VIP,														// VIP
-	OBJECTTYPE_GM,														// GM
-	OBJECTTYPE_GameProgramer,											// ...
+	OBJECTTYPE_UNKNOW = 0,    // 未知
+	OBJECTTYPE_PLAYER,    	// 玩家
+	OBJECTTYPE_NPC,    		// NPC
+	OBJECTTYPE_MONSTER,    	// 怪物
+	OBJECTTYPE_BOSS,    	// BOSS
+	OBJECTTYPE_PET,    		// 宠物
+	OBJECTTYPE_BUILDING,    // 建筑物
+	OBJECTTYPE_VIP,    		// VIP
+	OBJECTTYPE_GM,    		// GM
+	OBJECTTYPE_GameProgramer,   		// ...
 };
 
 // 职业标记
 enum eLevel
 {
-	OCCUPATION_WARRIOR = 0,												// 战斗
-	OCCUPATION_BUSINESSMAN,												// 商人
-	OCCUPATION_SCHOLAR,													// 学者
+	OCCUPATION_WARRIOR = 0,    // 战斗
+	OCCUPATION_BUSINESSMAN,    // 商人
+	OCCUPATION_SCHOLAR,    	// 学者
 };
 
 // 阵营标记
@@ -144,7 +144,7 @@ class CGameObject;
 struct  SKillData
 {
 	BYTE            ucID;                                       //技能ID
-	char 		    Name[64];                        			//技能名称
+	char 		    Name[64];                         //技能名称
 	UINT            PrefixID;                                   //前置技能ID
 	UINT            RrefixRank;                                 //前置等级要求
 	UINT            TotalRank;                                  //总等级要求
@@ -168,12 +168,12 @@ struct MagicData
 	UINT           uiMoney;                                    //耗费金钱
 	FLOAT	 	  	ucIntonateTime;                       		//吟唱时间
 	FLOAT   	  	usCoolingTime;                        		//冷却时间
-	char			ScriptFun[64];								//脚本函数
-	UINT			ucTarget;									//释放对象
-	UINT			ucAffectObj;								//影响目标
-	int			iEffectTurn;								//效果次数
-	float			fTimeInterval;								//时间间隔
-	int			iProperty;									//魔法属性
+	char ScriptFun[64];  		//脚本函数
+	UINT ucTarget;   //释放对象
+	UINT ucAffectObj;  		//影响目标
+	int iEffectTurn;  		//效果次数
+	float fTimeInterval;  		//时间间隔
+	int iProperty;   //魔法属性
 	bool           bIsEquipUse;                                //道具技能
 	int            iEnmity;                                    //增加的仇恨
 	int            StatusOdds;                                 //状态附加几率
@@ -202,7 +202,7 @@ struct ItemData
 		CdKey(0)
 	{
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
-			Append[i] = -1;
+ Append[i] = -1;
 	}
 };
 
@@ -212,12 +212,12 @@ struct Data
 	LONG                    m_lMaxMP;                       //MP上限
 	LONG                    m_lResumeHP;                    //HP恢复
 	LONG                    m_lResumeMP;                    //MP恢复
-	LONG					m_lAttack;				        //物理攻击力
-	LONG					m_lDefend;				    	//物理防御力
+	LONG 		m_lAttack; 	        //物理攻击力
+	LONG 		m_lDefend; 	    	//物理防御力
 	LONG                    m_lMagicAttack;                 //魔法攻击
 	LONG                    m_lMagicDefend;                 //魔法防御
-	LONG					m_lHit;						    //命中
-	LONG					m_lDodge;						//躲避
+	LONG 		m_lHit;      //命中
+	LONG 		m_lDodge;  //躲避
 	LONG                    m_lCritAppend;                  //暴击加成
 	LONG                    m_lCritDefend;                  //暴击抵抗
 	FLOAT                   m_fPhyDamageAppend;             //物理伤害加成
@@ -255,8 +255,8 @@ struct NpcItemData
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			BuyType[j] = -1;
-			BuyConsume[j] = 0;
+ BuyType[j] = -1;
+ BuyConsume[j] = 0;
 		}
 	}
 };
@@ -289,11 +289,11 @@ struct MallItemData
 		BuyTypeNum(0)
 	{
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
-			Append[i] = -1;
+ Append[i] = -1;
 		for (int j = 0; j < 3; j++)
 		{
-			BuyType[j] = -1;
-			BuyConsume[j] = 0;
+ BuyType[j] = -1;
+ BuyConsume[j] = 0;
 		}
 	}
 };
@@ -363,33 +363,33 @@ struct StatusData : public Data
 // 角色属性数据
 struct ObjectData
 {
-	char					m_strName[MAX_NAME];				//名称
+	char 		m_strName[MAX_NAME]; 	//名称
 	BYTE                    m_Gender;                           //性别0：女 1：男
-	USHORT					m_lRegionID;						//当前的场景标记
-	FLOAT					m_fX, m_fY, m_fZ;					//当前坐标
-	FLOAT					m_fSpeed;							//移动速度
-	USHORT					m_lStyle;							//外形特征
-	BYTE					m_lFaction;							//所属阵营 0：斯巴达 1：雅典
-	USHORT					m_lPrestige;						//声望
+	USHORT 		m_lRegionID;  //当前的场景标记
+	FLOAT 		m_fX, m_fY, m_fZ; 		//当前坐标
+	FLOAT 		m_fSpeed;  	//移动速度
+	USHORT 		m_lStyle;  	//外形特征
+	BYTE 		m_lFaction;  	//所属阵营 0：斯巴达 1：雅典
+	USHORT 		m_lPrestige;  //声望
 	BYTE                    m_cKnight;                          //爵位
 	USHORT                  m_cUnion;                           //公会
 	BYTE                    m_cUnionBusiness;                   //公会职务
 	UINT                    m_uiUionContribute;                 //公会贡献
-	UINT					m_uiStoreNum;						//仓库个数
-	UINT					m_uiBagNum;							//包裹个数
-	BYTE			        m_lClass;			                //职业
-	UINT                    m_cExp;				                //角色经验 add by lion
-	BYTE                    m_cRank;			                //角色等级 add by lion
-	long					m_lHP;								//HP
-	long					m_lMP;								//MP
+	UINT 		m_uiStoreNum;  //仓库个数
+	UINT 		m_uiBagNum;  	//包裹个数
+	BYTE         m_lClass;                 //职业
+	UINT                    m_cExp; 	                //角色经验 add by lion
+	BYTE                    m_cRank;                 //角色等级 add by lion
+	long 		m_lHP;  		//HP
+	long 		m_lMP;  		//MP
 	USHORT                  m_usAttackDistance;                 //人物攻击范围
 	USHORT                  m_usAttackSpeed;                    //攻击速度
 	BYTE                    m_cHairStyle;                       //发型
 	BYTE                    m_cPupilColor;                      //瞳色
 	USHORT                  m_usBelief;                         //信仰
-	UINT					m_lMoney;							//金钱
+	UINT 		m_lMoney;  	//金钱
 	UINT                    m_lStone;                           //宝石
-	//	char			m_acName[64];                   //公会名称
+	//	char m_acName[64];                   //公会名称
 };
 
 enum {
@@ -422,7 +422,7 @@ struct Consortia_Member
 	char acMemberName[32];             //成员名字
 	BYTE ucBusiness;                    //职业
 	UINT uiContribute;                  //贡献
-	BYTE iLevel;			            //等级add by lion
+	BYTE iLevel;             //等级add by lion
 	long lMapID;                       //所在地图ID,-1为离线,0雅典....
 	Consortia_Member()
 	{
@@ -445,9 +445,9 @@ struct Consortia_Info
 	long lfound;                       //资金
 	long lbijou;                       //宝石
 	char acTextInfo[256];              //公会公告
-	int			MaxMember;					 //公会人数上限
-	UINT		AltarCounts;				 //公会创建祭坛的个数
-	Consortia_AltarInfo		Altar[9];					 //创建的祭坛ID号
+	int MaxMember; 		 //公会人数上限
+	UINT		AltarCounts; 	 //公会创建祭坛的个数
+	Consortia_AltarInfo		Altar[9]; 		 //创建的祭坛ID号
 	Consortia_Info()
 	{
 		::ZeroMemory(acName, sizeof(acName));
@@ -473,29 +473,29 @@ struct Consortia_Info
 #define DUTYMEMBERNAME "会员"
 
 //World.h
-#define LOGIC_TIMEOUT   			40
+#define LOGIC_TIMEOUT    40
 #define REGION_BACKUP_TIMEOUT 		1000*30
 #define CONSOR_BACKUP_TIMEOUT 		300000
 #define GM_TIMEOUT                  3600000
 #define HINT_TIMEOUT                1000
-#define QUEUE_TIMEOUT			    10000
+#define QUEUE_TIMEOUT     10000
 
 #define LOGIC2NET_TIMEOUT   		2000
 #define LOGIC_LIMIT_TIMEOUT 		1000	// 逻辑限速
 #define LOGIC_CYCLE_DELAY_TIMEOUT 	120		// 时间脉冲，50次/秒
 
-#define LOGIC_CYCLE_DELAY			20
-#define LOGIN_QUEUE_REFRESH			20000
-#define SURVEY_ONLIEN_TIME			20*60*1000
+#define LOGIC_CYCLE_DELAY 20
+#define LOGIN_QUEUE_REFRESH 20000
+#define SURVEY_ONLIEN_TIME 20*60*1000
 
 //SkillManager.h
-#define  MAX_STATUS_EFFECT			32
-#define  MAX_SKILL_EFFECT			19
+#define  MAX_STATUS_EFFECT 32
+#define  MAX_SKILL_EFFECT 19
 
 //RoleRelation.h
-#define  MAX_RELATION_NUM			30
+#define  MAX_RELATION_NUM 30
 #define  MAX_CONSORTIA_MEMBER_SIZE	500
-#define  MAX_ALTAR_NUM				8
+#define  MAX_ALTAR_NUM 	8
 #define  CONSORTIA_REFRESH_DAY		86400
 
 ////////END////////

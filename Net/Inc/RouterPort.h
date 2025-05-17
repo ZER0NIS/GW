@@ -16,24 +16,24 @@ namespace serve
 	{
 	public:
 		CRouterPort(CMsgRouter& router, int nPort)
-			: m_Router(router), m_usPort(nPort), m_bEnable(true) {
+ : m_Router(router), m_usPort(nPort), m_bEnable(true) {
 		}
 		virtual ~CRouterPort();
 
 	private:
 		CMsgRouter& m_Router;
-		USHORT					m_usPort;
-		USHORT					m_usGroup;
+		USHORT 		m_usPort;
+		USHORT 		m_usGroup;
 		sbase::CCriticalSection	m_cs;
 
 		//消息接受链表
 		typedef std::list<sbase::IMessage*>	MSG_LST;
-		MSG_LST					m_setMsg;
+		MSG_LST 		m_setMsg;
 
 		//消息发送链表
 		MSG_LST                 m_outMsg;
 
-		bool					m_bEnable;
+		bool 		m_bEnable;
 
 		// Interface of IPort
 	public:
@@ -53,7 +53,7 @@ namespace serve
 		virtual void		Start(void) { m_bEnable = true; }
 		virtual void                DiscardMsg(sbase::IMessage* pMsg)
 		{
-			SAFE_RELEASE(pMsg);
+ SAFE_RELEASE(pMsg);
 		};
 
 		//从发送链表中取出消息

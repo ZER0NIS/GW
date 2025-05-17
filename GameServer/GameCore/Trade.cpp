@@ -131,7 +131,7 @@ void Trade::EndTrade()
 	for (int i = 0; i < MAX_TRADE_ITEMS; i++)
 	{
 		if (m_Items[i])
-			m_Items[i]->m_Lock = false;
+ m_Items[i]->m_Lock = false;
 	}
 }
 
@@ -258,19 +258,19 @@ eError Trade::CompleteTrade()
 		if (m_Items[i])
 		{
 #ifdef _DEBUG
-			ASSERT(m_Items[i]->m_Lock);
+ ASSERT(m_Items[i]->m_Lock);
 #else
-			if (!m_Items[i]->m_Lock)
-			{
-				m_Trader->GetTrade()->EndTrade();
-				EndTrade();
-			}
+ if (!m_Items[i]->m_Lock)
+ {
+ 	m_Trader->GetTrade()->EndTrade();
+ 	EndTrade();
+ }
 #endif
-			m_Items[i]->m_Lock = false;
+ m_Items[i]->m_Lock = false;
 
-			tempThis.push_back(*m_Items[i]);
+ tempThis.push_back(*m_Items[i]);
 
-			m_Items[i]->Clear();
+ m_Items[i]->Clear();
 		}
 	}
 
@@ -279,20 +279,20 @@ eError Trade::CompleteTrade()
 		if (m_Trader->GetTrade()->m_Items[i])
 		{
 #ifdef _DEBUG
-			ASSERT(m_Trader->GetTrade()->m_Items[i]->m_Lock);
+ ASSERT(m_Trader->GetTrade()->m_Items[i]->m_Lock);
 #else
-			if (!m_Trader->GetTrade()->m_Items[i]->m_Lock)
-			{
-				m_Trader->GetTrade()->EndTrade();
-				EndTrade();
-			}
+ if (!m_Trader->GetTrade()->m_Items[i]->m_Lock)
+ {
+ 	m_Trader->GetTrade()->EndTrade();
+ 	EndTrade();
+ }
 #endif
 
-			m_Trader->GetTrade()->m_Items[i]->m_Lock = false;
+ m_Trader->GetTrade()->m_Items[i]->m_Lock = false;
 
-			tempTrader.push_back(*m_Trader->GetTrade()->m_Items[i]);
+ tempTrader.push_back(*m_Trader->GetTrade()->m_Items[i]);
 
-			m_Trader->GetTrade()->m_Items[i]->Clear();
+ m_Trader->GetTrade()->m_Items[i]->Clear();
 		}
 	}
 
@@ -382,9 +382,9 @@ eError Trade::SetItem(int index, Item* item, CPlayer* pPlayer)
 	for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 	{
 		if (item->GetItemAppendAttribute(i))
-			msg_trade_item.Append[i] = item->GetItemAppendAttribute(i)->ID;
+ msg_trade_item.Append[i] = item->GetItemAppendAttribute(i)->ID;
 		else
-			msg_trade_item.Append[i] = -1;
+ msg_trade_item.Append[i] = -1;
 	}
 
 	msg_trade_item.Overlap = item->m_Overlap;

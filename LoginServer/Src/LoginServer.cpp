@@ -47,8 +47,8 @@ int _tmain(int, _TCHAR*)
 		unsigned long sysAff;
 		if (GetProcessAffinityMask(hProcess, &appAff, &sysAff))
 		{
-			UINT curAff = 12;
-			SetProcessAffinityMask(hProcess, curAff);
+ UINT curAff = 12;
+ SetProcessAffinityMask(hProcess, curAff);
 		}
 
 		SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS);

@@ -172,41 +172,41 @@ struct QuestInfo
 {
 	int NPCID;
 
-	int QuestID;			//ID
-	int QuestSort;			//种类
-	int MinLevel;			//等级下限
-	int MaxLevel;			//等级上限
+	int QuestID; //ID
+	int QuestSort; //种类
+	int MinLevel; //等级下限
+	int MaxLevel; //等级上限
 
 	int RequiredLevel;		//等级
 	std::vector<int> RequiredClass;		//职业
 	int RequiredBelief;		//信仰
 	int RequiredFaction;	//阵营
 
-	int TeamLimit;			//队伍限制
+	int TeamLimit; //队伍限制
 
-	int TimeStatus;			//计时任务
+	int TimeStatus; //计时任务
 
 	time_t TimeUpdata;		//更新时间
-	time_t MinTime;			//最小时间段
-	time_t MaxTime;			//最大时间段
+	time_t MinTime; //最小时间段
+	time_t MaxTime; //最大时间段
 
-	int	MaxNum;				//最大完成数
-	int Repeat;				//重复次数
+	int	MaxNum; 	//最大完成数
+	int Repeat; 	//重复次数
 
 	int SpecialFlags;		//标志位
-	//int Color;			//颜色
+	//int Color; //颜色
 
 	std::vector<ExplorerInfo*> ExplorerInfos;//探索信息
 
-	int Kill;				//杀怪数量
-	int QuestCount;			//完成任务数量
+	int Kill; 	//杀怪数量
+	int QuestCount; //完成任务数量
 
 	int PrevQuestId;		//前置任务
 	int NextQuestId;		//后续任务
 	std::vector<int> NextQuestsID;	//后续任务
 
-	int Money;				//钱
-	int Bijou;				//宝石
+	int Money; 	//钱
+	int Bijou; 	//宝石
 	int	RewardMoney;		//报酬钱
 	int RewardBijou;		//报酬宝石
 
@@ -214,7 +214,7 @@ struct QuestInfo
 	int UionMoney;		//公会奖励银
 	int ReqConsortiaLV;    //公会任务级别限制
 
-	bool TimeOver;			//时间超时
+	bool TimeOver; //时间超时
 
 	short Item[QUEST_OBJECTIVES_COUNT];
 	short Creature[QUEST_OBJECTIVES_COUNT];
@@ -288,11 +288,11 @@ struct QuestInfo
 	{
 		for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
 		{
-			ItemCount[i] = 0;
-			CreatureCount[i] = 0;
+ ItemCount[i] = 0;
+ CreatureCount[i] = 0;
 
-			memset(ItemCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
-			memset(CreatureCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
+ memset(ItemCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
+ memset(CreatureCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
 		}
 	}
 
@@ -326,9 +326,9 @@ struct QuestReward
 
 	int QuestID;
 
-	int Credit;			//？？荣誉？
+	int Credit; //？？荣誉？
 	int Contribute;		//贡献
-	int EXP;			//经验
+	int EXP; //经验
 	int SkillPoint;		//技能点
 
 	int SpecialFlags;	//特殊奖励标识
@@ -359,12 +359,12 @@ struct SQuestStatus
 
 		for (int index = 0; it != Quest->ExplorerInfos.end(); it++, index++)
 		{
-			//ExplorerInfo* info = (ExplorerInfo*)(*it);
-			if (!ExplorerComp[index])
-			{
-				bFinished = false;
-				break;
-			}
+ //ExplorerInfo* info = (ExplorerInfo*)(*it);
+ if (!ExplorerComp[index])
+ {
+ 	bFinished = false;
+ 	break;
+ }
 		}
 
 		return bFinished;
@@ -374,25 +374,25 @@ struct SQuestStatus
 	int Explorer(int mapid, float posx, float posz)
 	{
 		if (!Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_MAP_EXPOLORER))
-			return false;
+ return false;
 
 		std::vector<ExplorerInfo*>::iterator it = Quest->ExplorerInfos.begin();
 
 		for (int index = 0; it != Quest->ExplorerInfos.end(); it++, index++)
 		{
-			ExplorerInfo* info = (ExplorerInfo*)(*it);
-			if (!ExplorerComp[index] && mapid == info->MapID)
-			{
-				static int RADIUS = 10;
-				int length = (info->PosX - posx) * (info->PosX - posx) + (info->PosZ - posz) * (info->PosZ - posz);
-				if (length < RADIUS * RADIUS)
-				{
-					ExplorerComp[index] = true;
-					//if( !IsFinishedExplorer() )
-					//	return true;
-					return index;
-				}
-			}
+ ExplorerInfo* info = (ExplorerInfo*)(*it);
+ if (!ExplorerComp[index] && mapid == info->MapID)
+ {
+ 	static int RADIUS = 10;
+ 	int length = (info->PosX - posx) * (info->PosX - posx) + (info->PosZ - posz) * (info->PosZ - posz);
+ 	if (length < RADIUS * RADIUS)
+ 	{
+ 		ExplorerComp[index] = true;
+ 		//if( !IsFinishedExplorer() )
+ 		//	return true;
+ 		return index;
+ 	}
+ }
 		}
 		return -1;
 	}
@@ -400,23 +400,23 @@ struct SQuestStatus
 	bool Kill(int id)
 	{
 		if (id == -1 && Status != QUEST_STATUS_INCOMPLETE)
-			return false;
+ return false;
 
 		if (!Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_KILL_OR_CAST))
-			return false;
+ return false;
 
 		for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
 		{
-			if (Quest->Creature[i] == id)
-			{
-				if (CreatureCount[i] >= Quest->CreatureCount[i])
-					return false;
-				else
-				{
-					CreatureCount[i]++;
-					return true;
-				}
-			}
+ if (Quest->Creature[i] == id)
+ {
+ 	if (CreatureCount[i] >= Quest->CreatureCount[i])
+ 		return false;
+ 	else
+ 	{
+ 		CreatureCount[i]++;
+ 		return true;
+ 	}
+ }
 		}
 
 		return false;
@@ -425,29 +425,29 @@ struct SQuestStatus
 	bool Cast(int id)
 	{
 		if (id == -1 && Status != QUEST_STATUS_INCOMPLETE)
-			return false;
+ return false;
 
 		if (!Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_KILL_OR_CAST))
-			return false;
+ return false;
 
 		for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
 		{
-			if (Quest->Item[i] == id)
-			{
-				//这里加一个掉落几率
-				if (sbase::RandGet(100) < Quest->ItemProbability[i])
-				{
-					if (ItemCount[i] >= Quest->ItemCount[i])
-						return false;
-					else
-					{
-						ItemCount[i]++;
-						return true;
-					}
-				}
-				else
-					return false;
-			}
+ if (Quest->Item[i] == id)
+ {
+ 	//这里加一个掉落几率
+ 	if (sbase::RandGet(100) < Quest->ItemProbability[i])
+ 	{
+ 		if (ItemCount[i] >= Quest->ItemCount[i])
+  return false;
+ 		else
+ 		{
+  ItemCount[i]++;
+  return true;
+ 		}
+ 	}
+ 	else
+ 		return false;
+ }
 		}
 
 		return false;
@@ -468,12 +468,12 @@ struct SQuestStatus
 
 		// 如果已经完成，其他情况不变
 		if (Status == QUEST_STATUS_OVER)
-			Status = QUEST_STATUS_AVAILABLE;
+ Status = QUEST_STATUS_AVAILABLE;
 
 		if (Completed)
 		{
-			Completed = 0;
-			return true;
+ Completed = 0;
+ return true;
 		}
 
 		return false;
@@ -497,7 +497,7 @@ struct SQuestStatus
 	bool Cancel()
 	{
 		if (!Quest)
-			return false;
+ return false;
 
 		memset(ItemCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
 		memset(CreatureCount, 0, QUEST_OBJECTIVES_COUNT * sizeof(short));
@@ -505,8 +505,8 @@ struct SQuestStatus
 
 		if (Quest->TimeOver)
 		{
-			Status = QUEST_STATUS_UNAVAILABLE;
-			return false;
+ Status = QUEST_STATUS_UNAVAILABLE;
+ return false;
 		}
 
 		Status = QUEST_STATUS_AVAILABLE;
@@ -517,7 +517,7 @@ struct SQuestStatus
 	bool Accept()
 	{
 		if (Status != QUEST_STATUS_AVAILABLE)
-			return false;
+ return false;
 
 		Status = QUEST_STATUS_INCOMPLETE;
 
@@ -537,22 +537,22 @@ struct SQuestStatus
 
 		if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_REPEATABLE))
 		{
-			if (Quest->Repeat > 0 && Completed >= Quest->Repeat)
-				Status = QUEST_STATUS_OVER;
-			else if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_LOOP))//循环任务特殊处理
-			{
-				Status = QUEST_STATUS_UNAVAILABLE;
-			}
-			else
-				Status = QUEST_STATUS_AVAILABLE;
+ if (Quest->Repeat > 0 && Completed >= Quest->Repeat)
+ 	Status = QUEST_STATUS_OVER;
+ else if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_LOOP))//循环任务特殊处理
+ {
+ 	Status = QUEST_STATUS_UNAVAILABLE;
+ }
+ else
+ 	Status = QUEST_STATUS_AVAILABLE;
 		}
 		else if (Quest->QuestSort == QUEST_SORT_RANDOM)//道具任务特殊处理
 		{
-			Status = QUEST_STATUS_AVAILABLE;
+ Status = QUEST_STATUS_AVAILABLE;
 		}
 		else
 		{
-			Status = QUEST_STATUS_OVER;
+ Status = QUEST_STATUS_OVER;
 		}
 
 		return true;
@@ -561,61 +561,61 @@ struct SQuestStatus
 	int UpData(int level)
 	{
 		if (!m_Timer.IsExpire())
-			return QUEST_STATUS_NONE;
+ return QUEST_STATUS_NONE;
 
 		m_Timer.Update();
 
 		if (!Quest)
-			return QUEST_STATUS_NONE;
+ return QUEST_STATUS_NONE;
 
 		//如果完成，失败
 		if (Status == QUEST_STATUS_COMPLETE || Status == QUEST_STATUS_FAILD)
-			return QUEST_STATUS_NONE;
+ return QUEST_STATUS_NONE;
 
 		if (Quest->RequiredLevel > level)
-			return QUEST_STATUS_NONE;
+ return QUEST_STATUS_NONE;
 
 		if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_SPEAKTO))
 		{
-			Status = QUEST_STATUS_COMPLETE;
+ Status = QUEST_STATUS_COMPLETE;
 
-			return QUEST_STATUS_COMPLETE;
+ return QUEST_STATUS_COMPLETE;
 		}
 
 		// 		if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED))
 		// 		{
-		// 			//判断计时
-		// 			if (Quest->TimeOver)
-		// 			{
-		// 				Status = QUEST_STATUS_FAILD;
+		//  //判断计时
+		//  if (Quest->TimeOver)
+		//  {
+		//  	Status = QUEST_STATUS_FAILD;
 		//
-		// 				return QUEST_STATUS_FAILD;
-		// 			}
+		//  	return QUEST_STATUS_FAILD;
+		//  }
 		// 		}
 
 		if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_KILL_OR_CAST))
 		{
-			for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
-			{
-				if (ItemCount[i] < Quest->ItemCount[i])
-					return QUEST_STATUS_NONE;
-				if (CreatureCount[i] < Quest->CreatureCount[i])
-					return QUEST_STATUS_NONE;
+ for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
+ {
+ 	if (ItemCount[i] < Quest->ItemCount[i])
+ 		return QUEST_STATUS_NONE;
+ 	if (CreatureCount[i] < Quest->CreatureCount[i])
+ 		return QUEST_STATUS_NONE;
 
-				Status = QUEST_STATUS_COMPLETE;
+ 	Status = QUEST_STATUS_COMPLETE;
 
-				return QUEST_STATUS_COMPLETE;
-			}
+ 	return QUEST_STATUS_COMPLETE;
+ }
 		}
 
 		if (Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_MAP_EXPOLORER))//探索任务更新
 		{
-			if (IsFinishedExplorer())
-			{
-				Status = QUEST_STATUS_COMPLETE;
+ if (IsFinishedExplorer())
+ {
+ 	Status = QUEST_STATUS_COMPLETE;
 
-				return QUEST_STATUS_COMPLETE;
-			}
+ 	return QUEST_STATUS_COMPLETE;
+ }
 		}
 
 		return QUEST_STATUS_NONE;
@@ -629,11 +629,11 @@ struct SQuestStatus
 
 	QuestStatus Status;
 
-	time_t	TimeLimit;									//任务时限
+	time_t	TimeLimit;   //任务时限
 
-	time_t TimeUpdata;									//更新时间
+	time_t TimeUpdata;   //更新时间
 
-	char Completed;										//完成次数
+	char Completed;   	//完成次数
 
 	short ItemCount[QUEST_OBJECTIVES_COUNT];
 	short CreatureCount[QUEST_OBJECTIVES_COUNT];

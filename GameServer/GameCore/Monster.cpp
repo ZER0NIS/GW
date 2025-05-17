@@ -1,15 +1,3 @@
-//========================================================
-//
-//    Copyright (c) 2006,欢乐连线工作室
-//    All rights reserved.
-//
-//    文件名称 ： Monster.cpp
-//    摘    要 ： 怪物功能模块
-//
-//    修    改 ： 张文欣，添加了怪物技能
-//    完成日期 ： 2008-03-26
-//
-//========================================================
 #include "StdAfx.h"
 #include "Monster.h"
 #include "Player.h"
@@ -97,21 +85,11 @@ bool CMonster::IsOwner(const char* name)
 
 void CMonster::AddEnmity(CGameObject* pObject, long lValue)
 {
-	//道具归属
 	if (m_listEnmity.empty() || !m_ItemOwner[0])
 	{
 		m_ItemOwner[0] = pObject;
 		m_ItemOwnerName[0] = pObject->GetName();
 
-		// 		for (int i = 0 ; i < MAX_OWNER ; i++)
-		// 		{
-		// 			//是队伍..
-		// 			if (((CPlayer*)m_ItemOwner[0])->m_pTeam[i])
-		// 			{
-		// 				m_ItemOwner[i] = ((CPlayer*)m_ItemOwner[0])->m_pTeam[i];
-		// 				m_ItemOwnerName[i] = m_ItemOwner[i]->GetName();
-		// 			}
-		// 		}
 		if (((CPlayer*)m_ItemOwner[0])->m_pTeamLeader)
 		{
 			m_ItemOwner[0] = ((CPlayer*)m_ItemOwner[0])->m_pTeamLeader;
@@ -154,7 +132,6 @@ void CMonster::Activate(void)
 	CGameObject::Activate();
 }
 
-// 消失刷新     LOST
 void CMonster::ResetTimer(void)
 {
 	m_Timer.Startup(m_lRefreshTime);
@@ -165,7 +142,6 @@ bool CMonster::IsRefresh(void)
 	return m_Timer.IsExpire();
 }
 
-// 尸体存在刷新 DEAD->LOST
 void CMonster::ResetCorpseTimer(void)
 {
 	if (m_Drops)
@@ -183,12 +159,8 @@ bool CMonster::IsCorpseTimer(void)
 
 void CMonster::Refresh(void)
 {
-	// 刷新处理，需要将所有相关数据都进行重置
-
-	//清理状态
 	if (m_StatusMap.size() > 0)
 	{
-		//同步状态
 		MSG_STATUS msg_status;
 		msg_status.Head.usSize = sizeof(MSG_STATUS);
 		msg_status.Head.usType = _MSG_STATUS;
@@ -204,7 +176,6 @@ void CMonster::Refresh(void)
 
 	m_Escaped = false;
 	m_Escaping = false;
-	// 掉落容器重置
 	for (int i = 0; i < MAX_DROPS; i++)
 		m_DropItems[i].Clear();
 
@@ -216,7 +187,6 @@ void CMonster::Refresh(void)
 		m_ItemOwnerName[i] = "";
 	}
 
-	// 基本属性重置
 	m_ObjectData.m_lHP = GetBaselMaxHP();
 	m_lState = MONSTER_STATE_LIVE;
 	m_lActivity = MONSTER_ACTIVITY_IDLE;
@@ -230,10 +200,7 @@ void CMonster::Refresh(void)
 
 	m_listEnmity.clear();
 
-	// 重置AI时间
 	m_timerAI.Update();
-
-	// 广播刷新消息给Region中其他玩家
 
 	msg_leave.uiID = GetID();
 	msg_leave.Head.usSize = sizeof(msg_leave);
@@ -255,13 +222,11 @@ void CMonster::Refresh(void)
 	msg.ucCamp = GetlFaction();
 
 	sprintf(msg.cName, "%s", GetName());
-	// by fenjune m_pRegion->SendMsgToPlayer( &msg );
 	m_pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg);
 }
 
 void CMonster::LeaveFight(void)
 {
-	// 脱离战斗状态的属性重置
 	GetRegion()->EndFight(this);
 
 	SetTarget(NULL);
@@ -273,17 +238,12 @@ bool CMonster::DoSomething()
 	{
 	case MONSTER_MODE_CRAVEN:
 	{
-		//弱
 		if (GetlHP() <= GetBaselMaxHP() * 0.5)
 		{
 			CGameObject* obj = GetRegion()->GetNearestPartner(this);
 
-			//没逃跑时加个概率计算
-
 			if (!m_Escaping && !m_Escaped)
 			{
-				//非逃跑
-
 				if (sbase::RandGet(10) != 0)
 					return false;
 			}
@@ -293,23 +253,6 @@ bool CMonster::DoSomething()
 
 			if (FollowTo(obj->GetPosX(), 0.0f, obj->GetPosZ()))
 			{
-				/*
-				msg_walk_begin.X = GetPosX();
-				msg_walk_begin.Y = 0.0f;
-				msg_walk_begin.Z = GetPosZ();
-				msg_walk_begin.uiTick = m_nRunTick;
-				msg_walk_begin.OffsetX = m_fOffsetX;
-				msg_walk_begin.OffsetY = 0.0f;
-				msg_walk_begin.OffsetZ = m_fOffsetZ;
-				msg_walk_begin.uiID = GetID();
-				msg_walk_begin.usMapID = (USHORT)GetRegion()->GetID();
-				msg_walk_begin.Head.usSize = sizeof(msg_walk_begin);
-
-				//by fenjune GetRegion()->SendMsgToPlayer( &msg_walk_begin );
-				GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_begin );
-				m_nRunTick = 0;
-				*/
-
 				m_Escaping = true;
 
 				return true;
@@ -323,7 +266,6 @@ bool CMonster::DoSomething()
 					m_Escaped = true;
 					m_Escaping = false;
 
-					//同步仇恨列表
 					obj->ChainEnmityList(this, 0);
 					GetRegion()->StartFight(obj, m_targetObj);
 
@@ -335,89 +277,16 @@ bool CMonster::DoSomething()
 	break;
 	case MONSTER_MODE_VALOROUS:
 	{
-		//强
 	}
 	break;
 	case MONSTER_MODE_DEEP:
 	{
-		//狡猾
-
-		//return UseSKill();
 	}
 	break;
 	}
 
 	return false;
 }
-
-//bool CMonster::UseSKill()
-//{
-//	if (m_eState == OBJECT_CAST)
-//	{
-//		//施法状态
-//
-//		ChangeActiveSkillStatus(GetCurActiveSkillID() , TIME_STYLE_COOL);
-//
-//		if (CGameObject::IsRefresh(  TIME_STYLE_CAST ) )
-//		{
-//			::OutputDebugString( " OBJECT_PERFORM! \n" );
-//			m_eState = OBJECT_PERFORM;
-//
-//			//	int hp = pTarget->GetPropertyValue( USERDATA_CURHP );
-//			//	pTarget->SetPropertyValue( hp-10, USERDATA_CURHP );
-//			msg_magic.uiObjectID = m_targetObj->GetID();
-//			msg_magic.uiID       = GetID();
-//			msg_magic.bType		 = 0;
-//			msg_magic.iPower     = 9999;
-//			msg_magic.ucMagicID  = GetCurActiveSkillID();
-//			msg_magic.Head.usSize = sizeof(msg_magic);
-//
-//			//发送魔法Perform消息
-//			// by fenjune GetRegion()->SendMsgToPlayer(&msg_magic);
-//			GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_magic );
-//		}
-//
-//		return true;
-//	}
-//	else if (m_eState == OBJECT_PERFORM)
-//	{
-//		//执行状态
-//
-//		m_eState = OBJECT_IDLE;
-//
-//		return true;
-//	}
-//	else
-//	{
-//		//这块加一些判断,根据情况施法,
-//
-//		for (map< UINT , ACTIVEINFO >::iterator iter = m_ActiveSkill.begin() ; iter != m_ActiveSkill.end() ; iter++)
-//		{
-//			const MagicData* data = CGameObject::s_World->g_pSkillManager->GetMagic(iter->first);
-//
-//			if (!data)
-//				return false;
-//
-//			if (data->ucStyle == STYLE_DECREASE)
-//			{
-//				if (!GetRegion()->Skill(this , m_targetObj , m_fX , m_fY , m_fZ , iter->first, 0, 0, 0) )
-//					return false;
-//			}
-//			else if (data->ucStyle == STYLE_INCREASE)
-//			{
-//				if (!GetRegion()->Skill(this , this , m_fX , m_fY , m_fZ , iter->first, 0, 0, 0))
-//					return false;
-//			}
-//
-//			// 发送移动停止的消息
-//			StopWalk();
-//
-//			return true;
-//		}
-//
-//		return false;
-//	}
-//}
 
 bool CMonster::IsSkillCooling(int index)
 {
@@ -432,11 +301,9 @@ void CMonster::Cooldown(int index)
 	m_SkillInfos[index].TimePos = timeGetTime();
 }
 
-//怪物使用技能
 void CMonster::UseSkill(int index)
 {
 	int skillID = m_SkillInfos[index].SkillID;
-	//冷却
 	Cooldown(index);
 
 	const MagicData* magicData = CGameObject::s_World->g_pSkillManager->GetMagic(skillID);
@@ -444,7 +311,6 @@ void CMonster::UseSkill(int index)
 	UINT targetFlag = magicData->ucTarget;
 	bool bTarSelf = (targetFlag == TARGET_SELF);
 
-	//发送特效显示消息
 	MSG_MAGIC_PERFORM mgicPerform;
 	mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 	mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -455,7 +321,6 @@ void CMonster::UseSkill(int index)
 	mgicPerform.ucMagicID = skillID;
 	GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &mgicPerform);
 
-	//群体魔法伤害计算加入到Region里
 	if (magicData->ucRange != 0)
 	{
 		if (GetTarget() != NULL)
@@ -464,7 +329,7 @@ void CMonster::UseSkill(int index)
 			center[0] = bTarSelf ? m_fX : GetTarget()->GetPosX();
 			center[1] = 0;
 			center[2] = bTarSelf ? m_fZ : GetTarget()->GetPosZ();
-			if (magicData->iEffectTurn > 1) //群体伤害都加进去
+			if (magicData->iEffectTurn > 1)
 			{
 				GetRegion()->AddMagicRegion(GetID(), skillID, center, magicData->ucRange,
 					magicData->ucAffectObj);
@@ -493,7 +358,6 @@ void CMonster::UseSkill(int index)
 				MAGIC_DAMAGE* mgicDamage = &clstDamager->magicDamage[i];
 				++i;
 
-				// 遍历所有对象
 				pTarget = (CGameObject*)*Iter;
 
 				if (pTarget->GetID() == GetTarget()->GetID())
@@ -528,7 +392,6 @@ void CMonster::AI(void)
 {
 	if (GetState() == MONSTER_STATE_DEAD)
 	{
-		// 刷掉尸体
 		if (IsCorpseTimer())
 		{
 			ResetTimer();
@@ -542,7 +405,6 @@ void CMonster::AI(void)
 	}
 	else if (GetState() == MONSTER_STATE_LOST)
 	{
-		// 刷新
 		if (IsRefresh())
 			Refresh();
 
@@ -551,26 +413,8 @@ void CMonster::AI(void)
 
 	if (m_lState == MONSTER_STATE_LEAVEFIGHT)
 	{
-		//Refresh();
-
 		if (FollowTo(m_fFightX, 0.0f, m_fFightZ))
 		{
-			/*
-			msg_walk_begin.X = GetPosX();
-			msg_walk_begin.Y = 0.0f;
-			msg_walk_begin.Z = GetPosZ();
-			msg_walk_begin.uiTick = m_nRunTick;
-			msg_walk_begin.OffsetX = m_fOffsetX;
-			msg_walk_begin.OffsetY = 0.0f;
-			msg_walk_begin.OffsetZ = m_fOffsetZ;
-			msg_walk_begin.uiID = GetID();
-			msg_walk_begin.usMapID = (USHORT)GetRegion()->GetID();
-			msg_walk_begin.Head.usSize = sizeof(msg_walk_begin);
-
-			// by fenjune GetRegion()->SendMsgToPlayer( &msg_walk_begin );
-			GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_begin );
-			m_nRunTick = 0;
-			*/
 		}
 		else
 		{
@@ -578,10 +422,8 @@ void CMonster::AI(void)
 		}
 	}
 
-	// 存活智能
 	if (m_bIsFight)
 	{
-		//自己状态
 		__super::AI();
 
 		if (IsDead())
@@ -591,7 +433,6 @@ void CMonster::AI(void)
 			return;
 		}
 
-		// 脱离战斗条件判定
 		if (GetDist(m_fFightX, m_fFightZ) > m_fActivityRange && m_timeFight.IsExpire())
 		{
 			m_lState = MONSTER_STATE_LEAVEFIGHT;
@@ -603,7 +444,6 @@ void CMonster::AI(void)
 		int rand = RandomSkill();
 
 		const MagicData* magicData = CGameObject::s_World->g_pSkillManager->GetMagic(m_SkillInfos[rand].SkillID);
-		// 战斗中，使用AI
 		if (GetTarget() != NULL)
 		{
 			if (DoSomething())
@@ -612,22 +452,6 @@ void CMonster::AI(void)
 			}
 			else if (FollowTo(GetTarget()->GetPosX(), 0.0f, GetTarget()->GetPosZ(), magicData->ucDistance))
 			{
-				/*
-				msg_walk_begin.X = GetPosX();
-				msg_walk_begin.Y = 0.0f;
-				msg_walk_begin.Z = GetPosZ();
-				msg_walk_begin.uiTick = m_nRunTick;
-				msg_walk_begin.OffsetX = m_fOffsetX;
-				msg_walk_begin.OffsetY = 0.0f;
-				msg_walk_begin.OffsetZ = m_fOffsetZ;
-				msg_walk_begin.uiID = GetID();
-				msg_walk_begin.usMapID = (USHORT)GetRegion()->GetID();
-				msg_walk_begin.Head.usSize = sizeof(msg_walk_begin);
-
-				//GetRegion()->SendMsgToPlayer( &msg_walk_begin );
-				GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_begin );
-				m_nRunTick = 0;
-				*/
 			}
 			else
 			{
@@ -637,7 +461,6 @@ void CMonster::AI(void)
 				}
 				else if (IsAttack())
 				{
-					//判断命中
 					ATTACK_TYPE  attack_type = this->JudgeAttackStyle(m_targetObj);
 					msg_attack.ucAttackType = attack_type;
 
@@ -649,11 +472,10 @@ void CMonster::AI(void)
 					case ATTACK_HIT:
 					{
 						const MagicData* magicData = CGameObject::s_World->g_pSkillManager->GetMagic(m_SkillInfos[rand].SkillID);
-						//状态数据(添加状态)(必中)
 						std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 						for (; iter != magicData->m_Status.end(); iter++)
 						{
-							if ((*iter) < 0) //去状态
+							if ((*iter) < 0)
 							{
 								m_targetObj->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 							}
@@ -669,14 +491,11 @@ void CMonster::AI(void)
 							damage = 1;
 						else
 						{
-							//中断吟唱
 							if (OBJECT_CAST == m_targetObj->GetState() && m_targetObj->GetHaltIntonate() > 0.0f)
 							{
-								//m_targetObj->SetState( OBJECT_IDLE );
 								m_targetObj->ResetCastState();
 							}
 
-							//返还HP
 							int HPResume = int(damage * m_targetObj->GetReboundDamage() + (int)damage * m_targetObj->GetReturnDamage());
 							AddHP(HPResume);
 
@@ -691,8 +510,6 @@ void CMonster::AI(void)
 						msg_attack.Z = m_fZ;
 						msg_attack.ucAttackType = ATTACK_HIT;
 						msg_attack.uiDamage = damage;
-						//							msg_attack.Head.usSize = sizeof(msg_attack);
-
 						m_targetObj->AddHP(-damage);
 
 						GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_attack);
@@ -723,23 +540,13 @@ void CMonster::AI(void)
 
 						GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_attack);
 						m_timeAttack.Update();
-
-						/*
-						// ？ 这段代码什么意思？属于技能？  by: sea_bug
-						msg_magic.ucMagicID = m_SkillInfos[0].SkillID;
-						msg_magic.bType = ATTACK_MISS;
-						msg_magic.Head.usSize = sizeof(msg_magic);
-
-						// by fenjune GetRegion()->SendMsgToPlayer(&msg_magic);
-						GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(),&msg_magic );
-						*/
 					}
 					break;
 					}
 				}
 			}
 		}
-		else	// 对象异常，如掉线
+		else
 		{
 			m_lState = MONSTER_STATE_LEAVEFIGHT;
 
@@ -748,21 +555,17 @@ void CMonster::AI(void)
 	}
 	else
 	{
-		// 待机中
-
 		if (m_WalkTime == 0)
 			return;
 
 		if (m_timerAI.IsExpire())
 		{
-			// 触发操作
 			switch (m_lActivity)
 			{
-			case MONSTER_ACTIVITY_IDLE:			// 静止状态
+			case MONSTER_ACTIVITY_IDLE:
 			{
 				m_lActivity = MONSTER_ACTIVITY_WALK;
 
-				// 怪物智能移动范围AI
 				float rand_x = 0.0f;
 				float rand_z = 0.0f;
 				float top_x, top_y, bottom_x, bottom_y;
@@ -783,30 +586,6 @@ void CMonster::AI(void)
 					rand_z = m_fIniZ - (float)(sbase::RandGet(5, false));
 				else if (rand_z > (m_fIniZ + 5.0f))
 					rand_z = m_fIniZ + (float)(sbase::RandGet(5, false));
-				/*
-				int rand = sbase::RandGet( 20, false );
-				if( rand < 5 )
-				{
-				rand_x = GetPosX() + ((float)(sbase::RandGet( 7, false )) + 2.f);
-				rand_z = GetPosZ() + ((float)(sbase::RandGet( 7, false )) + 2.f);
-				}
-				else if( rand < 10 )
-				{
-				rand_x = GetPosX() - ((float)(sbase::RandGet( 7, false )) + 2.f);
-				rand_z = GetPosZ() - ((float)(sbase::RandGet( 7, false )) + 2.f);
-				}
-				else if( rand < 15 )
-				{
-				rand_x = GetPosX() + ((float)(sbase::RandGet( 7, false )) + 2.f);
-				rand_z = GetPosZ() - ((float)(sbase::RandGet( 7, false )) + 2.f);
-				}
-				else
-				{
-				rand_x = GetPosX() - ((float)(sbase::RandGet( 7, false )) + 2.f);
-				rand_z = GetPosZ() + ((float)(sbase::RandGet( 7, false )) + 2.f);
-				}
-				*/
-
 				WalkTo(rand_x, 0.0f, rand_z);
 			}
 			break;
@@ -822,8 +601,6 @@ void CMonster::AI(void)
 
 			m_timerAI.Update();
 		}
-
-		// 		GetRegion()->RefreshInitiativeMonster(this);
 	}
 }
 
@@ -832,7 +609,6 @@ void CMonster::Run()
 	if (IsDead())
 		return;
 
-	// 怪物状态机
 	switch (m_eState)
 	{
 	case OBJECT_RUN:
@@ -851,13 +627,10 @@ void CMonster::Run()
 
 		if (m_fDist <= 0.0f)
 		{
-			// 移动终止，切换角色状态
 			StopWalk();
 			msg_walk.lState = OBJECT_IDLE;
-			m_timerAI.Update();		// 打乱AI时间次序
+			m_timerAI.Update();
 		}
-
-		//			SendAreaMsgOneToOther( pPlayer->GetCurrentCell(), &msg_walk );
 	}
 	break;
 	default:
@@ -865,9 +638,6 @@ void CMonster::Run()
 	}
 }
 
-// -------------------------------------------------
-//初始化内部数据
-// -------------------------------------------------
 bool CMonster::InitObjData(long)
 {
 	m_DropItemMgr.Init(m_ConfirmConfig.ItemTable);
@@ -920,8 +690,6 @@ bool CMonster::InitObjData(long)
 		AddActiveSkill(m_SkillInfos[i].SkillID);
 	}
 
-	//m_lMode = MONSTER_MODE_INITIATIVE;
-
 	return true;
 }
 
@@ -930,8 +698,6 @@ bool CMonster::StopWalk(void)
 	if (m_eState == OBJECT_RUN)
 	{
 		m_eState = OBJECT_IDLE;
-		// 发送移动停止的消息
-
 		msg_walk_end.X = GetPosX();
 		msg_walk_end.Y = 0.0f;
 		msg_walk_end.Z = GetPosZ();
@@ -939,7 +705,6 @@ bool CMonster::StopWalk(void)
 		msg_walk_end.fAtan2 = m_fatan2;
 		msg_walk_end.uiID = GetID();
 		msg_walk_end.usMapID = (USHORT)GetRegion()->GetID();
-		//		msg_walk_end.Head.usSize = sizeof(msg_walk_end);
 		GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_walk_end);
 
 		m_nRunTick = 0;
@@ -954,30 +719,23 @@ bool CMonster::WalkTo(float x, float, float z)
 	if (x == GetPosX() && z == GetPosZ())
 		return false;
 
-	// 	if (g_pObstacle->IsObstacleList(this->GetRegion()->GetID() , x , z))
-	// 		return false;
-
-	// 临时参数， (Z2-Z1) (X2-X1)
 	float fPX = 0.0f;
 	float fPZ = 0.0f;
 
 	m_fDestinationX = x;
-	m_fDestinationY = 0.0f;	// 锁定地面高度，固定为0.0f
+	m_fDestinationY = 0.0f;
 	m_fDestinationZ = z;
 
 	fPX = x - GetPosX();
 	fPZ = z - GetPosZ();
 
-	// 当前位置与目标位置距离
 	m_fDist = sqrt(fPX * fPX + fPZ * fPZ);
 
 	m_fOffsetX = fPX / m_fDist * m_ObjectData.m_fSpeed;
 	m_fOffsetZ = fPZ / m_fDist * m_ObjectData.m_fSpeed;
 
-	// 移动面部朝向
 	m_fatan2 = atan2(fPX, fPZ);
 
-	// 角色状态
 	if (m_eState == OBJECT_IDLE)
 	{
 		m_eState = OBJECT_RUN;
@@ -992,35 +750,25 @@ bool CMonster::WalkTo(float x, float, float z)
 	msg_walk_begin.OffsetZ = m_fOffsetZ;
 	msg_walk_begin.uiID = GetID();
 	msg_walk_begin.usMapID = (USHORT)GetRegion()->GetID();
-	//	msg_walk_begin.Head.usSize = sizeof(msg_walk_begin);
-
 	GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_walk_begin);
 
-	/*
-	char buf[256];
-	sprintf( buf, "(%f, %f)  dist=%f  offset=%f, %f\n", GetPosX(), GetPosZ(), m_fDist, m_fOffsetX, m_fOffsetZ );
-	OutputDebugString( buf );
-	*/
 	return true;
 }
 
 bool CMonster::FollowTo(float x, float, float z, BYTE distance)
 {
-	// 临时参数， (Z2-Z1) (X2-X1)
 	float fPX = 0.0f;
 	float fPZ = 0.0f;
 
 	m_fDestinationX = x;
-	m_fDestinationY = 0.0f;	// 锁定地面高度，固定为0.0f
+	m_fDestinationY = 0.0f;
 	m_fDestinationZ = z;
 
 	fPX = x - GetPosX();
 	fPZ = z - GetPosZ();
 
-	// 当前位置与目标位置距离
 	m_fDist = sqrt(fPX * fPX + fPZ * fPZ);
 
-	// 移动面部朝向
 	m_fatan2 = atan2(fPX, fPZ);
 
 	if (m_fDist < distance || m_fDist < 2.0f)
@@ -1042,12 +790,9 @@ bool CMonster::FollowTo(float x, float, float z, BYTE distance)
 	msg_walk_begin.usMapID = (USHORT)GetRegion()->GetID();
 	msg_walk_begin.Head.usSize = sizeof(msg_walk_begin);
 
-	// by fenjune GetRegion()->SendMsgToPlayer( &msg_walk_begin );
 	GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_walk_begin);
 	m_nRunTick = 0;
 
-	// 角色状态
-	//	if( m_eState != OBJECT_ATTACK )
 	{
 		m_eState = OBJECT_RUN;
 		return true;
@@ -1062,7 +807,6 @@ float CMonster::GetDistWithTarget()
 	float fPX = GetTarget()->GetPosX() - GetPosX();
 	float fPZ = GetTarget()->GetPosZ() - GetPosZ();
 
-	// 当前位置与目标位置距离
 	return sqrt(fPX * fPX + fPZ * fPZ);
 }
 
@@ -1071,21 +815,13 @@ float CMonster::GetDist(float x, float z)
 	float fPX = x - GetPosX();
 	float fPZ = z - GetPosZ();
 
-	// 当前位置与目标位置距离
 	return sqrt(fPX * fPX + fPZ * fPZ);
 }
 
-//------------------------------------------------------
-//计算合成攻击力
-//------------------------------------------------------
 UINT CMonster::CalculateAttack() const
 {
 	return  0;
 }
-
-//------------------------------------------------------
-//计算合成防御力
-//------------------------------------------------------
 
 UINT CMonster::CalculateDefend() const
 {
@@ -1113,7 +849,6 @@ Item* CMonster::GetFreeItem()
 
 CGameObject* CMonster::GetNearestPartner()
 {
-	//GetRegion()->m_listMonster
 	return NULL;
 }
 
@@ -1122,31 +857,31 @@ UINT  CMonster::CalculateAttack()
 	return CGameObject::CalculateAttack();
 }
 
-bool  CMonster::CalculatePassivePracticeDegree(PhysiacalAttack /*Type*/, ATTACK_TYPE /*eAttackType*/, bool /*IsDead*/)
+bool  CMonster::CalculatePassivePracticeDegree(PhysiacalAttack, ATTACK_TYPE, bool)
 {
 	return false;
 }
 
-void CMonster::CalculatePassivePracticeDegree(int /*MagicID*/, ATTACK_TYPE /*eAttackType*/, bool /*IsDead*/)
+void CMonster::CalculatePassivePracticeDegree(int, ATTACK_TYPE, bool)
 {
 	return;
 }
 
-bool CMonster::ChanegeDegree(int /*ucSkillID*/, int /*Buffer*/)
+bool CMonster::ChanegeDegree(int, int)
 {
 	return false;
 }
 
-bool CMonster::PassiveSkillUpgrade(UINT  /*SkillID*/, int*)
+bool CMonster::PassiveSkillUpgrade(UINT, int*)
 {
 	return true;
 }
 
-void CMonster::AddPassiveSkill(int /*ucSkillID*/, int /*iRank*/, int /*EXP*/)
+void CMonster::AddPassiveSkill(int, int, int)
 {
 }
 
-INT CMonster::CalculateAttackDamage(CGameObject& obj, float /*iPower*/)
+INT CMonster::CalculateAttackDamage(CGameObject& obj, float)
 {
 	return CGameObject::CalculateAttackDamage(obj);
 }
@@ -1157,13 +892,11 @@ INT  CMonster::CalculateAttackDamage(int MagicID)
 		return  CGameObject::CalculateAttackDamage(MagicID, *m_targetObj);
 }
 
-//命中
 ULONG CMonster::GetHit()
 {
 	return m_BaseData.m_lHit;
 }
 
-//躲避
 ULONG CMonster::GetDodge()
 {
 	return m_BaseData.m_lDodge;
@@ -1193,15 +926,11 @@ void CMonster::Dead(CGameObject* pObj)
 	if (m_eState == OBJECT_DEAD)
 		return;
 
-	//杀死怪物加经验
 	int Count = 0;
 	for (int i = 0; i < MAX_OWNER; i++)
 	{
 		if (m_ItemOwner[i])
-			//		{
-			// 			m_ItemOwner[i]->CalculateExp( true );
 			Count++;
-		// 		}
 	}
 
 	if (NULL != pObj)
@@ -1249,10 +978,8 @@ void CMonster::Dead(CGameObject* pObj)
 	m_eState = OBJECT_DEAD;
 	m_lState = MONSTER_STATE_DEAD;
 
-	//玩家等级高于怪物等级并且等级差小于30级配置掉落才生效
 	if (pObj && pObj->GetRank() - GetRank() < 30)
 	{
-		//配置掉落
 		for (int i = 0; i < m_ConfirmConfig.DropNum; i++)
 		{
 			int rand = sbase::RandGet(100);
@@ -1280,7 +1007,6 @@ void CMonster::Dead(CGameObject* pObj)
 		}
 	}
 
-	//相性掉落
 	for (int i = 0; i < m_DropConfig.DropNum; i++)
 	{
 		int rand = sbase::RandGet(100);
@@ -1302,17 +1028,14 @@ void CMonster::Dead(CGameObject* pObj)
 
 	ResetCorpseTimer();
 
-	// 发送移动停止的消息
 	StopWalk();
 
-	// 发送死亡消息
 	msg_dead.uiID = GetID();
 	msg_dead.Head.usSize = sizeof(msg_dead);
 	msg_dead.KillerID = GetID();
 	msg_dead.KillerPre = 0;
 	GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_dead);
 
-	//掉落
 	msg_drops.uiID = GetID();
 	msg_drops.DropNum = m_Drops;
 	msg_drops.Head.usSize = sizeof(msg_drops.Head);
@@ -1353,34 +1076,23 @@ int CMonster::RandomSkill()
 			random -= m_SkillInfos[i].SkillPro;
 	}
 
-	return 0;//保证最少第一个技能可以用（可反复使用的技能）
+	return 0;
 }
 
-//-------------------------------------------------------
-//将其他对象信息同步给自己
-//-------------------------------------------------------
 void CMonster::AynObjToObj(CCell* pOldCell, CCell* pNewCell)
 {
-	//旧区域
 	msg_leave.uiID = GetID();
 	std::vector<CCell*>  NewCell = GetRegion()->GetMap()->AreaCollisionTest(pNewCell, pOldCell);
 	GetRegion()->SendAreaMsgOneToOther(NewCell, &msg_leave);
 
-	//新区域
 	AynMeToOther(pOldCell, pNewCell);
 }
 
-//-------------------------------------------------------
-//将自己的信息同步给其他玩家
-//-------------------------------------------------------
 void CMonster::AynMeToOther(CCell* pOldCell, CCell* pNewCell)
 {
 	CGameObject::AynMeToOther(pOldCell, pNewCell);
 }
 
-//-------------------------------------------------------
-// 设置怪物临时物理攻击力(招式\魔法)
-//-------------------------------------------------------
 void   CMonster::SetRandMagicAttack(UINT MagicAttack)
 {
 	m_BaseData.m_lAttack = MagicAttack;

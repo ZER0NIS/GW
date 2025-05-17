@@ -26,7 +26,7 @@ namespace serve
 		CKernelImpl::GetInstance(void)
 	{
 		if (NULL == s_pKernel)
-			s_pKernel = new CKernelImpl();
+ s_pKernel = new CKernelImpl();
 
 		return s_pKernel;
 	}
@@ -56,12 +56,12 @@ namespace serve
 		SERVE_VEC::iterator itor = m_setServe.begin();
 		for (; itor != m_setServe.end(); itor++)
 		{
-			CServe* pServe = (*itor);
-			if (pServe)
-			{
-				UnRegisterServe(pServe);
-				SAFE_RELEASE(pServe);
-			}
+ CServe* pServe = (*itor);
+ if (pServe)
+ {
+ 	UnRegisterServe(pServe);
+ 	SAFE_RELEASE(pServe);
+ }
 		}
 
 		m_setServe.clear();
@@ -77,12 +77,12 @@ namespace serve
 		CKernelImpl::InitRouter(void)
 	{
 		if (m_eStatus != STATUS_NONE)
-			return true;
+ return true;
 
 		// Init MsgRouter
 		m_pRouter = CMsgRouter::CreateNew();
 		IF_NOT(m_pRouter)
-			return false;
+ return false;
 
 		char szMsg[512] = "";
 		sprintf_s(szMsg, "Initialize MsgRouter success!\r\n");
@@ -99,7 +99,7 @@ namespace serve
 		//20070106
 
 		if (STATUS_READY != m_eStatus || NULL == m_pRouter)
-			return false;
+ return false;
 
 		//sbase::CIni ini("config.ini", true);
 		//USHORT usInterval	= ini.GetData("Serve","Interval");
@@ -108,10 +108,10 @@ namespace serve
 		IServe* pServe = ns::ServeCreate(m_pRouter, 10, ns::RECEIVE);
 		if (!pServe)
 		{
-			char szInfo[1024] = "";
-			::sprintf_s(szInfo, "ServeCreate failed\n");
-			this->UpdateInitInfo(szInfo);
-			return false;
+ char szInfo[1024] = "";
+ ::sprintf_s(szInfo, "ServeCreate failed\n");
+ this->UpdateInitInfo(szInfo);
+ return false;
 		}
 
 		char szInfo[1024] = "";
@@ -127,7 +127,7 @@ namespace serve
 		IServe* pSendServe = ns::ServeCreate(m_pRouter, 10, ns::SEND);
 		if (!pSendServe)
 		{
-			return false;
+ return false;
 		}
 
 		this->RegisterServe(pSendServe);
@@ -150,7 +150,7 @@ namespace serve
 		//启动线程
 		bool bet = RunServes();
 		IF_NOT(bet)
-			m_eStatus = STATUS_ERR;
+ m_eStatus = STATUS_ERR;
 		return bet;
 	}
 
@@ -165,73 +165,73 @@ namespace serve
 		std::string strErr;
 		for (; it != m_setServe.end();)
 		{
-			CServe* pServe = *it;
-			IF_NOT(pServe)
-				return false;
+ CServe* pServe = *it;
+ IF_NOT(pServe)
+ 	return false;
 
-			IServe* pIServe = pServe->QueryServe();
-			IF_NOT(pIServe)
-				return false;
+ IServe* pIServe = pServe->QueryServe();
+ IF_NOT(pIServe)
+ 	return false;
 
-			strErr = pIServe->GetName();
-			if (uStatus == S_PRECREATE)
-			{
-				IF_NOT(pIServe->PreCreate())
-				{
-					strErr += "  -->Precreate Failed!!! ";
-					bRet = false;
-				}
-			else
-			{
-				strErr += "   -->Precreate OK!!!";
-			}
-			}
-			else if (uStatus == S_CREATE)
-			{
-				IF_NOT(pIServe->Create())
-				{
-					bRet = false;
-					strErr += "  -->Create Failed!!! ";
-				}
-			else
-			{
-				strErr += "  -->Create OK!!! ";
-			}
-			}
-			else
-			{
-				IF_NOT(pServe->Run())
-				{
-					bRet = false;
-					strErr += "  -->Run Failed!!! ";
-				}
-				else
-				{
-					strErr += "  -->Run OK!!! ";
-					}
-			}
+ strErr = pIServe->GetName();
+ if (uStatus == S_PRECREATE)
+ {
+ 	IF_NOT(pIServe->PreCreate())
+ 	{
+ 		strErr += "  -->Precreate Failed!!! ";
+ 		bRet = false;
+ 	}
+ else
+ {
+ 	strErr += "   -->Precreate OK!!!";
+ }
+ }
+ else if (uStatus == S_CREATE)
+ {
+ 	IF_NOT(pIServe->Create())
+ 	{
+ 		bRet = false;
+ 		strErr += "  -->Create Failed!!! ";
+ 	}
+ else
+ {
+ 	strErr += "  -->Create OK!!! ";
+ }
+ }
+ else
+ {
+ 	IF_NOT(pServe->Run())
+ 	{
+ 		bRet = false;
+ 		strErr += "  -->Run Failed!!! ";
+ 	}
+ 	else
+ 	{
+ 		strErr += "  -->Run OK!!! ";
+ 		}
+ }
 
-			this->UpdateInitInfo(strErr.c_str());
+ this->UpdateInitInfo(strErr.c_str());
 
-			it++;
+ it++;
 
-			if (it == m_setServe.end())
-			{
-				if (uStatus == S_PRECREATE)
-				{
-					uStatus = S_CREATE;
-					it = m_setServe.begin();
-				}
-				else if (uStatus == S_CREATE)
-				{
-					uStatus = S_RUN;
-					it = m_setServe.begin();
-				}
-				else
-				{
-					break;
-				}
-			}
+ if (it == m_setServe.end())
+ {
+ 	if (uStatus == S_PRECREATE)
+ 	{
+ 		uStatus = S_CREATE;
+ 		it = m_setServe.begin();
+ 	}
+ 	else if (uStatus == S_CREATE)
+ 	{
+ 		uStatus = S_RUN;
+ 		it = m_setServe.begin();
+ 	}
+ 	else
+ 	{
+ 		break;
+ 	}
+ }
 		}
 
 		return bRet;
@@ -247,46 +247,46 @@ namespace serve
 		std::string strErr;
 		for (; it != m_setServe.end();)
 		{
-			CServe* pServe = *it;
-			IServe* pIServe = pServe ? pServe->QueryServe() : NULL;
-			IF_NOT(pServe)
-			{
-				goto next;
-			}
+ CServe* pServe = *it;
+ IServe* pIServe = pServe ? pServe->QueryServe() : NULL;
+ IF_NOT(pServe)
+ {
+ 	goto next;
+ }
 
-			strErr = pIServe ? pIServe->GetName() : "Unknown Serve";
+ strErr = pIServe ? pIServe->GetName() : "Unknown Serve";
 
-			if (uStatus == S_POSTDESTROY)
-			{
-				IF_OK(pIServe)
-				{
-					strErr += " PostDestoy!!!";
-					pIServe->PostDestroy();
-				}
-			}
-			else if (uStatus == S_DESTROY)
-			{
-				strErr += " Destroy!!!";
-				pServe->Release();
-				it = m_setServe.erase(it);
-				continue;
-			}
+ if (uStatus == S_POSTDESTROY)
+ {
+ 	IF_OK(pIServe)
+ 	{
+ 		strErr += " PostDestoy!!!";
+ 		pIServe->PostDestroy();
+ 	}
+ }
+ else if (uStatus == S_DESTROY)
+ {
+ 	strErr += " Destroy!!!";
+ 	pServe->Release();
+ 	it = m_setServe.erase(it);
+ 	continue;
+ }
 
 		next:
-			it++;
+ it++;
 
-			if (it == m_setServe.end())
-			{
-				if (uStatus == S_POSTDESTROY)
-				{
-					uStatus = S_DESTROY;
-					it = m_setServe.begin();
-				}
-				else
-				{
-					break;
-				}
-			}
+ if (it == m_setServe.end())
+ {
+ 	if (uStatus == S_POSTDESTROY)
+ 	{
+ 		uStatus = S_DESTROY;
+ 		it = m_setServe.begin();
+ 	}
+ 	else
+ 	{
+ 		break;
+ 	}
+ }
 		}
 	}
 
@@ -295,7 +295,7 @@ namespace serve
 		CKernelImpl::RegisterServe(IServe* pServe, HMODULE hModule)
 	{
 		IF_NOT(pServe)
-			return false;
+ return false;
 
 		CServe* pObjServe = new CServe(pServe, hModule);
 
@@ -311,7 +311,7 @@ namespace serve
 		CKernelImpl::QueryShellPort(void) const
 	{
 		IF_NOT(m_pRouter)
-			return NULL;
+ return NULL;
 
 		return m_pRouter->QueryPort(PORT_SHELL);
 	}
@@ -321,11 +321,11 @@ namespace serve
 		CKernelImpl::UnRegisterServe(CServe* pServe)
 	{
 		IF_NOT(pServe)
-			return false;
+ return false;
 
 		SERVE_PORT_MAP::iterator itor = m_setPortServe.find(pServe->GetPort());
 		if (itor == m_setPortServe.end())
-			return false;
+ return false;
 
 		m_setPortServe.erase(itor);
 
@@ -348,7 +348,7 @@ namespace serve
 		CKernelImpl::CloseSocket(SOCKET socket)
 	{
 		IF_OK(m_setServe[0])
-			m_setServe[0]->CloseSock(socket);
+ m_setServe[0]->CloseSock(socket);
 	}
 
 	//--------------------------------------------------------
@@ -359,19 +359,19 @@ namespace serve
 	{
 		CKernelImpl* pKernel = CKernelImpl::GetInstance();
 		IF_NOT(pKernel)
-			return NULL;
+ return NULL;
 
 		IF_NOT(pKernel->Init())
 		{
-			SAFE_RELEASE(pKernel);
-			return NULL;
+ SAFE_RELEASE(pKernel);
+ return NULL;
 		}
 
 		(*pPort) = pKernel->m_pRouter->QueryPort(PORT_IN);
 		a = &(pKernel->b);
 		if (NULL == pPort)
 		{
-			return NULL;
+ return NULL;
 		}
 		//::OutputDebugStr(_T("加载DLL成功!"));
 

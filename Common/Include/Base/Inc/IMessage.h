@@ -13,26 +13,26 @@ namespace sbase
 	public:
 		IMessage(void);
 		IMessage(const void* buf, int from = -1, void* to = NULL) :
-			usFrom((USHORT)from), usTo(to)
+ usFrom((USHORT)from), usTo(to)
 		{
-			ZeroMemory(bufMsg, sizeof(bufMsg));
-			if (buf)
-			{
-				USHORT size = *((USHORT*)buf);
-				IF_OK(size <= MAX_MSGSIZE)
-					memcpy(bufMsg, buf, size);
-			}
+ ZeroMemory(bufMsg, sizeof(bufMsg));
+ if (buf)
+ {
+ 	USHORT size = *((USHORT*)buf);
+ 	IF_OK(size <= MAX_MSGSIZE)
+ 		memcpy(bufMsg, buf, size);
+ }
 		}
 		IMessage(int size, int type, const void* buf, int from, void* to);
 		IMessage(const IMessage& rhs);
 
-		USHORT			Release(void);
+		USHORT Release(void);
 
-		USHORT			GetSize(void) const { return usMsgSize; }
-		USHORT			GetType(void) const { return usMsgType; }
+		USHORT GetSize(void) const { return usMsgSize; }
+		USHORT GetType(void) const { return usMsgType; }
 		const void* GetBuf(void) const { return bufMsg; }
 
-		USHORT			GetFrom(void) const { return usFrom; }
+		USHORT GetFrom(void) const { return usFrom; }
 		void* GetTo(void) const { return usTo; }
 
 		// 		void*	operator new	(size_t size);
@@ -46,12 +46,12 @@ namespace sbase
 		void* usTo;
 		union
 		{
-			char	bufMsg[MAX_MSGSIZE];
-			struct
-			{
-				unsigned short usMsgSize;
-				unsigned short usMsgType;
-			};
+ char	bufMsg[MAX_MSGSIZE];
+ struct
+ {
+ 	unsigned short usMsgSize;
+ 	unsigned short usMsgType;
+ };
 		};
 	private:
 		DECLARE_FIXEDSIZE_ALLOCATOR(IMessage);

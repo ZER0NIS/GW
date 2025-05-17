@@ -20,12 +20,6 @@ extern MSG_ACTIVESKILL_INFO  msg_activeskill_info;
 extern MSG_USEOREQUIP_ITEM msg_useorequip_item;
 
 extern void ExcScript(CGameObject* p1, CGameObject* p2, int MagicID);
-//extern long &GetOnlinePlayer( void );
-//extern long GetNowPlayer( void );
-
-//------------------------------------------------------------------------------------
-//½ÇÉ«AI
-//------------------------------------------------------------------------------------
 void CPlayer::AI()
 {
 	OnRead();
@@ -38,11 +32,9 @@ void CPlayer::AI()
 	else
 		return;
 
-	//¼¼ÄÜ
 	IsRefresh(TIME_STYLE_COOL);
 
-	//HP,MP»Ø¸´
-	if ((m_ObjectData.m_lHP < GetMaxHP() || m_ObjectData.m_lMP < GetMaxMP()))  //·ÇÕ½¶·×´Ì¬
+	if ((m_ObjectData.m_lHP < GetMaxHP() || m_ObjectData.m_lMP < GetMaxMP()))
 	{
 		if (m_Resume_Timer.IsActive() && m_Resume_Timer.IsExpire() && !IsDead())
 		{
@@ -64,19 +56,16 @@ void CPlayer::AI()
 			msg_Resume.ulHP = m_ObjectData.m_lHP;
 			msg_Resume.ulMP = m_ObjectData.m_lMP;
 			CGameObject::s_World->SendMsgToClient(&msg_Resume, GetSocket());
-			//GetRegion()->SendCellMsg( GetCurrentCell(),&msg_Resume );
 			ResetResumeTimer();
 		}
 	}
 
 	if (m_Relation_Timer.IsActive() && m_Relation_Timer.IsExpire() && !IsDead())
 	{
-		//×Ô¼º¹ØÏµÊý¾Ý
 		RefreshRelation();
 		ResetRelationTimer();
 	}
 
-	//½»Ò×
 	if (m_Trade.IsTrading())
 	{
 		float fPX = 0.0f;
@@ -85,7 +74,6 @@ void CPlayer::AI()
 		fPX = m_Trade.GetTrader()->GetPosX() - GetPosX();
 		fPZ = m_Trade.GetTrader()->GetPosZ() - GetPosZ();
 
-		// µ±Ç°Î»ÖÃÓëÄ¿±êÎ»ÖÃ¾àÀë
 		int dist = sqrt(fPX * fPX + fPZ * fPZ);
 
 		if (dist > 20)
@@ -98,38 +86,29 @@ void CPlayer::AI()
 		}
 	}
 
-	//Ö÷¶¯¹Ö
 	if (!this->IsDead())
 		this->GetRegion()->RefreshInitiativeMonster(this);
 
-	//×Ô¼º×´Ì¬
 	__super::AI();
 
-	//µ¹¼ÆÊ±ÍË³ö
 	if (GetTimeStart())
 	{
 		Updata_SurplusTime();
 	}
-	//×Ô¼ºÉíÉÏµÄÊÕ·ÑµÀ¾ß¼ÆÊ±º¯Êý
 	ClearExpiredItem();
 
-	//¸üÐÂÈÎÎñ
 	QuestUpdata();
 
-	// ³¢ÊÔÇÐ»»³¡¾°
 	if (GetRegion()->ChangeRegion(this, GetPosX(), 0.0f, GetPosZ()))
 	{
-		//m_SceneChangeFlag = true;
 	}
 
-	//¶ÓÎéÐÅÏ¢¸üÐÂ
 	if ((NULL != m_pTeamLeader) && m_Team_Timer.IsActive() && m_Team_Timer.IsExpire())
 	{
 		m_pTeamLeader->UpdateTeam_New(true);
 		m_Team_Timer.Update();
 	}
 
-	//ÐÐÎª¿ØÖÆAI
 	m_GMctr->CrtAI();
 
 	if (GetDanger() >= 3)
@@ -143,91 +122,33 @@ int CPlayer::CheckBlock(int Mid, float x, float z)
 
 void CPlayer::Run(void)
 {
-	//×Ô¼º×´Ì¬Âß¼­
 	if (m_WorldStatus == eSCENECHANGE)
-	{
 		return;
-	}
 
-	if (m_queueWalk.size() > 0)
+	if (!m_queueWalk.empty())
 	{
 		WalkIterator it = m_queueWalk.begin();
-		tarWalk* pWalk = *it;
 
-		SetPos(pWalk->x, 0.0f, pWalk->z);
-		m_fatan2 = pWalk->fatan;
+		SetPos((*it)->x, 0.0f, (*it)->z);
+		m_fatan2 = (*it)->fatan;
 
-		m_queueWalk.remove(pWalk);
-		SAFE_DELETE(pWalk);
+		m_queueWalk.erase(it);
 	}
 
-	// ±Ø¶¨ÐÐ×ß
-	if (m_queuePath.size() > 0)
+	if (!m_queuePath.empty())
 	{
 		PathIterator it = m_queuePath.begin();
-		tarPath* pPath = *it;
-		// ·ÀÖ¹Ô½½ç
+		tarPath* pPath = it->get();
 		if (pPath->nTick >= 60)
 		{
 			char Ifbuf[128];
-			_stprintf(Ifbuf, "Íæ¼Ò: %s ¿¨Î»ÁË£¡", GetName());
+			_stprintf(Ifbuf, "Jugador: %s está atascado!", GetName());
 			sbase::ConsoleWriteColorText(FOREGROUND_RED, Ifbuf);
-			////²âÊÔ¿¨Î»BUG£¬ÏÈ·Å×Å¿´¿´£¬ZWX£¬¿¨Î»µÄ»¹Ã»ÍêÈ«½â¾ö
-			//m_queuePath.remove( pPath );
-			//if( m_queuePath.size() > 0 )
-			//{
-			//	it = m_queuePath.begin();
-			//	tarPath* pNextPath = *it;
-			//	SetPos( pNextPath->x, 0, pNextPath->z );
-			//	m_fatan2 = atan2( pNextPath->OffsetX, pNextPath->OffsetZ );
-
-			//	 post message to other player
-			//	msg_walk_begin.X = GetPosX();
-			//	msg_walk_begin.Y = 0.0f;
-			//	msg_walk_begin.Z = GetPosZ();
-			//	msg_walk_begin.uiTick = pPath->nEndTick;
-			//	msg_walk_begin.OffsetX = pNextPath->OffsetX;
-			//	msg_walk_begin.OffsetY = 0.0f;
-			//	msg_walk_begin.OffsetZ = pNextPath->OffsetZ;
-			//	msg_walk_begin.uiID = GetID();
-			//	msg_walk_begin.usMapID = (USHORT)this->GetID();
-			//	this->GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_begin );
-
-			//}
-			//else
-			//{
-			//	if( m_eState == OBJECT_RUN )
-			//		m_eState = OBJECT_IDLE;
-
-			//	 post message to other player
-			//	msg_walk_end.X = GetPosX();
-			//	msg_walk_end.Y = 0.0f;
-			//	msg_walk_end.Z = GetPosZ();
-			//	msg_walk_end.uiTick = pPath->nEndTick;
-			//	msg_walk_end.fAtan2 = m_fatan2;
-			//	msg_walk_end.uiID = GetID();
-			//	msg_walk_end.usMapID = (USHORT)this->GetID();
-			//	this->GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_end );
-
-			//}
-			//SAFE_DELETE( pPath );
-			////END OF ²âÊÔ¿¨Î»BUG
 		}
 		else
 		{
 			pPath->nTick++;
 			SetPos(GetPosX() + pPath->OffsetX, 0, GetPosZ() + pPath->OffsetZ);
-
-			/*
-			// ¼ì²âÎ»ÖÃÊÇ·ñ´¦ÓÚµµ¸ñ£¬½øÐÐÍþÐ²Öµ¹¦ÄÜÅÐ¶¨
-			if( this->GetType() == OBJECTTYPE_PLAYER )
-			{
-				if( CGameObject::s_World->g_pObstacle->IsObstacleList( GetRegion()->GetID(), GetPosX(), GetPosZ() ) )
-					AddDanger();
-				if( GetDanger() > 100 )
-					KickPlayer( this );
-			}
-			*/
 		}
 
 		if (pPath == NULL)
@@ -235,28 +156,35 @@ void CPlayer::Run(void)
 			if (m_queuePath.size() > 0)
 			{
 				it = m_queuePath.begin();
-				pPath = *it;
-			}//²âÊÔ¿¨Î»BUG
+				pPath = it->get();
+			}
 		}
 
-		if (m_queuePath.size() > 0 && pPath->nEndTick != 0)	// ÊÇ·ñÓÐÍ£Ö¹Ö¸Áî
+		if (!m_queuePath.empty() && pPath && pPath->nEndTick != 0)
 		{
-			if (pPath->nTick >= pPath->nEndTick)		// ÒÆ¶¯Ê±¼ä½áÊø
+			if (pPath->nTick >= pPath->nEndTick)
 			{
-				SetPos(pPath->end_x, 0, pPath->end_z);
-				m_queuePath.remove(pPath);
-				if (m_queuePath.size() > 0)
+				// Guardar datos necesarios antes de eliminar pPath
+				unsigned int endTick = pPath->nEndTick;
+				float endX = pPath->end_x;
+				float endZ = pPath->end_z;
+
+				SetPos(endX, 0, endZ);
+
+				m_queuePath.erase(it);
+
+				if (!m_queuePath.empty())
 				{
 					it = m_queuePath.begin();
-					tarPath* pNextPath = *it;
+					tarPath* pNextPath = it->get();
+
 					SetPos(pNextPath->x, 0, pNextPath->z);
 					m_fatan2 = atan2(pNextPath->OffsetX, pNextPath->OffsetZ);
 
-					// post message to other player
 					msg_walk_begin.X = GetPosX();
 					msg_walk_begin.Y = 0.0f;
 					msg_walk_begin.Z = GetPosZ();
-					msg_walk_begin.uiTick = pPath->nEndTick;
+					msg_walk_begin.uiTick = endTick; // Usar el valor guardado
 					msg_walk_begin.OffsetX = pNextPath->OffsetX;
 					msg_walk_begin.OffsetY = 0.0f;
 					msg_walk_begin.OffsetZ = pNextPath->OffsetZ;
@@ -269,36 +197,29 @@ void CPlayer::Run(void)
 					if (m_eState == OBJECT_RUN)
 						m_eState = OBJECT_IDLE;
 
-					// post message to other player
 					msg_walk_end.X = GetPosX();
 					msg_walk_end.Y = 0.0f;
 					msg_walk_end.Z = GetPosZ();
-					msg_walk_end.uiTick = pPath->nEndTick;
+					msg_walk_end.uiTick = endTick; // Usar el valor guardado
 					msg_walk_end.fAtan2 = m_fatan2;
 					msg_walk_end.uiID = GetID();
 					msg_walk_end.usMapID = (USHORT)this->GetID();
 					this->GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_walk_end);
 				}
-				SAFE_DELETE(pPath);
 			}
-		}
-		else
-		{
 		}
 	}
 
-	Explorer();//Ì½Ë÷ÈÎÎñ£¬ÕâÀïÒªÔÙ×ö¸ö¶¨Ê±Æ÷¶¨Ê±¼ì²é
+	Explorer();
 
 	switch (m_eState)
 	{
-	case OBJECT_RUN:		// Íæ¼ÒÒÆ¶¯
+	case OBJECT_RUN:
 	{
-		//	Explorer();
 	}
 	break;
 	case OBJECT_CAST:
 	{
-		//ChangeActiveSkillStatus( GetCurActiveSkillID() , TIME_STYLE_COOL );
 		if (IsRefresh(TIME_STYLE_CAST))
 		{
 			m_eState = OBJECT_PERFORM;
@@ -310,7 +231,7 @@ void CPlayer::Run(void)
 		if (IsDead())
 			break;
 		const MagicData* magicData = CGameObject::s_World->g_pSkillManager->GetMagic(GetCurActiveSkillID());
-		CGameObject* pTarget = GetRegion()->CollectTarget(this, GetSkillTarget(), magicData->ucTarget, magicData);//
+		CGameObject* pTarget = GetRegion()->CollectTarget(this, GetSkillTarget(), magicData->ucTarget, magicData);
 		if (NULL == pTarget)
 		{
 			if (!((magicData->ucTarget & TARGET_POS) == TARGET_POS))
@@ -324,7 +245,7 @@ void CPlayer::Run(void)
 		if (pTarget)
 			FirstDead = pTarget->IsDead();
 
-		if (magicData->ucRange == 0)  //µ¥ÌåÄ§·¨
+		if (magicData->ucRange == 0)
 		{
 			if (FirstDead)
 			{
@@ -340,13 +261,12 @@ void CPlayer::Run(void)
 				fPosition[2] = pTarget->GetPosZ();
 				GetRegion()->AddMagicRegion(GetID(), GetCurActiveSkillID(), fPosition, magicData->ucRange, magicData->ucAffectObj, pTarget->GetID());
 			}
-			if (magicData->ucStyle == 1)         //ÔöÒæ
+			if (magicData->ucStyle == 1)
 			{
-				//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)(±ØÖÐ)
 				std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 				for (; iter != magicData->m_Status.end(); iter++)
 				{
-					if ((*iter) < 0) //È¥×´Ì¬
+					if ((*iter) < 0)
 					{
 						pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 					}
@@ -356,29 +276,20 @@ void CPlayer::Run(void)
 					}
 				}
 
-				//Ôö¼Ó³ðºÞ
 				pTarget->CoagentEnmityList(this, magicData->iEnmity);
-
-				//Ö´ÐÐ½Å±¾
-				/************************************************************************/
-				/* ²âÊÔ                                                                     */
-				/************************************************************************/
-
-				//------------------------------------------------------------------------------
 
 				ExcScript(this, pTarget, GetCurActiveSkillID());
 			}
-			else //¼õÒæ
+			else
 			{
-				if (magicData->ucEffect == 1)  //×´Ì¬
+				if (magicData->ucEffect == 1)
 				{
-					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)  //ÃüÖÐ
+					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
 					{
-						//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)
 						std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 						for (; iter != magicData->m_Status.end(); iter++)
 						{
-							if ((*iter) < 0) //È¥×´Ì¬
+							if ((*iter) < 0)
 							{
 								pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 							}
@@ -394,7 +305,6 @@ void CPlayer::Run(void)
 						msg_magic.Status_Type = ATTACK_MISS;
 					}
 
-					// ·¢ËÍÖ´ÐÐÏûÏ¢
 					MSG_MAGIC_PERFORM mgicPerform;
 					mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 					mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -406,31 +316,21 @@ void CPlayer::Run(void)
 
 					if (!FirstDead)
 					{
-						// 							msg_magic.bType = 1;
-						// 							//×´Ì¬ÃüÖÐµÈÐ§¼¼ÄÜÃüÖÐ
-						// 							msg_magic.Attack_Type = msg_magic.Status_Type;
-						// 							msg_magic.ucMagicID = GetCurActiveSkillID();
-						// 							msg_magic.uiObjectID = pTarget->GetID();
-						// 							msg_magic.uiID = GetID();
-						// 							msg_magic.x1 = m_SkillMsg.x1;
-						// 							msg_magic.z1 = m_SkillMsg.z1;
-						// 							GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_magic );
 					}
 
 					GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &mgicPerform);
 				}
-				else  //ÉËº¦
+				else
 				{
 					if (pTarget->GetlFaction() == this->GetlFaction())
 						return;
 
 					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
 					{
-						//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)
 						std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 						for (; iter != magicData->m_Status.end(); iter++)
 						{
-							if ((*iter) < 0) //È¥×´Ì¬
+							if ((*iter) < 0)
 							{
 								pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 							}
@@ -442,7 +342,6 @@ void CPlayer::Run(void)
 						msg_magic.Status_Type = ATTACK_HIT;
 					}
 
-					// ¼ÆËã¹¥»÷£¬ÉËº¦
 					if (pTarget && (pTarget->GetType() == OBJECTTYPE_MONSTER || pTarget->GetType() == OBJECTTYPE_PLAYER))
 					{
 						pTarget->ClearDamageInfo();
@@ -472,7 +371,6 @@ void CPlayer::Run(void)
 							msg_magic.iPower = damageInfo.MP;
 						}
 
-						// ·¢ËÍÖ´ÐÐÏûÏ¢
 						MSG_MAGIC_PERFORM mgicPerform;
 
 						mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
@@ -490,17 +388,15 @@ void CPlayer::Run(void)
 							msg_magic.x1 = m_SkillMsg.x1;
 							msg_magic.z1 = m_SkillMsg.z1;
 
-							//ÉËº¦
 							GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_magic);
 						}
 
-						//·¢ËÍÄ§·¨PerformÏûÏ¢
 						GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &mgicPerform);
 					}
 				}
 			}
 		}
-		else // ÈºÌåÄ§·¨
+		else
 		{
 			ObjectList objlst;
 			float	   center[3];
@@ -537,20 +433,17 @@ void CPlayer::Run(void)
 				MAGIC_DAMAGE* mgicDamage = &clstDamager->magicDamage[i];
 				++i;
 
-				// ±éÀúËùÓÐ¶ÔÏó
 				pTarget = (CGameObject*)*Iter;
 
-				// ÈºÌåÖÐ×´Ì¬´¦Àí
-				if (magicData->ucStyle == 1)         //ÔöÒæ
+				if (magicData->ucStyle == 1)
 				{
 					if (FirstDead)
 						break;
 
-					//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)(±ØÖÐ)
 					std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 					for (; iter != magicData->m_Status.end(); iter++)
 					{
-						if ((*iter) < 0) //È¥×´Ì¬
+						if ((*iter) < 0)
 						{
 							pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 						}
@@ -560,36 +453,16 @@ void CPlayer::Run(void)
 						}
 					}
 				}
-				else //¼õÒæ
+				else
 				{
-					if (magicData->ucEffect == 1)  //Ö»ÖÐ×´Ì¬
-					{
-						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)  //ÃüÖÐ
-						{
-							//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)
-							std::vector<int>::const_iterator iter = magicData->m_Status.begin();
-							for (; iter != magicData->m_Status.end(); iter++)
-							{
-								if ((*iter) < 0) //È¥×´Ì¬
-								{
-									pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
-								}
-								else
-								{
-									pTarget->AddStatus(pTarget->s_World->g_pStatusManager->GetStatus(*iter));
-								}
-							}
-						}
-					}// end Ö»ÖÐ×´Ì¬
-					else  //ÉËº¦¼Ó×´Ì¬
+					if (magicData->ucEffect == 1)
 					{
 						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
 						{
-							//×´Ì¬Êý¾Ý(Ìí¼Ó×´Ì¬)
 							std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 							for (; iter != magicData->m_Status.end(); iter++)
 							{
-								if ((*iter) < 0) //È¥×´Ì¬
+								if ((*iter) < 0)
 								{
 									pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 								}
@@ -599,12 +472,29 @@ void CPlayer::Run(void)
 								}
 							}
 						}
-					}// end ÉËº¦¼Ó×´Ì¬
-				}// end ¼õÒæ end ÈºÌåÖÐ×´Ì¬´¦Àí
+					}
+					else
+					{
+						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
+						{
+							std::vector<int>::const_iterator iter = magicData->m_Status.begin();
+							for (; iter != magicData->m_Status.end(); iter++)
+							{
+								if ((*iter) < 0)
+								{
+									pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
+								}
+								else
+								{
+									pTarget->AddStatus(pTarget->s_World->g_pStatusManager->GetStatus(*iter));
+								}
+							}
+						}
+					}
+				}
 
 				mgicDamage->uiObjectID = pTarget->GetID();
 
-				// Ö´ÐÐ½Å±¾
 				pTarget->ClearDamageInfo();
 				ExcScript(this, pTarget, GetCurActiveSkillID());
 				DAMAGE_INFO damageInfo = pTarget->GetDamageInfo();
@@ -624,16 +514,12 @@ void CPlayer::Run(void)
 
 				mgicDamage->Attack_Type = damageInfo.Type;
 
-				//if( pTarget->GetType() == OBJECTTYPE_MONSTER )
-				//{
 				if (pTarget->GetlHP() <= 0)
 				{
 					pTarget->Dead(this);
 				}
-				//}
 			}
 
-			// ·¢ËÍÖ´ÐÐÏûÏ¢
 			MSG_MAGIC_PERFORM mgicPerform;
 			mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 			mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -668,7 +554,6 @@ void CPlayer::Run(void)
 	}
 }
 
-//------------------------------------------------------------------------------------
 bool CPlayer::PickupDrops(Item* p)
 {
 	if (!IsMsgOK(MSG_KITBAG_FLAG))
@@ -683,7 +568,6 @@ bool CPlayer::PickupDrops(Item* p)
 	return false;
 }
 
-//------------------------------------------------------------------------------------
 Item* CPlayer::GetEmpty()
 {
 	for (int i = 0; i < MAX_BAGS; i++)
@@ -700,7 +584,6 @@ Item* CPlayer::GetEmpty()
 	return NULL;
 }
 
-//------------------------------------------------------------------------------------
 Item* CPlayer::GetItem(int index, int num)
 {
 	if (!m_Bags[index].GetActive())
@@ -719,8 +602,6 @@ void CPlayer::AddItem(Item* item, int index, int num)
 
 void CPlayer::AddItem(Item* item, int count)
 {
-	//Ïû·ÑµÀ¾ßÖØµþÎÊÌâÃ»ÓÐ´¦Àí,
-
 	vector<Item*> free;
 
 	for (int i = 0; i < MAX_BAGS; i++)
@@ -741,9 +622,6 @@ void CPlayer::AddItem(Item* item, int count)
 	}
 }
 
-//------------------------------------------------------------
-//±¦Ïä¡¢Ô¿³×ÊÇ·ñ´æÔÚ by lion
-//------------------------------------------------------------
 bool CPlayer::IsGoldBoxExist(int keyid)
 {
 	Item* temp_item = NULL;
@@ -754,7 +632,7 @@ bool CPlayer::IsGoldBoxExist(int keyid)
 		{
 			temp_item = m_Bags[i].GetItem(j);
 			if (!temp_item) { return false; }
-			ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+			ASSERT(temp_item->GetItemBaseAttribute());
 			if (!key) { if (temp_item->GetItemBaseAttribute()->KEY == keyid) { key = true; } }
 			if (!box) { if (temp_item->GetItemBaseAttribute()->GoldBoxIdx == keyid) { box = true; } }
 			if (key && box) { return true; }
@@ -762,7 +640,6 @@ bool CPlayer::IsGoldBoxExist(int keyid)
 	}
 	return false;
 }
-//ÊÇ·ñ¿É¿ªÆô±¦Ïä
 BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 {
 	Item* temp_item(NULL), * temp_item2(NULL);
@@ -773,7 +650,7 @@ BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 	temp_item = m_Bags[index1].GetItem(index2);
 	if (!temp_item) { return -1; }
 	if (temp_item->m_Lock) { return -1; }
-	ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+	ASSERT(temp_item->GetItemBaseAttribute());
 	if (temp_item->GetItemBaseAttribute()->ID != base_id)
 	{
 		return -1;
@@ -790,14 +667,13 @@ BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 
 			if (temp_item2->GetItemBaseAttribute()->KEY == keyid)
 			{
-				//ÁÙÊ±×¢Ïú			temp_item->m_Lock = true;
 				return i * MAX_BAG_GRID + j;
 			}
 		}
 	}
 	return -1;
 }
-bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid)		//ÁÙÊ±			//ÏûºÄ±¦ÏäºÍÔ¿³×
+bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid)
 {
 	Item* temp_item(NULL), * temp_item2(NULL);
 	BYTE index1(0), index2(0), index3(0), index4(0);
@@ -809,7 +685,7 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 	temp_item = m_Bags[index1].GetItem(index2);
 	if (!temp_item) { return -1; }
 	if (temp_item->m_Lock) { return -1; }
-	ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+	ASSERT(temp_item->GetItemBaseAttribute());
 	if (temp_item->GetItemBaseAttribute()->ID != base_id)
 	{
 		return false;
@@ -823,22 +699,19 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 		return false;
 	}
 
-	if (!UseOrEquip(index3, index4))//ÏûºÄÔ¿³×
+	if (!UseOrEquip(index3, index4))
 	{
 		return false;
 	}
 
-	AddItem(&cur_box_item, index1, index2); //°Ñ±¦ÏäÌæ»»³ÉÎïÆ·
-
-	//Í¬²½ÓÃ
+	AddItem(&cur_box_item, index1, index2);
 
 	msg_useorequip_item.Index = (USHORT)index3;
 	msg_useorequip_item.Num = (USHORT)index4;
 	msg_useorequip_item.uiID = GetID();
 	msg_useorequip_item.False = false;
 
-	//Í¬²½
-	ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+	ASSERT(temp_item->GetItemBaseAttribute());
 	msg_useorequip_item.Base = temp_item->GetItemBaseAttribute()->ID;
 	for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 	{
@@ -855,13 +728,10 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 	msg_useorequip_item.BaseLevel = temp_item->BaseLevel;
 	msg_useorequip_item.AppendLevel = temp_item->AppLevel;
 
-	// by fenjune SendMsgToPlayer(&msg_useorequip_item);
-//	CRegion* pRegion = GetRegion();
 	s_World->SendMsgToClient(&msg_useorequip_item, m_pSocket);
-	//	pRegion->SendAreaMsgOneToOther( GetCurrentCell(), &msg_useorequip_item );
 }
 
-bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//Ô¿³×ÏûºÄ
+bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
 {
 	Item* temp_item = NULL;
 
@@ -874,7 +744,7 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//Ô¿³×ÏûºÄ
 	if (!temp_item) { return false; }
 	if (temp_item->IsClear()) { return false; }
 	if (temp_item->m_Lock) { return false; }
-	ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+	ASSERT(temp_item->GetItemBaseAttribute());
 	if (temp_item->GetItemBaseAttribute()->KEY == Iter)
 	{
 		if (!UseOrEquip(index1, index2))
@@ -882,15 +752,12 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//Ô¿³×ÏûºÄ
 			return false;
 		}
 
-		//Í¬²½ÓÃ
-
 		msg_useorequip_item.Index = (USHORT)index1;
 		msg_useorequip_item.Num = (USHORT)index2;
 		msg_useorequip_item.uiID = GetID();
 		msg_useorequip_item.False = false;
 
-		//Í¬²½
-		ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+		ASSERT(temp_item->GetItemBaseAttribute());
 		msg_useorequip_item.Base = temp_item->GetItemBaseAttribute()->ID;
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 		{
@@ -907,7 +774,6 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//Ô¿³×ÏûºÄ
 		msg_useorequip_item.BaseLevel = temp_item->BaseLevel;
 		msg_useorequip_item.AppendLevel = temp_item->AppLevel;
 
-		// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 		CRegion* pRegion = GetRegion();
 		pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 		return true;
@@ -916,7 +782,7 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//Ô¿³×ÏûºÄ
 	return false;
 }
 
-bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
+bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 {
 	Item* temp_item = NULL;
 	bool key(false), box(false);
@@ -936,7 +802,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 			Item temp = *temp_item;
 			if (!key)
 			{
-				ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+				ASSERT(temp_item->GetItemBaseAttribute());
 				if (temp_item->GetItemBaseAttribute()->KEY == keyid)
 				{
 					key = true;
@@ -945,14 +811,11 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 						return false;
 					}
 
-					//Í¬²½ÓÃ
-
 					msg_useorequip_item.Index = (USHORT)i;
 					msg_useorequip_item.Num = (USHORT)j;
 					msg_useorequip_item.uiID = GetID();
 					msg_useorequip_item.False = false;
 
-					//Í¬²½
 					msg_useorequip_item.Base = temp.GetItemBaseAttribute()->ID;
 					for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 					{
@@ -969,7 +832,6 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 					msg_useorequip_item.BaseLevel = temp.BaseLevel;
 					msg_useorequip_item.AppendLevel = temp.AppLevel;
 
-					// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 					CRegion* pRegion = GetRegion();
 					pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 					continue;
@@ -977,7 +839,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 			}
 			if (!box)
 			{
-				ASSERT(temp_item->GetItemBaseAttribute());//ÎïÆ·´íÀ²
+				ASSERT(temp_item->GetItemBaseAttribute());
 				if (temp_item->GetItemBaseAttribute()->ID == gold_box_id)
 				{
 					box = true;
@@ -985,14 +847,11 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 					{
 						return false;
 					}
-					//Í¬²½ÓÃ
-
 					msg_useorequip_item.Index = (USHORT)i;
 					msg_useorequip_item.Num = (USHORT)j;
 					msg_useorequip_item.uiID = GetID();
 					msg_useorequip_item.False = false;
 
-					//Í¬²½
 					msg_useorequip_item.Base = temp.GetItemBaseAttribute()->ID;
 					for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 					{
@@ -1009,7 +868,6 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 					msg_useorequip_item.BaseLevel = temp.BaseLevel;
 					msg_useorequip_item.AppendLevel = temp.AppLevel;
 
-					// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 					CRegion* pRegion = GetRegion();
 					pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 				}
@@ -1019,7 +877,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//±¦ÏäÏûºÄ
 	return false;
 }
 
-bool CPlayer::IsDoubleItem()//±¦Ïä¼ÆÊýÔö¼Ó ·µ»ØÖµ¾ö¶¨ÊÇ·ñË«±¶·¢ËÍÎïÆ·
+bool CPlayer::IsDoubleItem()
 {
 	switch (++GoldOpendNum)
 	{
@@ -1038,7 +896,6 @@ bool CPlayer::AddItem(Item* item)
 {
 	if (item->GetItemBaseAttribute()->EType == ItemBaseAttribute::ConsumeItem)
 	{
-		//Èç¹ûÊÇÏû·ÑµÀ¾ß
 		if (GetFreeItemCount() == 0)
 		{
 			int num = 0;
@@ -1126,14 +983,11 @@ eError CPlayer::SellItem(int index, int num)
 
 	if (!item)
 	{
-		//Íâ
 		return NO_MSG_ERRO;
 	}
 
 	if (item->IsClear())
 	{
-		//Íâ
-
 		return NO_MSG_ERRO;
 	}
 
@@ -1144,8 +998,6 @@ eError CPlayer::SellItem(int index, int num)
 
 	if (m_Trade.IsTrading())
 	{
-		//ÆóÍ¼×÷Ê²Ã´£¿
-
 		return NO_MSG_ERRO;
 	}
 
@@ -1216,15 +1068,11 @@ int CPlayer::GetFreeItemOverlap(Item* p)
 
 bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 {
-	//ÒÆ¶¯×°±¸
-
 	if (IsGM())
 		return false;
 
 	if (index >= EquipCount)
 	{
-		//¸ÃËÀµÄÍâ¹Ò,
-
 		return false;
 	}
 
@@ -1235,7 +1083,6 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 
 	if (indexaim < 0 || numaim < 0)
 	{
-		//É¾³ý,
 		m_Equips[index].Decrease(&m_EquipData);
 		m_Equips[index].Clear();
 
@@ -1254,8 +1101,6 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 
 	if (!pitem->IsClear())
 	{
-		//´¦ÀíÎïÆ·µ½×°±¸µÄ¹ý³Ì
-
 		if (pitem->m_Lock)
 			return false;
 
@@ -1276,7 +1121,6 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 	{
 		if (m_Equips[index].IsClear())
 		{
-			//Íâ¹Ò
 			return false;
 		}
 
@@ -1310,8 +1154,7 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 	return true;
 }
 
-//------------------------------------------------------------------------------------
-int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim /*,int overlay*/)
+int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim)
 {
 	if (index < 0)
 	{
@@ -1325,15 +1168,11 @@ int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim /*,int overl
 
 	if (index >= MAX_BAGS || indexaim >= MAX_BAGS)
 	{
-		//Íâ¹Ò
-
 		return NO_MSG_ERRO;
 	}
 
 	if (indexaim < 0 || numaim < 0)
 	{
-		//Í¬Ê±Ð¡ÓÚ0,Çå³ý
-		//¶ªµôÎïÆ·
 		if (m_Bags[index].Erase(num))
 		{
 			msg_move_item.uiID = this->GetID();
@@ -1348,59 +1187,20 @@ int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim /*,int overl
 		return NO_MSG_ERRO;
 	}
 
-	if (m_Bags[index].Move(&m_Bags[indexaim], num, numaim/*,overlay*/))
+	if (m_Bags[index].Move(&m_Bags[indexaim], num, numaim))
 	{
 		msg_move_item.uiID = this->GetID();
 		msg_move_item.Index = index;
 		msg_move_item.Num = num;
 		msg_move_item.IndexAim = indexaim;
 		msg_move_item.NumAim = numaim;
-		//msg_move_item.Overlap=overlay;
-
 		CGameObject::s_World->SendMsgToClient(&msg_move_item, GetSocket());
 	}
 
 	return NO_MSG_ERRO;
 }
-//²ð·ÖÎïÆ·
-//------------------------------------------------------------------------------------
 int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overlay)
 {
-	//if (index < 0)
-	//{
-	//	return NO_MSG_ERRO;
-	//}
-
-	//if (num < 0)
-	//{
-	//	return MoveEquip(index , indexaim , numaim);
-	//}
-
-	//if (index >= MAX_BAGS || indexaim >= MAX_BAGS)
-	//{
-	//	//Íâ¹Ò
-
-	//	return NO_MSG_ERRO;
-	//}
-
-	//if (indexaim < 0 || numaim < 0)
-	//{
-	//	//Í¬Ê±Ð¡ÓÚ0,Çå³ý
-	//	//¶ªµôÎïÆ·
-	//	if (m_Bags[index].Erase(num))
-	//	{
-	//		msg_break_item.Index = index;
-	//		msg_break_item.Num = num;
-	//		msg_break_item.IndexAim = -1;
-	//		msg_break_item.NumAim = -1;
-	//		msg_break_item.Flags = 1;
-
-	//		CGameObject::s_World->SendMsgToClient(&msg_break_item, GetSocket());
-	//	}
-
-	//	return NO_MSG_ERRO;
-	//}
-
 	Item* item = GetItem(index, num);
 
 	if (m_Bags[index].Break(&m_Bags[indexaim], num, numaim, overlay))
@@ -1416,11 +1216,10 @@ int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overla
 	}
 	else
 	{
-		//·¢ËÍ²ð·ÖÊ§°Ü£¬½âËø
 		if (item->m_Lock)
 		{
 			item->m_Lock = false;
-		}//endif
+		}
 
 		msg_break_item.Index = index;
 		msg_break_item.Num = num;
@@ -1436,18 +1235,13 @@ int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overla
 
 bool CPlayer::SetEquip(int index, int num, int indexaim)
 {
-	//²»¼ì²â,¼ì²âÔÚÖ®Ç°×÷.
 	Item* pitem = m_Bags[index].GetItem(num);
 
 	if (pitem->GetItemBaseAttribute()->Equip)
 	{
-		//×°±¸
-
 		if (pitem->BaseLevel > m_ObjectData.m_cRank ||
 			pitem->GetItemBaseAttribute()->EType > ItemBaseAttribute::Ring)
 		{
-			//×°±¸µÈ¼¶´óÓÚÈËÎïµÈ¼¶,Ã÷ÏÔÊÇÍâ¹Ò,ÔÚÏÂÃæ´¦Àí,
-
 			return false;
 		}
 		if (!pitem->HasClass(m_ObjectData.m_lClass))
@@ -1591,13 +1385,11 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
-					//¶¼¿Õ
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
 				else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 				{
-					//Ö÷ÊÖ¿Õ
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
@@ -1605,7 +1397,6 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 				{
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 					{
-						//Ö÷ÊÖÉÏÊÇË«ÊÖ,°ÑÖ÷ÊÖ»»ÏÂ
 						if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 							return false;
 
@@ -1618,7 +1409,6 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 					else if (pitem->GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
-						//Ë«³Ö
 						temp = m_Equips[Auxiliary];
 						m_Equips[Auxiliary] = *pitem;
 					}
@@ -1778,17 +1568,11 @@ void CPlayer::SendEquipTimeEnd(int index, int type, int bagnum)
 				{
 					if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pItemBaseInfo->UndoSkillID, 0, 0, 0) == NO_MSG_ERRO)
 					{
-						;//ÁÙÊ±
+						;
 					}
 				}
 			}
 		}
-		// 		if ((--pItem->m_Overlap) == 0)
-		// 			pItem->Clear();
-
-		//¶ªµôÎïÆ·
-		//if (m_Bags[index].Erase(bagnum))
-		//{
 		msg_move_item.uiID = this->GetID();
 		msg_move_item.Index = index;
 		msg_move_item.Num = bagnum;
@@ -1796,19 +1580,15 @@ void CPlayer::SendEquipTimeEnd(int index, int type, int bagnum)
 		msg_move_item.NumAim = -1;
 
 		s_World->SendMsgToClient(&msg_move_item, GetSocket());
-
-		//}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 int	CPlayer::GetNumOfItem(const int _ID)
 {
 	int	count = 0;
 	ItemBaseAttribute* pItemBaseInfo = NULL;
 	Item* pItem = NULL;
-	for (int i = 0; i < MAX_BAGS; i++)			//Ó¦¸Ã¸Ä½øÎªÖ»²é¿´Íæ¼Ò¿ª·ÅµÄ±³°ü
+	for (int i = 0; i < MAX_BAGS; i++)
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
@@ -1825,11 +1605,11 @@ int	CPlayer::GetNumOfItem(const int _ID)
 	return	count;
 }
 
-bool	CPlayer::UseItem(const int _ID, int _Num /* = 1 */)
+bool	CPlayer::UseItem(const int _ID, int _Num)
 {
 	ItemBaseAttribute* pItemBaseInfo = NULL;
 	Item* pItem = NULL;
-	for (int i = 0; i < MAX_BAGS; i++)			//Ó¦¸Ã¸Ä½øÎªÖ»²é¿´Íæ¼Ò¿ª·ÅµÄ±³°ü
+	for (int i = 0; i < MAX_BAGS; i++)
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
@@ -1839,7 +1619,7 @@ bool	CPlayer::UseItem(const int _ID, int _Num /* = 1 */)
 			pItemBaseInfo = pItem->GetItemBaseAttribute();
 			if (!pItemBaseInfo)
 				continue;
-			if (_ID == pItemBaseInfo->ID)		//¿ÉÒÔÕÒµ½£¬ÀíÂÛÉÏËµÃ÷¸ÃµÀ¾ßµÄOverlapÖÁÉÙÎª1
+			if (_ID == pItemBaseInfo->ID)
 			{
 				(pItem->m_Overlap)--;
 				if (pItem->m_Overlap <= 0)
@@ -1863,9 +1643,8 @@ void CPlayer::ClearExpiredItem()
 
 		if (0 == ItemBaseInfo->Mode && m_Equips[i].IsActivated)
 		{
-			if (IsExpired(&(m_Equips[i].ExpiredDate)))//ÀûÓÃ¸Ã²ÎÊýÅÐ¶ÏÊÇ·ñ¸Ã×°±¸¹ýÆÚ
+			if (IsExpired(&(m_Equips[i].ExpiredDate)))
 			{
-				//É¾³ýµÀ¾ß»ò×°±¸
 				SendEquipTimeEnd(i, 0, 0);
 			}
 		}
@@ -1885,9 +1664,8 @@ void CPlayer::ClearExpiredItem()
 
 			if (0 == ItemBaseInfo->Mode && pItem->IsActivated)
 			{
-				if (IsExpired((&pItem->ExpiredDate)))//ÀûÓÃ¸Ã²ÎÊýÅÐ¶ÏÊÇ·ñ¸Ã×°±¸¹ýÆÚ
+				if (IsExpired((&pItem->ExpiredDate)))
 				{
-					//É¾³ýµÀ¾ß»ò×°±¸
 					SendEquipTimeEnd(i, 1, j);
 				}
 			}
@@ -1919,18 +1697,16 @@ void CPlayer::ClearExpiredItem()
 		}
 	}
 }
-//------------------------------------------------------------------------------
 bool	CPlayer::IsExpired(tm* _pTime)
 {
 	time_t	timep;
 	time(&timep);
 	tm* tm_buf = localtime(&timep);
-	timep = _mkgmtime(tm_buf);	 //¶à×ªÒ»´Î£¬ÐÞÕýÎó²î
-	if (timep > _mkgmtime(_pTime))//µ±Ç°ÏµÍ³Ê±¼ä´óÓÚÉè¶¨Ê±¼ä£¬±íÊ¾¹ýÆÚ
+	timep = _mkgmtime(tm_buf);
+	if (timep > _mkgmtime(_pTime))
 		return	true;
 	return	false;
 }
-//------------------------------------------------------------------------------
 void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 {
 	if (!_pItem)
@@ -1956,7 +1732,6 @@ void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 
 	_pItem->IsActivated = true;
 
-	//·ÅÈëÁÐ±í±£´æ
 	vector<Item>::iterator itor = MallItemInUseList.begin();
 	vector<Item>::iterator itor_end = MallItemInUseList.end();
 	for (; itor != itor_end; itor++)
@@ -1973,30 +1748,18 @@ void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 	return;
 }
 
-//------------------------------------------------------------------------------------
-bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
+bool CPlayer::UseOrEquip(int index, int num)
 {
 	if (IsDead())
 		return false;
 
-	//²»¼ì²â,¼ì²âÔÚÖ®Ç°×÷.
 	Item* pitem = m_Bags[index].GetItem(num);
-
-	/************************************************************************/
-	/* ²âÊÔ                                                                     */
-	/************************************************************************/
-// 	if ((--pitem->m_Overlap) == 0)
-// 		pitem->Clear();
-// 	return	true;
-	//------------------------------------------------------------------------------
 
 	if (pitem->m_Lock)
 		return false;
 
 	if (pitem->GetEquipLV() > m_ObjectData.m_cRank)
 	{
-		//µÈ¼¶´óÓÚÈËÎïµÈ¼¶,Ã÷ÏÔÊÇÍâ¹Ò,ÔÚÏÂÃæ´¦Àí,
-
 		return false;
 	}
 
@@ -2009,8 +1772,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 
 	if (pitem->GetItemBaseAttribute()->Equip)
 	{
-		//×°±¸
-
 		if (IsGM())
 			return false;
 
@@ -2041,16 +1802,13 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 			{
 				if (m_Equips[main].IsClear())
 				{
-					//Ö÷ÊÖ¿Õ
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
 				else if (!m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
-					//¸±ÊÖ¿Õ
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand != pitem->GetItemBaseAttribute()->eEquipHand)
 					{
-						//Ö÷ÊÖ×°±¸²»¿ÉÒÔË«³Ö
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -2064,13 +1822,11 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 				{
 					if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType != ItemBaseAttribute::Weapon)
 					{
-						//¸±ÊÖ²»ÊÇÎäÆ÷
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
 					else if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
-						//Ë«³Ö
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -2095,13 +1851,11 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
-					//¶¼¿Õ
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
 				else if (!m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
-					//¸±ÊÖ¿Õ
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
@@ -2110,7 +1864,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 					if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[Auxiliary].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
-						//Ë«³Ö
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -2128,13 +1881,11 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
-					//¶¼¿Õ
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
 				else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 				{
-					//Ö÷ÊÖ¿Õ
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
@@ -2142,7 +1893,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 				{
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 					{
-						//Ö÷ÊÖÉÏÊÇË«ÊÖ,°ÑÖ÷ÊÖ»»ÏÂ
 						if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 							return false;
 
@@ -2155,7 +1905,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 					else if (pitem->GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
-						//Ë«³Ö
 						temp = m_Equips[Auxiliary];
 						m_Equips[Auxiliary] = *pitem;
 					}
@@ -2180,13 +1929,11 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 		{
 			if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 			{
-				//¶¼¿Õ
 				temp = m_Equips[Auxiliary];
 				m_Equips[Auxiliary] = *pitem;
 			}
 			else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 			{
-				//Ö÷ÊÖ¿Õ
 				temp = m_Equips[Auxiliary];
 				m_Equips[Auxiliary] = *pitem;
 			}
@@ -2194,7 +1941,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 			{
 				if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 				{
-					//Ö÷ÊÖÉÏÊÇË«ÊÖ,°ÑÖ÷ÊÖ»»ÏÂ
 					if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 						return false;
 
@@ -2261,7 +2007,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 			break;
 
 		default:
-			//ÄÜ½øÀ´Ö¤Ã÷¼û¹íÁË,
 			ASSERT(0);
 			return false;
 			break;
@@ -2288,15 +2033,13 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 	}
 	else
 	{
-		//½Å±¾Ó¦ÓÃ´æÈë
 		TempScriptItem = pitem;
 		TempScriptIndex = index;
 		TempScriptNum = num;
 
-		//¿ÉÖØµþ
 		if (pitem->GetItemBaseAttribute()->Overlap)
 		{
-			if ((pitem->GetItemBaseAttribute()->GoldBoxIdx != -1)//Èç¹ûÊÇ±¦Ïä»òÕßÔ¿³× ÏûºÄµô¾ÍÐÐÁË
+			if ((pitem->GetItemBaseAttribute()->GoldBoxIdx != -1)
 				|| (pitem->GetItemBaseAttribute()->KEY != -1))
 			{
 				if ((--pitem->m_Overlap) == 0)
@@ -2310,8 +2053,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 
 			if (pitem->GetItemBaseAttribute()->SkillBook)
 			{
-				//¼¼ÄÜÊé£¬
-
 				if (pitem->GetItemBaseAttribute()->PrevSkillID != -1 &&
 					!FindActiveSkill(pitem->GetItemBaseAttribute()->PrevSkillID))
 					return false;
@@ -2336,12 +2077,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 
 			if (0 <= pitem->GetItemBaseAttribute()->Mode)
 			{
-				/************************************************************************/
-				/* ²âÊÔ                                                                     */
-				/************************************************************************/
-			/*	return	true;*/
-				//------------------------------------------------------------------------------
-
 				SetItemActivated(pitem, true);
 				if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pitem->GetItemBaseAttribute()->SkillID, 0, 0, 0) == NO_MSG_ERRO)
 				{
@@ -2353,7 +2088,6 @@ bool CPlayer::UseOrEquip(int index, int num)// Ê¹ÓÃ×°±¸
 				return	false;
 			}
 
-			//ÑªÆ¿Ê¹ÓÃ »òÉÌ³ÇµÀ¾ßÊ¹ÓÃ
 			if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pitem->GetItemBaseAttribute()->SkillID, 0, 0, 0) == NO_MSG_ERRO)
 			{
 				if ((--pitem->m_Overlap) == 0)

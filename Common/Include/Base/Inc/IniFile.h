@@ -12,7 +12,7 @@
 
 namespace sbase
 {
-	const int  _MAX_INISIZE = 10240;			// INI文件中，串的最大长度
+	const int  _MAX_INISIZE = 10240; // INI文件中，串的最大长度
 
 	class CIniFile
 	{
@@ -44,10 +44,10 @@ KEY2=INT
 	SECTION行：	必须为“标识符”，不区分大小写。([)必须顶行，([])中间不能有空白。(])后面可以带注释。
 
 	KEY行：		KEY必须顶行，必须为“标识符”，不区分大小写。
-				(=)前后不能有空白，否则会出错。
-				STRING不能用(")括住，否则会被当着字符串的一部分。尾空会被删掉。
-				INT为十进制数。
-				STRING或INT后不能有注释。
+ 	(=)前后不能有空白，否则会出错。
+ 	STRING不能用(")括住，否则会被当着字符串的一部分。尾空会被删掉。
+ 	INT为十进制数。
+ 	STRING或INT后不能有注释。
 
 	COMMENT：	(;)必须顶行，所有内容无意义。
 	空行：		无意义。

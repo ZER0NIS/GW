@@ -10,8 +10,8 @@ namespace net
 	class CListenSocket  
 	{
 	public:
-		CListenSocket()						{ m_sock = INVALID_SOCKET; }
-		virtual ~CListenSocket()			{ this->Close(); }
+		CListenSocket()  { m_sock = INVALID_SOCKET; }
+		virtual ~CListenSocket() { this->Close(); }
 		
 		// interface
 	public:
@@ -23,9 +23,9 @@ namespace net
 		// data 
 	protected:
 		// 探测socket可写性，返回1表示可写，0表示socket还未就绪需要等待，-1表示socket错误
-		int			Detect		(SOCKET sock);
+		int Detect		(SOCKET sock);
 		
-		SOCKET				m_sock;			// 侦听socket
+		SOCKET 	m_sock; // 侦听socket
 		std::list<SOCKET>	m_setSock;		// 还未就绪的socket集
 	};
 

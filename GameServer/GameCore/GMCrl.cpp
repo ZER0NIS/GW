@@ -18,7 +18,7 @@ bool GMCrl::HaveActionCtr(GM_MSG_TYPE eType)
 		ActionElem Elem = (*itor);
 		if (eType == Elem.Head.usType)
 		{
-			return true;
+ return true;
 		}
 	}
 	return false;
@@ -31,11 +31,11 @@ bool GMCrl::DelActionCtr(GM_MSG_TYPE eType)
 		ActionElem Elem = (*itor);
 		if (eType == Elem.Head.usType)
 		{
-			itor = this->Remove(itor);
+ itor = this->Remove(itor);
 		}
 		else
 		{
-			itor++;
+ itor++;
 		}
 	}
 	return true;
@@ -48,11 +48,11 @@ void GMCrl::CrtAI()
 		ActionElem Elem = (*itor);
 		if (Elem.callback(*itor))
 		{
-			itor = this->Remove(itor);
+ itor = this->Remove(itor);
 		}
 		else
 		{
-			itor++;
+ itor++;
 		}
 	}
 }

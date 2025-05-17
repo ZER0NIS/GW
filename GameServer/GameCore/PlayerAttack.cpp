@@ -21,12 +21,12 @@ extern MSG_DEAD msg_dead;
 {\
 	m_ObjectData.Z +=  Rank  * ( pSkill->LINK_MODULUS(Y) );    \
 }\
-																			else if ( TYPE_UPDATE == Type )\
+      	else if ( TYPE_UPDATE == Type )\
 {\
 	m_ObjectData.Z -=  ( Rank - 1 )  * ( pSkill->LINK_MODULUS(Y) );    \
 	m_ObjectData.Z +=  Rank  * ( pSkill->LINK_MODULUS(Y) );    \
 }\
-																			else if ( TYPE_DELETE == Type )\
+      	else if ( TYPE_DELETE == Type )\
 {\
 	m_ObjectData.Z -=   Rank  * ( pSkill->LINK_MODULUS(Y)  );\
 }\
@@ -106,11 +106,11 @@ void CPlayer::AddExp(int exp)
 
 		while (m_ObjectData.m_cExp >= GetNextGradeExp() && GetRank() < PLAYER_MAXLV)
 		{
-			m_ObjectData.m_cExp -= GetNextGradeExp();
-			m_ObjectData.m_cRank++;
-			//m_ObjectData.m_cExp =  exp -( Exp - Buf )	;//tao
-			PlayerUpGrade(true);
-			//Exp =  GetNextGradeExp( );
+ m_ObjectData.m_cExp -= GetNextGradeExp();
+ m_ObjectData.m_cRank++;
+ //m_ObjectData.m_cExp =  exp -( Exp - Buf )	;//tao
+ PlayerUpGrade(true);
+ //Exp =  GetNextGradeExp( );
 		}
 	}
 }
@@ -135,10 +135,10 @@ void	CPlayer::CalculateExpAndLevel(CGameObject& pTarObj)
 	float		teamLevelFactor = 1.0f;	//队伍等级系数
 	float		memLevelFactor = 1.0f;	//成员等级系数
 	float		factor = 1.0f;	//组队人数奖励
-	int			memCount = 0;	//队伍人数
-	int			teamLevel = 0;	//队伍等级
-	int			avgteamLevel = 0;	//队伍平均等级
-	int			monExp = 0;	//怪物本身经验
+	int memCount = 0;	//队伍人数
+	int teamLevel = 0;	//队伍等级
+	int avgteamLevel = 0;	//队伍平均等级
+	int monExp = 0;	//怪物本身经验
 
 	/************************************************************************/
 	/* 用于计算本玩家有效区域内同队人数                                     */
@@ -148,20 +148,20 @@ void	CPlayer::CalculateExpAndLevel(CGameObject& pTarObj)
 		//处理队长
 		if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), m_pTeamLeader->GetCurrentCell()))
 		{
-			memCount++;
-			teamLevel += m_pTeamLeader->GetRank();
+ memCount++;
+ teamLevel += m_pTeamLeader->GetRank();
 		}
 
 		for (vector<CPlayer*>::iterator iter = m_pTeamLeader->m_Teammates.begin();
-			iter != m_pTeamLeader->m_Teammates.end();
-			iter++)
+ iter != m_pTeamLeader->m_Teammates.end();
+ iter++)
 		{
-			//需要判断一下队伍队员是否在自己的范围内
-			if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), (*iter)->GetCurrentCell()))
-			{
-				memCount++;
-				teamLevel += (*iter)->GetRank();
-			}
+ //需要判断一下队伍队员是否在自己的范围内
+ if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), (*iter)->GetCurrentCell()))
+ {
+ 	memCount++;
+ 	teamLevel += (*iter)->GetRank();
+ }
 		}
 	}
 	else
@@ -172,18 +172,18 @@ void	CPlayer::CalculateExpAndLevel(CGameObject& pTarObj)
 	/************************************************************************/
 
 	/************************************************************************
-	** 					队员所得经验	=	怪物本身经验 * 队伍等级系数* 组队人数奖励 * 成员等级系数	向下整数取整
-	** monExp			怪物本身经验	=	由怪物本身决定
-	** teamLevel		队伍总等级		=	队伍成员总等级之和											向下整数取整
-	** teamLevelFactor	队伍等级系数	=	1＋（怪物等级-队伍等级）/10									队伍等级系数该值最大为1，最小为0。
-	** factor			组队人数奖励	=	（人数-1）*0.25 + 1.0										2人为1.25,  3人为1.5,  4人为1.75, 5人为2.0
+	**  		队员所得经验	=	怪物本身经验 * 队伍等级系数* 组队人数奖励 * 成员等级系数	向下整数取整
+	** monExp 怪物本身经验	=	由怪物本身决定
+	** teamLevel		队伍总等级		=	队伍成员总等级之和   		向下整数取整
+	** teamLevelFactor	队伍等级系数	=	1＋（怪物等级-队伍等级）/10   队伍等级系数该值最大为1，最小为0。
+	** factor 组队人数奖励	=	（人数-1）*0.25 + 1.0   	2人为1.25,  3人为1.5,  4人为1.75, 5人为2.0
 	** memLevelFactor	成员等级系数	=	(人物本身等级＋avgteamLevel) / (所有队伍成员等级之和＋avgteamLevel*队伍成员数量)
 	** avgteamLevel		队伍平均等级	=   所有队伍成员等级之和 / 队伍成员数量
 	************************************************************************/
 
 	monExp = pTarObj.GetEXP();
 	factor = (memCount - 1) * 0.25f + 1.0f;
-	avgteamLevel = teamLevel / memCount;				//队伍平均等级
+	avgteamLevel = teamLevel / memCount; 	//队伍平均等级
 
 	teamLevelFactor = 1.0f + (float)(((float)pTarObj.GetRank() - (float)avgteamLevel) / 10.0f);
 	if (teamLevelFactor < 0.0f)
@@ -200,12 +200,12 @@ void	CPlayer::CalculateExpAndLevel(CGameObject& pTarObj)
 		m_ObjectData.m_cExp += TempEXP * (1 + m_StatusData.m_GetEXP);
 		while (m_ObjectData.m_cExp >= Exp && GetRank() < PLAYER_MAXLV)
 		{
-			m_ObjectData.m_cRank++;
-			m_ObjectData.m_cExp = TempEXP - (Exp - m_ObjectData.m_cExp);
-			PlayerUpGrade(true);
-			SetlHP(GetMaxHP());
-			SetlMP(GetMaxMP());
-			Exp = GetNextGradeExp();
+ m_ObjectData.m_cRank++;
+ m_ObjectData.m_cExp = TempEXP - (Exp - m_ObjectData.m_cExp);
+ PlayerUpGrade(true);
+ SetlHP(GetMaxHP());
+ SetlMP(GetMaxMP());
+ Exp = GetNextGradeExp();
 		}
 	}
 	//当成员数超过1，即有组队，开始计算其他队员经验
@@ -214,49 +214,49 @@ void	CPlayer::CalculateExpAndLevel(CGameObject& pTarObj)
 		//队长经验处理
 		if (this != m_pTeamLeader)//为防止重复计算，先判断自己不是队长
 		{
-			if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), m_pTeamLeader->GetCurrentCell()) && m_pTeamLeader->GetRank() < PLAYER_MAXLV)
-			{
-				memLevelFactor = ((float)m_pTeamLeader->m_ObjectData.m_cRank + (float)avgteamLevel) / ((float)teamLevel + (float)avgteamLevel * (float)memCount);
-				ULONG Exp = m_pTeamLeader->GetNextGradeExp();
-				float TempEXP = monExp * teamLevelFactor * memLevelFactor * factor;
-				m_pTeamLeader->m_ObjectData.m_cExp += TempEXP * (1 + m_pTeamLeader->GetGetEXP()); ;
-				while (m_pTeamLeader->m_ObjectData.m_cExp >= Exp && m_pTeamLeader->GetRank() < PLAYER_MAXLV)
-				{
-					m_pTeamLeader->m_ObjectData.m_cRank++;
-					m_pTeamLeader->m_ObjectData.m_cExp = TempEXP - (Exp - m_pTeamLeader->m_ObjectData.m_cExp);
-					m_pTeamLeader->PlayerUpGrade(true);
-					m_pTeamLeader->SetlHP(GetMaxHP());
-					m_pTeamLeader->SetlMP(GetMaxMP());
-					Exp = m_pTeamLeader->GetNextGradeExp();
-				}
-			}
+ if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), m_pTeamLeader->GetCurrentCell()) && m_pTeamLeader->GetRank() < PLAYER_MAXLV)
+ {
+ 	memLevelFactor = ((float)m_pTeamLeader->m_ObjectData.m_cRank + (float)avgteamLevel) / ((float)teamLevel + (float)avgteamLevel * (float)memCount);
+ 	ULONG Exp = m_pTeamLeader->GetNextGradeExp();
+ 	float TempEXP = monExp * teamLevelFactor * memLevelFactor * factor;
+ 	m_pTeamLeader->m_ObjectData.m_cExp += TempEXP * (1 + m_pTeamLeader->GetGetEXP()); ;
+ 	while (m_pTeamLeader->m_ObjectData.m_cExp >= Exp && m_pTeamLeader->GetRank() < PLAYER_MAXLV)
+ 	{
+ 		m_pTeamLeader->m_ObjectData.m_cRank++;
+ 		m_pTeamLeader->m_ObjectData.m_cExp = TempEXP - (Exp - m_pTeamLeader->m_ObjectData.m_cExp);
+ 		m_pTeamLeader->PlayerUpGrade(true);
+ 		m_pTeamLeader->SetlHP(GetMaxHP());
+ 		m_pTeamLeader->SetlMP(GetMaxMP());
+ 		Exp = m_pTeamLeader->GetNextGradeExp();
+ 	}
+ }
 		}
 
 		//对队员处理
 		for (vector<CPlayer*>::iterator iter = m_pTeamLeader->m_Teammates.begin();
-			iter != m_pTeamLeader->m_Teammates.end();
-			iter++)
+ iter != m_pTeamLeader->m_Teammates.end();
+ iter++)
 		{
-			//如果是自己，就不再增加经验
-			if (this == (*iter))
-				continue;
-			//需要判断一下队伍队员是否在自己的范围内
-			if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), (*iter)->GetCurrentCell()))
-			{
-				memLevelFactor = ((float)(*iter)->m_ObjectData.m_cRank + (float)avgteamLevel) / ((float)teamLevel + (float)avgteamLevel * (float)memCount);
-				ULONG Exp = (*iter)->GetNextGradeExp();
-				float TempEXP = monExp * teamLevelFactor * memLevelFactor * factor;
-				(*iter)->m_ObjectData.m_cExp += TempEXP * (1 + (*iter)->GetGetEXP());
-				while ((*iter)->m_ObjectData.m_cExp >= Exp && (*iter)->GetRank() < PLAYER_MAXLV)
-				{
-					(*iter)->m_ObjectData.m_cRank++;
-					(*iter)->m_ObjectData.m_cExp = TempEXP - (Exp - (*iter)->m_ObjectData.m_cExp);
-					(*iter)->PlayerUpGrade(true);
-					(*iter)->SetlHP(GetMaxHP());
-					(*iter)->SetlMP(GetMaxMP());
-					Exp = (*iter)->GetNextGradeExp();
-				}
-			}
+ //如果是自己，就不再增加经验
+ if (this == (*iter))
+ 	continue;
+ //需要判断一下队伍队员是否在自己的范围内
+ if (GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), (*iter)->GetCurrentCell()))
+ {
+ 	memLevelFactor = ((float)(*iter)->m_ObjectData.m_cRank + (float)avgteamLevel) / ((float)teamLevel + (float)avgteamLevel * (float)memCount);
+ 	ULONG Exp = (*iter)->GetNextGradeExp();
+ 	float TempEXP = monExp * teamLevelFactor * memLevelFactor * factor;
+ 	(*iter)->m_ObjectData.m_cExp += TempEXP * (1 + (*iter)->GetGetEXP());
+ 	while ((*iter)->m_ObjectData.m_cExp >= Exp && (*iter)->GetRank() < PLAYER_MAXLV)
+ 	{
+ 		(*iter)->m_ObjectData.m_cRank++;
+ 		(*iter)->m_ObjectData.m_cExp = TempEXP - (Exp - (*iter)->m_ObjectData.m_cExp);
+ 		(*iter)->PlayerUpGrade(true);
+ 		(*iter)->SetlHP(GetMaxHP());
+ 		(*iter)->SetlMP(GetMaxMP());
+ 		Exp = (*iter)->GetNextGradeExp();
+ 	}
+ }
 		}
 	}
 }
@@ -285,20 +285,20 @@ void	CPlayer::CalculateMoney(CGameObject* /*pObj*/)
 	//		// 有队伍
 	//		int i = 0;
 	//		for ( i = 0; i < MAX_TEAM_NUMBER; i++ ) {
-	//			if ( m_pTeam[i] == NULL ) {
-	//				break;
-	//			}
+	// if ( m_pTeam[i] == NULL ) {
+	// 	break;
+	// }
 	//		}
 
 	//		if ( i == 0 ) {
-	//			AddMoney( money );
-	//			return;
+	// AddMoney( money );
+	// return;
 	//		}
 	//
 	//		money /= i;
 
 	//		for ( ; i != 0; --i ) {
-	//			m_pTeam[i-1]->AddMoney( money );
+	// m_pTeam[i-1]->AddMoney( money );
 	//		}
 	//	}
 	//	else {
@@ -368,12 +368,12 @@ UINT CPlayer::CalculateMagic()
 		map< UINT, PASSIVEINFO >::iterator itor = m_PassiveSkill.begin();
 		for (; itor != m_PassiveSkill.end(); itor++)
 		{
-			//const SKillData *pSkill = g_pSkillManager->GetSkill( (*itor).first ) ;
-			//			UINT rank = (*itor).second.Degree_Practice;
-			// 			if ( pSkill->MagicAttack )
-			// 			{
-			// 				BaseSkill += UINT( rank* pSkill->MagicAttack_modulus );
-			// 			};
+ //const SKillData *pSkill = g_pSkillManager->GetSkill( (*itor).first ) ;
+ // UINT rank = (*itor).second.Degree_Practice;
+ //  if ( pSkill->MagicAttack )
+ //  {
+ //  	BaseSkill += UINT( rank* pSkill->MagicAttack_modulus );
+ //  };
 		}
 	}
 	//m_ObjectData.m_lSkillMagicAttack = BaseSkill;
@@ -401,18 +401,18 @@ HandType CPlayer::GetHandType()
 	{
 		if (m_Equips[Auxiliary].IsClear())
 		{
-			//副手空
-			if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
-				return HTTwo;
-			else
-				return HTOne;
+ //副手空
+ if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
+ 	return HTTwo;
+ else
+ 	return HTOne;
 		}
 		else
 		{
-			if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon)
-				return HTDoubule;
-			else
-				return HTOne;
+ if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon)
+ 	return HTDoubule;
+ else
+ 	return HTOne;
 		}
 	}
 }
@@ -452,27 +452,27 @@ eError CPlayer::Revive(int type)
 		int consume = ItemManager::Instance()->GetReviveConsum(m_ObjectData.m_cRank, type);
 		if (consume == -1)
 		{
-			//没有读取到等级对应的消耗，检查配置的问题
-			ASSERT(consume == -1);
-			return NO_MSG_ERRO;
+ //没有读取到等级对应的消耗，检查配置的问题
+ ASSERT(consume == -1);
+ return NO_MSG_ERRO;
 		}
 
 		if (type == eREVIVE_STONE && m_ObjectData.m_lStone >= consume)
 		{
-			m_ObjectData.m_lStone -= consume;
-			m_ObjectData.m_lHP = GetMaxHP();
-			m_ObjectData.m_lMP = GetMaxMP();
+ m_ObjectData.m_lStone -= consume;
+ m_ObjectData.m_lHP = GetMaxHP();
+ m_ObjectData.m_lMP = GetMaxMP();
 		}
 		else if (type == eREVIVE_MONEY && m_ObjectData.m_lMoney >= consume)
 		{
-			m_ObjectData.m_lMoney -= consume;
-			m_ObjectData.m_lHP = GetMaxHP() / 3;
-			m_ObjectData.m_lMP = GetMaxMP() / 3;
+ m_ObjectData.m_lMoney -= consume;
+ m_ObjectData.m_lHP = GetMaxHP() / 3;
+ m_ObjectData.m_lMP = GetMaxMP() / 3;
 		}
 		else
 		{
-			//外挂
-			return NO_MSG_ERRO;
+ //外挂
+ return NO_MSG_ERRO;
 		}
 
 		GetRegion()->RemoveObject(GetID());
@@ -497,17 +497,17 @@ eError CPlayer::Revive(int type)
 		pSceneChange->lFromSceneID = this->GetRegion()->GetID();
 		if (m_ObjectData.m_lFaction == 1)  //athen
 		{
-			pSceneChange->lToSceneID = CGameObject::s_World->GetRegionFromLogicID(GetRegion()->GetAthensRevival()->MapID)->GetID();/*GetRegionFromName( "Athens_Newbie" )->GetID();*/
-			pSceneChange->x = GetRegion()->GetAthensRevival()->X/*98.0f*/;
-			pSceneChange->y = 0.0f;
-			pSceneChange->z = GetRegion()->GetAthensRevival()->Z/*-178.0f*/;
+ pSceneChange->lToSceneID = CGameObject::s_World->GetRegionFromLogicID(GetRegion()->GetAthensRevival()->MapID)->GetID();/*GetRegionFromName( "Athens_Newbie" )->GetID();*/
+ pSceneChange->x = GetRegion()->GetAthensRevival()->X/*98.0f*/;
+ pSceneChange->y = 0.0f;
+ pSceneChange->z = GetRegion()->GetAthensRevival()->Z/*-178.0f*/;
 		}
 		else if (m_ObjectData.m_lFaction == 0) //sparta
 		{
-			pSceneChange->lToSceneID = CGameObject::s_World->GetRegionFromLogicID(GetRegion()->GetSpartaRevival()->MapID)->GetID();/*GetRegionFromName( "Sparta_Newbie" )->GetID()*/
-			pSceneChange->x = GetRegion()->GetSpartaRevival()->X;/*-108.0f;*/
-			pSceneChange->y = 0.0f;
-			pSceneChange->z = GetRegion()->GetSpartaRevival()->Z;/*-122.0f*/
+ pSceneChange->lToSceneID = CGameObject::s_World->GetRegionFromLogicID(GetRegion()->GetSpartaRevival()->MapID)->GetID();/*GetRegionFromName( "Sparta_Newbie" )->GetID()*/
+ pSceneChange->x = GetRegion()->GetSpartaRevival()->X;/*-108.0f;*/
+ pSceneChange->y = 0.0f;
+ pSceneChange->z = GetRegion()->GetSpartaRevival()->Z;/*-122.0f*/
 		}
 
 		CGameObject::s_World->g_listSceneChange.push_back(pSceneChange);
@@ -555,17 +555,17 @@ void CPlayer::Fly(int id, float x, float y, float z)
 	{
 		while (1)
 		{
-			float angle = sbase::RandGet(360);
-			pSceneChange->x = this->GetPosX() + cos(angle) * 50;
-			pSceneChange->z = this->GetPosZ() + sin(angle) * 50;
+ float angle = sbase::RandGet(360);
+ pSceneChange->x = this->GetPosX() + cos(angle) * 50;
+ pSceneChange->z = this->GetPosZ() + sin(angle) * 50;
 
-			if (pSceneChange->x<256 && pSceneChange->x>-256 && pSceneChange->z<256 && pSceneChange->z>-256)
-			{
-				if (!this->CheckBlock(this->GetRegion()->GetID(), pSceneChange->x, pSceneChange->z))
-				{
-					break;
-				}
-			}
+ if (pSceneChange->x<256 && pSceneChange->x>-256 && pSceneChange->z<256 && pSceneChange->z>-256)
+ {
+ 	if (!this->CheckBlock(this->GetRegion()->GetID(), pSceneChange->x, pSceneChange->z))
+ 	{
+ 		break;
+ 	}
+ }
 		}
 	}
 
@@ -613,9 +613,9 @@ void CPlayer::Dead(CGameObject* pObj)
 		int ExpandPre = 0;
 		if (pObj->GetType() == OBJECTTYPE_PLAYER && pObj->GetlFaction() != GetlFaction())
 		{
-			int Dis = pObj->GetRank() - GetRank();
-			if ((20 - Dis) > 0)  ExpandPre = 20 - Dis;
-			pObj->SetlPrestige(pObj->GetlPrestige() + ExpandPre);
+ int Dis = pObj->GetRank() - GetRank();
+ if ((20 - Dis) > 0)  ExpandPre = 20 - Dis;
+ pObj->SetlPrestige(pObj->GetlPrestige() + ExpandPre);
 		}
 
 		msg_dead.KillerID = pObj->GetID();
@@ -658,24 +658,24 @@ void CPlayer::ChangeAttackSpeed()
 
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 		{
-			if (!m_Equips[main].GetItemAppendAttribute(i))
-				continue;
+ if (!m_Equips[main].GetItemAppendAttribute(i))
+ 	continue;
 
-			float value = m_Equips[main].GetItemAppendAttribute(i)->LvInfo[m_Equips[main].AppLevel - 1];
+ float value = m_Equips[main].GetItemAppendAttribute(i)->LvInfo[m_Equips[main].AppLevel - 1];
 
-			if (m_Equips[main].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
-				attack1 += (int)value;
+ if (m_Equips[main].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
+ 	attack1 += (int)value;
 		}
 
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 		{
-			if (!m_Equips[Auxiliary].GetItemAppendAttribute(i))
-				continue;
+ if (!m_Equips[Auxiliary].GetItemAppendAttribute(i))
+ 	continue;
 
-			float value = m_Equips[Auxiliary].GetItemAppendAttribute(i)->LvInfo[m_Equips[Auxiliary].AppLevel - 1];
+ float value = m_Equips[Auxiliary].GetItemAppendAttribute(i)->LvInfo[m_Equips[Auxiliary].AppLevel - 1];
 
-			if (m_Equips[Auxiliary].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
-				attack2 += (int)value;
+ if (m_Equips[Auxiliary].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
+ 	attack2 += (int)value;
 		}
 
 		m_EquipData.m_AttackSpeed = m_Equips[main].GetItemBaseAttribute()->AttackSpeed[0] * 0.7 * 1000;
@@ -686,52 +686,52 @@ void CPlayer::ChangeAttackSpeed()
 	{
 		if (!m_Equips[main].IsClear())
 		{
-			if (!m_Equips[main].GetItemBaseAttribute() || !m_Equips[main].BaseLevel)
-			{
-				ASSERT(0);
-			}
+ if (!m_Equips[main].GetItemBaseAttribute() || !m_Equips[main].BaseLevel)
+ {
+ 	ASSERT(0);
+ }
 
-			int attack = m_Equips[main].GetItemBaseAttribute()->Attack[m_Equips[main].BaseLevel - 1];
-			float appendattack = 0.0;
+ int attack = m_Equips[main].GetItemBaseAttribute()->Attack[m_Equips[main].BaseLevel - 1];
+ float appendattack = 0.0;
 
-			for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
-			{
-				if (!m_Equips[main].GetItemAppendAttribute(i))
-					continue;
+ for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
+ {
+ 	if (!m_Equips[main].GetItemAppendAttribute(i))
+ 		continue;
 
-				float value = m_Equips[main].GetItemAppendAttribute(i)->LvInfo[m_Equips[main].AppLevel - 1];
+ 	float value = m_Equips[main].GetItemAppendAttribute(i)->LvInfo[m_Equips[main].AppLevel - 1];
 
-				if (m_Equips[main].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
-					attack += (int)value;
-			}
+ 	if (m_Equips[main].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
+ 		attack += (int)value;
+ }
 
-			m_EquipData.m_AttackSpeed = m_Equips[main].GetItemBaseAttribute()->AttackSpeed[0] * 1000;
+ m_EquipData.m_AttackSpeed = m_Equips[main].GetItemBaseAttribute()->AttackSpeed[0] * 1000;
 
-			m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
+ m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
 		}
 		else if (!m_Equips[Auxiliary].IsClear())
 		{
-			int attack = m_Equips[Auxiliary].GetItemBaseAttribute()->Attack[m_Equips[Auxiliary].BaseLevel - 1];
-			float appendattack = 0.0;
+ int attack = m_Equips[Auxiliary].GetItemBaseAttribute()->Attack[m_Equips[Auxiliary].BaseLevel - 1];
+ float appendattack = 0.0;
 
-			for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
-			{
-				if (!m_Equips[Auxiliary].GetItemAppendAttribute(i))
-					continue;
+ for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
+ {
+ 	if (!m_Equips[Auxiliary].GetItemAppendAttribute(i))
+ 		continue;
 
-				float value = m_Equips[Auxiliary].GetItemAppendAttribute(i)->LvInfo[m_Equips[Auxiliary].AppLevel - 1];
+ 	float value = m_Equips[Auxiliary].GetItemAppendAttribute(i)->LvInfo[m_Equips[Auxiliary].AppLevel - 1];
 
-				if (m_Equips[Auxiliary].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
-					attack += (int)value;
-			}
+ 	if (m_Equips[Auxiliary].GetItemAppendAttribute(i)->Type == ItemAppendAttribute::AttackA)
+ 		attack += (int)value;
+ }
 
-			m_EquipData.m_AttackSpeed = 1500;
-			m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
+ m_EquipData.m_AttackSpeed = 1500;
+ m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
 		}
 		else
 		{
-			m_EquipData.m_AttackSpeed = 1500;
-			m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
+ m_EquipData.m_AttackSpeed = 1500;
+ m_timeAttack.SetInterval(m_EquipData.m_AttackSpeed);
 		}
 	}
 

@@ -1,20 +1,3 @@
-//========================================================
-//    Copyright (c) 2006,欢乐连线工作室
-//    All rights reserved.
-//
-//    文件名称 ： GameObject.cpp
-//    摘    要 ： 动态对象功能模块
-//
-//    原始版本 ： 1.00
-//    作    者 ： 林德辉
-//    完成日期 ： 2007-01-17
-//
-//    当前版本 ： 1.01
-//    作    者 ： 李锋军
-//    完成日期 ： 2007-05-17
-//
-//========================================================
-
 #include "StdAfx.h"
 #include "GameObject.h"
 #include "Buff.h"
@@ -28,7 +11,6 @@ extern MSG_LEAVE msg_leave;
 
 CWorld* CGameObject::s_World = NULL;
 
-//-------------------------------------------------------
 CGameObject::CGameObject(void)
 	: m_AttackRadius(Melee)
 {
@@ -39,13 +21,12 @@ CGameObject::CGameObject(void)
 	m_pDeBuff = new CBuff[MAX_DEBUFF];
 	m_pRegion = NULL;
 
-	m_lDanger = 0;		// 威胁值
+	m_lDanger = 0;
 
 	m_timeAttack.Startup(1);
 	memset(&m_ObjectData, 0, sizeof(ObjectData));
 }
 
-//------------------------------------------------------------------------------------
 CGameObject::~CGameObject(void)
 {
 	SAFE_DELETE_ARRAY(m_pBuff);
@@ -53,14 +34,12 @@ CGameObject::~CGameObject(void)
 	ClearPath();
 }
 
-//------------------------------------------------------------------------------------
 long CGameObject::SetActive(bool active)
 {
 	m_bActive = active;
 	return 0;
 }
 
-//------------------------------------------------------------------------------------
 CCell* CGameObject::SetPos(float x, float y, float z, bool IsFirst)
 {
 	if (IsFirst)
@@ -88,9 +67,6 @@ CCell* CGameObject::SetPos(float x, float y, float z, bool IsFirst)
 	m_ObjectData.m_fY = y;
 	m_ObjectData.m_fZ = z;
 
-	//::OutputDebugString("Walk Go ON !" );
-	//cout<<"Walk Go ON: "<<"X="<<m_fX<<",Z="<<m_fZ<<endl;
-
 	CCell* pNewCell = GetRegion()->GetMap()->GetCell(x, z);
 	if (pOldCell != pNewCell)
 	{
@@ -107,26 +83,21 @@ CCell* CGameObject::SetPos(float x, float y, float z, bool IsFirst)
 	return NULL;
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::Activate(void)
 {
-	//	memset( &m_ObjectData, 0, sizeof(ObjectData) );
-
 	m_fX = m_fY = m_fZ = 0.0f;
 	m_fOffsetX = m_fOffsetY = m_fOffsetZ = 0.0f;
 	m_fDestinationX = m_fDestinationY = m_fDestinationZ = 0.0f;
 	m_fDest = m_fDist = m_fatan2 = 0.0f;
-	m_ObjectData.m_fSpeed = 0.18f;//0.07f;
+	m_ObjectData.m_fSpeed = 0.18f;
 	m_ObjectData.m_usAttackSpeed = 2500;
 	m_eState = OBJECT_IDLE;
 	m_bIsFight = false;
 
 	m_lDanger = 0;
 
-	// 清除路径队列
 	ClearPath();
 
-	// 清除换装属性表
 	for (int i = 0; i < MAX_AVATAR; i++)
 		m_nAvatar[i] = 0;
 
@@ -135,36 +106,24 @@ void CGameObject::Activate(void)
 
 void CGameObject::ClearPath(void)
 {
-	// 清除路径队列
-	if (m_queuePath.size() != 0)
+	if (!m_queuePath.empty())
 	{
 		for (PathIterator it = m_queuePath.begin(); it != m_queuePath.end(); it++)
 		{
-			tarPath* pPath = *it;
-			if (pPath->nEndTick == 0)
+			if (it->get() && (*it)->nEndTick == 0)
 			{
-				SetPos(pPath->x, 0.0f, pPath->z);
+				SetPos((*it)->x, 0.0f, (*it)->z);
 			}
-			SAFE_DELETE(pPath);
 		}
 		m_queuePath.clear();
 	}
 
-	// 新路徑處理
-	if (m_queueWalk.size() != 0)
+	if (!m_queueWalk.empty())
 	{
-		for (WalkIterator it = m_queueWalk.begin(); it != m_queueWalk.end(); it++)
-		{
-			tarWalk* pWalk = *it;
-			// 			SetPos( pWalk->x, 0.0f, pWalk->z );
-			// 			m_fatan2 = pWalk->fatan;
-			SAFE_DELETE(pWalk);
-		}
 		m_queueWalk.clear();
 	}
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::Release(void)
 {
 	SetActive(false);
@@ -172,13 +131,6 @@ void CGameObject::Release(void)
 	m_StatusSelfData.clear();
 }
 
-//------------------------------------------------------------------------------------
-// ObjectData *CGameObject::GetObjData()
-// {
-//
-// 	return &m_ObjectData;
-// }
-//------------------------------------------------------------------------------------
 void		CGameObject::AddHP(const int hp)
 {
 	long maxHp = GetMaxHP();
@@ -191,7 +143,6 @@ void		CGameObject::AddHP(const int hp)
 	else if (m_ObjectData.m_lHP > maxHp)
 		m_ObjectData.m_lHP = maxHp;
 }
-//------------------------------------------------------------------------------------
 void		CGameObject::AddMP(const int mp)
 {
 	long maxMp = GetMaxMP();
@@ -205,43 +156,29 @@ void		CGameObject::AddMP(const int mp)
 		m_ObjectData.m_lMP = maxMp;
 }
 
-//------------------------------------------------------------------------------------
-// HP上限
-// 公式：(等级换算HP + 装备附加 + 装备附加百分比 + 被动技能附加百分比 + 状态加成百分比 )
-//------------------------------------------------------------------------------------
-int			CGameObject::GetMaxHP(void) const
+int CGameObject::GetMaxHP(void) const
 {
 	return (int)(m_BaseData.m_lMaxHP + m_EquipData.m_lMaxHP + m_Specialty.m_lMaxHP + m_StatusData.m_lMaxHP + m_AltarData.m_lMaxHP);
 }
 
-//------------------------------------------------------------------------------------
-// MP上限
-// 公式: (等级换算MP + 装备附加 1 + 装备附加百分比 + 被动技能附加百分比  + 状态加成百分比 )
-//------------------------------------------------------------------------------------
-int			CGameObject::GetMaxMP(void) const
+int CGameObject::GetMaxMP(void) const
 {
 	return (int)(m_BaseData.m_lMaxMP + m_EquipData.m_lMaxMP + m_Specialty.m_lMaxMP + m_StatusData.m_lMaxMP + m_AltarData.m_lMaxMP);
 }
 
-//------------------------------------------------------------------------------------
 DAMAGE_INFO	CGameObject::GetDamageInfo(void) const
 {
 	return m_DamageInfo;
 }
-//------------------------------------------------------------------------------------
-
 void		CGameObject::ClearDamageInfo(void)
 {
 	m_DamageInfo.HP = 0;
 	m_DamageInfo.MP = 0;
 }
-//------------------------------------------------------------------------------------
 void		CGameObject::SetDamageInfo(const DAMAGE_INFO dmgInfo)
 {
 	m_DamageInfo = dmgInfo;
 }
-//------------------------------------------------------------------------------------
-
 void CGameObject::GetScriptObject(ScriptObject* obj)
 {
 	obj->ID = int(this);
@@ -257,9 +194,6 @@ HandType CGameObject::GetHandType()
 	return HTOne;
 }
 
-//------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------
 void CGameObject::StartFight(CGameObject* pObject)
 {
 	m_timeFight.Startup(FIGHT_TIME);
@@ -277,23 +211,16 @@ void CGameObject::EndFight()
 	ClearEnmity();
 }
 
-//------------------------------------------------------------------------------------
 bool CGameObject::IsAttack(void)
 {
 	return m_timeAttack.IsExpire();
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::AI()
 {
-	//刷新状态
 	ResolveStatus();
 }
 
-//------------------------------------------------------------------------------------
-//计算物理攻击力
-//公式:(人物等级换算值+被动技能附加值+装备附加值+状态加成)
-//------------------------------------------------------------------------------------
 UINT  CGameObject::CalculateAttack()
 {
 	return  (UINT)(m_BaseData.m_lAttack + m_Specialty.m_lAttack + m_EquipData.m_lAttack + m_StatusData.m_lAttack + m_AltarData.m_lMaxMP);
@@ -304,10 +231,6 @@ void  CGameObject::CalculateMoney(CGameObject*)
 	return;
 }
 
-//------------------------------------------------------------------------------------
-//计算物理防御力
-//公式:(人物等级换算值+被动技能附加值+装备附加值+状态加成)
-//------------------------------------------------------------------------------------
 UINT  CGameObject::CalculateDefend() const
 {
 	return (m_BaseData.m_lDefend + m_Specialty.m_lDefend + m_EquipData.m_lDefend + m_StatusData.m_lDefend + m_AltarData.m_lDefend);
@@ -318,9 +241,6 @@ AttackRadius CGameObject::GetAttackRadius()
 	return m_AttackRadius;
 }
 
-//------------------------------------------------------------------------------------
-//仇恨列表实现
-//------------------------------------------------------------------------------------
 void CGameObject::AddEnmity(CGameObject* pObject, long lValue)
 {
 	if (pObject == this)
@@ -344,7 +264,6 @@ void CGameObject::AddEnmity(CGameObject* pObject, long lValue)
 	m_listEnmity.push_back(tar);
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::DecEnmity(CGameObject* pObject, long lValue)
 {
 	if (pObject == this)
@@ -368,7 +287,6 @@ bool CGameObject::IsClearEnmity()
 	return m_listEnmity.empty();
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::ClearEnmity()
 {
 	m_listEnmity.clear();
@@ -376,7 +294,6 @@ void CGameObject::ClearEnmity()
 	m_targetObj = NULL;
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::RemoveEnmity(CGameObject* pObject)
 {
 	if (m_listEnmity.empty())
@@ -392,12 +309,10 @@ void CGameObject::RemoveEnmity(CGameObject* pObject)
 		}
 	}
 
-	//換當前目標
 	if (pObject == m_targetObj)
 		m_targetObj = GetMaxEnmity();
 }
 
-//------------------------------------------------------------------------------------
 void CGameObject::ChainEnmityList(CGameObject* obj, int value)
 {
 	if (!obj)
@@ -426,7 +341,6 @@ void CGameObject::CoagentEnmityList(CGameObject* obj, int value)
 	}
 }
 
-//------------------------------------------------------------------------------------
 CGameObject* CGameObject::GetMaxEnmity()
 {
 	tarEnmity* obj = NULL;
@@ -444,9 +358,6 @@ CGameObject* CGameObject::GetMaxEnmity()
 	return obj ? obj->pObject : NULL;
 }
 
-//------------------------------------------------------------------------------------
-//删除被动技能
-//------------------------------------------------------------------------------------
 bool  CGameObject::DelPassiveSkill(int ucSkillID)
 {
 	map< UINT, PASSIVEINFO >::iterator itor = m_PassiveSkill.find(ucSkillID);
@@ -459,24 +370,16 @@ bool  CGameObject::DelPassiveSkill(int ucSkillID)
 	return false;
 }
 
-//------------------------------------------------------------------------------------
-//找到被动技能
-//------------------------------------------------------------------------------------
 bool  CGameObject::FindPassiveSkill(int ucSkillID, UINT*)
 {
 	map< UINT, PASSIVEINFO >::const_iterator itor = m_PassiveSkill.find(ucSkillID);
 	if (itor != m_PassiveSkill.end())
 	{
-		// 		if( Degree != NULL )
-		// 			*Degree = (*itor).second.Degree_Practice;
 		return  true;
 	}
 	return false;
 }
 
-//------------------------------------------------------------------------------------
-//找到主动技能
-//------------------------------------------------------------------------------------
 bool   CGameObject::FindActiveSkill(int ucSkillID)
 {
 	map< UINT, ACTIVE_INFO> ::iterator itor = m_ActiveSkill.find(ucSkillID);
@@ -487,9 +390,6 @@ bool   CGameObject::FindActiveSkill(int ucSkillID)
 	return false;
 }
 
-//------------------------------------------------------------------------------------
-//添加主动技能
-//------------------------------------------------------------------------------------
 bool   CGameObject::AddActiveSkill(int ucSkillID)
 {
 	const MagicData* pActiveSkill, * AddSkill = s_World->g_pSkillManager->GetMagic(ucSkillID);
@@ -524,13 +424,10 @@ bool   CGameObject::AddActiveSkill(int ucSkillID)
 
 	m_ActiveSkill[ucSkillID].Time_style = TIME_STYLE_NONE;
 	m_ActiveSkill[ucSkillID].Time_start = time(NULL);
-	m_ActiveSkill[ucSkillID].Time_interval = 0;//(UINT)AddSkill->usCoolingTime*1000;
+	m_ActiveSkill[ucSkillID].Time_interval = 0;
 	return true;
 }
 
-//------------------------------------------------------------------------------------
-//删除主动技能
-//------------------------------------------------------------------------------------
 void   CGameObject::DelActiveSkill(int ucSkillID)
 {
 	map< UINT, ACTIVE_INFO > ::iterator itor = m_ActiveSkill.find(ucSkillID);
@@ -540,15 +437,12 @@ void   CGameObject::DelActiveSkill(int ucSkillID)
 	}
 }
 
-//------------------------------------------------------------------------------------
-//魔法是否处于冷却状态
-//------------------------------------------------------------------------------------
 bool CGameObject::IsActiveSkillCooling(int ucSkillID)
 {
 	return (m_ActiveSkill[ucSkillID].Time_style == TIME_STYLE_COOL) ? true : false;
 }
 
-bool CGameObject::IsGodSkillTimeOut(int /*MagicID*/)
+bool CGameObject::IsGodSkillTimeOut(int)
 {
 	return false;
 }
@@ -569,9 +463,6 @@ void    CGameObject::SetCurActiveSkillID(int ucActiveSkillID)
 	m_ucCurActiveSkill = ucActiveSkillID;
 }
 
-//------------------------------------------------------------------------------------
-// 时间刷新
-//------------------------------------------------------------------------------------
 void CGameObject::ResetTimer(float IntervalTime, TIME_STYLE timeStyle)
 {
 	if (timeStyle == TIME_STYLE_CAST)
@@ -584,9 +475,6 @@ void CGameObject::ResetTimer(float IntervalTime, TIME_STYLE timeStyle)
 	}
 }
 
-//------------------------------------------------------------------------------------
-//改变魔法状态
-//------------------------------------------------------------------------------------
 void    CGameObject::ChangeActiveSkillStatus(int ucSkillID, TIME_STYLE status)
 {
 	const MagicData* pActiveSkill = s_World->g_pSkillManager->GetMagic(ucSkillID);
@@ -594,7 +482,7 @@ void    CGameObject::ChangeActiveSkillStatus(int ucSkillID, TIME_STYLE status)
 	{
 		m_ActiveSkill[ucSkillID].Time_style = status;
 		m_ActiveSkill[ucSkillID].Time_interval = (UINT)pActiveSkill->usCoolingTime;
-		if (ucSkillID >= GODSKILL_ID)  //神恩技能冷却完毕时间
+		if (ucSkillID >= GODSKILL_ID)
 		{
 			m_GodLastTime = time(NULL);
 		}
@@ -614,7 +502,6 @@ bool CGameObject::IsRefresh(TIME_STYLE timeStyle)
 	}
 	else if (timeStyle == TIME_STYLE_COOL)
 	{
-		//遍历魔法列表,如果超时,更改状态
 		map< UINT, ACTIVE_INFO > ::iterator itor = m_ActiveSkill.begin();
 		for (; itor != m_ActiveSkill.end(); itor++)
 		{
@@ -632,12 +519,10 @@ bool CGameObject::IsRefresh(TIME_STYLE timeStyle)
 		map< UINT, ACTIVE_INFO > ::iterator itor = m_ActiveSkill.begin();
 		for (; itor != m_ActiveSkill.end(); itor++)
 		{
-			//ACTIVE_INFO  active_info = (*itor).second;
 			BYTE  MagicID = (*itor).first;
 
-			if (MagicID == 200)  //神恩
+			if (MagicID == 200)
 			{
-				//ACTIVE_INFO  active_info = (*itor).second;
 				if (m_ActiveSkillCool_Timer.IsExpire(m_GodLastTime, 30))
 				{
 					ChangeActiveSkillStatus((*itor).first, TIME_STYLE_COOL);
@@ -649,9 +534,6 @@ bool CGameObject::IsRefresh(TIME_STYLE timeStyle)
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-//暴击命中的判断
-//-----------------------------------------------------------------------------
 ATTACK_TYPE CGameObject::JudgeAttackStyle(CGameObject* pTarget)
 {
 	ASSERT(pTarget);
@@ -704,9 +586,6 @@ ATTACK_TYPE CGameObject::JudgeAttackStyle(CGameObject* pTarget)
 	return  attack_result;
 }
 
-//------------------------------------------------------------------------------------
-// 状态命中判断
-//------------------------------------------------------------------------------------
 ATTACK_TYPE CGameObject::JudgeAppendStatusStyle(CGameObject* pTarget, const MagicData* pMagicData)
 {
 	if (!pTarget)
@@ -740,9 +619,6 @@ ATTACK_TYPE CGameObject::JudgeAppendStatusStyle(CGameObject* pTarget, const Magi
 	return  attack_result;
 }
 
-//------------------------------------------------------------------------------------
-//计算物理攻击的伤害
-//------------------------------------------------------------------------------------
 int CGameObject::CalculateAttackDamage(CGameObject& pObj, float iPower1, int iPower2)
 {
 	int FirstDamage = GetAlllAttack() - pObj.GetAlllDefend();
@@ -757,17 +633,10 @@ int CGameObject::CalculateAttackDamage(CGameObject& pObj, float iPower1, int iPo
 	return    Damage <= 0 ? 1 : Damage;
 }
 
-//------------------------------------------------------------------------------------
-//计算经验和等级
-//------------------------------------------------------------------------------------
 void	CGameObject::CalculateExpAndLevel(CGameObject&)
 {
 }
 
-//------------------------------------------------------------------------------------
-//计算魔法攻击的伤害(A->B)
-//计算公式:魔法威力*( 1 + A该系造成的伤害)*( 1 - B该系伤害抗性 )*( 1 + A造成的魔法伤害 )*( 1 + B受到魔法伤害 )
-//------------------------------------------------------------------------------------
 INT CGameObject::CalculateAttackDamage(int MagicID, CGameObject& pObj)
 {
 	float Power = 0.0f;
@@ -776,31 +645,26 @@ INT CGameObject::CalculateAttackDamage(int MagicID, CGameObject& pObj)
 	float ACreateDamage = 0.0f;
 	float BBeDemage = 0.0f;
 
-	//查找该魔法
 	const MagicData* pMagic = s_World->g_pSkillManager->GetMagic(MagicID);
 	if (NULL == pMagic)
 	{
 		return 0;
 	}
 
-	//魔法基本威力
 	if (FindActiveSkill(MagicID))
 		Power = pMagic->fPower1;
-
-	//吸收
-	//double Absorb = 0.0;
 
 	const MagicData* mgc = s_World->g_pSkillManager->GetMagic(MagicID);
 
 	int Damage = 0;
 
-	if (mgc->iProperty == PROPERTY_MAG)  //魔法
+	if (mgc->iProperty == PROPERTY_MAG)
 	{
 		int FirstDamage = GetAlllMagicAttack() - pObj.GetAlllMagicDefend();
 		Damage = ((FirstDamage < 0 ? 0 : FirstDamage) * (1 + GetAllfMagicDamageAppend()) * (1 + mgc->fPower1) + mgc->fPower2 - pObj.GetAlllDamageSorb()) * (1 + GetCreateMagicDamage() - pObj.GetBeAttackDamage());
 		return Damage <= 0 ? 1 : Damage;
 	}
-	else  if (mgc->iProperty == PROPERTY_PHY) //招式
+	else  if (mgc->iProperty == PROPERTY_PHY)
 	{
 		return   CalculateAttackDamage(pObj, pMagic->fPower1, pMagic->fPower2);
 	}
@@ -821,15 +685,12 @@ bool CGameObject::IsDead()
 	return GetlHP() <= 0;
 }
 
-//将其他对象信息同步给自己
 void CGameObject::AynObjToObj(CCell*, CCell*)
 {
 }
 
-//将自己的信息同步给其他玩家
 void CGameObject::AynMeToOther(CCell* pOldCell, CCell* pNewCell)
 {
-	//新区域
 	MSG_OBJECTINFO ObjInfo;
 	ObjInfo.Head.usType = _MSG_OBJECTINFO;
 	ObjInfo.Head.usSize = sizeof(MSG_OBJECTINFO);
@@ -851,7 +712,6 @@ void CGameObject::AynMeToOther(CCell* pOldCell, CCell* pNewCell)
 	GetRegion()->SendAreaMsgOneToOther(NewCell, &ObjInfo);
 }
 
-//吟唱终止后的复位操作
 void CGameObject::ResetCastState()
 {
 	if (GetState() != OBJECT_CAST && GetState() != OBJECT_PERFORM)
@@ -867,9 +727,6 @@ void CGameObject::ResetCastState()
 	GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &skillInterrupt);
 }
 
-//--------------------------------------------------------
-// 终止别人吟唱
-//--------------------------------------------------------
 void CGameObject::Handler_HaltIntonate(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -884,9 +741,6 @@ void CGameObject::Handler_HaltIntonate(float value, bool isresume, int StatusID)
 	}
 }
 
-//--------------------------------------------------------
-// 返还单次伤害
-//--------------------------------------------------------
 void CGameObject::Handler_ReboundDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -901,9 +755,6 @@ void CGameObject::Handler_ReboundDamage(float value, bool isresume, int StatusID
 	}
 }
 
-//--------------------------------------------------------
-// 不能移动
-//--------------------------------------------------------
 void CGameObject::Handler_NonMoving(float value, bool isresume, int StatusID)
 {
 	m_StatusData.m_HaltIntonate = 0.0f;
@@ -926,9 +777,6 @@ void CGameObject::Handler_NonMoving(float value, bool isresume, int StatusID)
 	}
 }
 
-//--------------------------------------------------------
-// 不能使用魔法
-//--------------------------------------------------------
 void CGameObject::Handler_NonMagicUsing(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -943,9 +791,6 @@ void CGameObject::Handler_NonMagicUsing(float value, bool isresume, int StatusID
 	}
 }
 
-//--------------------------------------------------------
-// 不能使用招式
-//--------------------------------------------------------
 void CGameObject::Handler_NonZSUsing(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -960,9 +805,6 @@ void CGameObject::Handler_NonZSUsing(float value, bool isresume, int StatusID)
 	}
 }
 
-//---------------------------------------------------------
-// 不能使用物理攻击
-//---------------------------------------------------------
 void CGameObject::Handler_NonAttackUsing(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -977,9 +819,6 @@ void CGameObject::Handler_NonAttackUsing(float value, bool isresume, int StatusI
 	}
 }
 
-//---------------------------------------------------------
-// 不能使用道具
-//---------------------------------------------------------
 void  CGameObject::Handler_NonPropUsing(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -994,9 +833,6 @@ void  CGameObject::Handler_NonPropUsing(float value, bool isresume, int StatusID
 	}
 }
 
-//---------------------------------------------------------
-// 返还伤害
-//---------------------------------------------------------
 void CGameObject::Handler_ReturnDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1011,9 +847,6 @@ void CGameObject::Handler_ReturnDamage(float value, bool isresume, int StatusID)
 	}
 }
 
-//---------------------------------------------------------
-// 改变吟唱时间
-//---------------------------------------------------------
 void CGameObject::Handler_ChangeIntonateTime(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1028,9 +861,6 @@ void CGameObject::Handler_ChangeIntonateTime(float value, bool isresume, int Sta
 	}
 }
 
-//---------------------------------------------------------
-// 受到医疗
-//---------------------------------------------------------
 void CGameObject::Handler_BeCure(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1046,9 +876,6 @@ void CGameObject::Handler_BeCure(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//--------------------------------------------------------
-// 使用治疗
-//--------------------------------------------------------
 void CGameObject::Handler_UseCure(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1064,9 +891,6 @@ void CGameObject::Handler_UseCure(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//---------------------------------------------------------
-// 受到魔法伤害
-//---------------------------------------------------------
 void CGameObject::Handler_BeMagicDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1081,9 +905,6 @@ void CGameObject::Handler_BeMagicDamage(float value, bool isresume, int StatusID
 	}
 }
 
-//----------------------------------------------------------
-//造成魔法伤害
-//----------------------------------------------------------
 void CGameObject::Handler_CreateMagicDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1098,9 +919,6 @@ void CGameObject::Handler_CreateMagicDamage(float value, bool isresume, int Stat
 	}
 }
 
-//----------------------------------------------------------
-// 被物理攻击
-//----------------------------------------------------------
 void CGameObject::Handler_BeAttackDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1115,9 +933,6 @@ void CGameObject::Handler_BeAttackDamage(float value, bool isresume, int StatusI
 	}
 }
 
-//----------------------------------------------------------
-// 物理攻击
-//----------------------------------------------------------
 void CGameObject::Handler_CreateAttackDamage(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1132,9 +947,6 @@ void CGameObject::Handler_CreateAttackDamage(float value, bool isresume, int Sta
 	}
 }
 
-//---------------------------------------------------------
-// 得到经验值
-//---------------------------------------------------------
 void CGameObject::Handler_GetEXP(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1149,9 +961,6 @@ void CGameObject::Handler_GetEXP(float value, bool isresume, int StatusID)
 	}
 }
 
-//---------------------------------------------------------
-// MP上限
-//---------------------------------------------------------
 void CGameObject::Handler_MPMax(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1171,9 +980,6 @@ void CGameObject::Handler_MPMax(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//---------------------------------------------------------
-// HP上限
-//---------------------------------------------------------
 void CGameObject::Handler_HPMax(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1195,9 +1001,6 @@ void CGameObject::Handler_HPMax(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//---------------------------------------------------------
-// 命中
-//---------------------------------------------------------
 void CGameObject::Handler_Hit(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1213,9 +1016,6 @@ void CGameObject::Handler_Hit(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 闪避
-//----------------------------------------------------------
 void CGameObject::Handler_Duck(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1231,9 +1031,6 @@ void CGameObject::Handler_Duck(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 防御
-//----------------------------------------------------------
 void CGameObject::Handler_Defend(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1249,9 +1046,6 @@ void CGameObject::Handler_Defend(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 攻击
-//----------------------------------------------------------
 void CGameObject::Handler_Attack(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1326,18 +1120,12 @@ void  CGameObject::Handler_MagicDefend(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 增加HP
-//----------------------------------------------------------
 void CGameObject::Handler_AddHP(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
 	{
-		//没有死才能恢复
 		if (!IsDead())
 		{
-			//m_StatusData.m_AddHP -= m_StatusSelfData[StatusID].m_AddHP;
-			//m_StatusData.m_AddHP += value;
 			m_ObjectData.m_lHP += value - m_StatusSelfData[StatusID].m_AddHP;
 			m_StatusSelfData[StatusID].m_AddHP = value;
 		}
@@ -1345,21 +1133,11 @@ void CGameObject::Handler_AddHP(float value, bool isresume, int StatusID)
 	else
 	{
 		m_StatusSelfData[StatusID].m_AddHP = 0.0f;
-		//m_StatusData.m_AddHP -= m_StatusSelfData[StatusID].m_AddHP;
-		//m_ObjectData.m_lHP += m_StatusSelfData[StatusID].m_AddHP;
 	}
-
-	//if ( GetlHP() >= GetMaxHP() )
-	//{
-	//	return;
-	//}
 
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 减少HP
-//----------------------------------------------------------
 void CGameObject::Handler_DecHP(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1387,9 +1165,6 @@ void CGameObject::Handler_DecHP(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 增加MP
-//----------------------------------------------------------
 void CGameObject::Handler_AddMP(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1412,9 +1187,6 @@ void CGameObject::Handler_AddMP(float value, bool isresume, int StatusID)
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 减少MP
-//----------------------------------------------------------
 void CGameObject::Handler_DecMP(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1436,9 +1208,6 @@ void CGameObject::Handler_DecMP(float value, bool isresume, int StatusID)
 
 	SynGameData(true);
 }
-//---------------------------------------------------------
-// 状态类魔法成功几率
-//---------------------------------------------------------
 void  CGameObject::Handler_ChangeMagicSuccedOdds(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1454,9 +1223,6 @@ void  CGameObject::Handler_ChangeMagicSuccedOdds(float value, bool isresume, int
 	SynGameData(true);
 }
 
-//----------------------------------------------------------
-// 状态类魔法抵抗率
-//----------------------------------------------------------
 void  CGameObject::Handler_ChangeMagicDefendOdds(float value, bool isresume, int StatusID)
 {
 	if (!isresume)
@@ -1473,9 +1239,6 @@ void  CGameObject::Handler_ChangeMagicDefendOdds(float value, bool isresume, int
 	SynGameData(true);
 }
 
-//---------------------------------------------------------
-// 函数指针路由
-//---------------------------------------------------------
 void CGameObject::RouterHandler(pFAddr* Addr, int ID)
 {
 	switch (ID)
@@ -1577,14 +1340,10 @@ void CGameObject::RouterHandler(pFAddr* Addr, int ID)
 		*Addr = &Handler_ChangeMagicDefendOdds;
 		break;
 	default:
-		//ASSERT(0);
 		break;
 	}
 }
 
-//-----------------------------------------------------------------
-// 删除状态
-//-----------------------------------------------------------------
 bool CGameObject::DelStatus(CStatus* pStatus)
 {
 	map< UINT, TTimeElement<CStatus*, time_t> >::iterator  itor = m_StatusMap.find(pStatus->GetID());
@@ -1628,7 +1387,6 @@ bool CGameObject::DelStatus(CStatus* pStatus)
 	m_StatusMap.erase(itor);
 	m_StatusSelfData.erase(m_StatusSelfData.find(pStatus->GetID()));
 
-	//同步状态
 	MSG_STATUS msg_status;
 	msg_status.Head.usSize = sizeof(MSG_STATUS);
 	msg_status.Head.usType = _MSG_STATUS;
@@ -1650,9 +1408,6 @@ bool CGameObject::DelStatus(CStatus* pStatus)
 	return true;
 }
 
-//-----------------------------------------------------------------
-// 添加状态
-//-----------------------------------------------------------------
 bool CGameObject::AddStatus(CStatus* pStatus)
 {
 	if (NULL == pStatus)
@@ -1665,7 +1420,6 @@ bool CGameObject::AddStatus(CStatus* pStatus)
 		StatusData temp;
 		m_StatusSelfData[pStatus->GetID()] = temp;
 		ResolveStatus();
-		//向周围同步自己的状态
 		MSG_STATUS msg_status;
 		msg_status.Head.usSize = sizeof(MSG_STATUS);
 		msg_status.Head.usType = _MSG_STATUS;
@@ -1703,9 +1457,6 @@ size_t CGameObject::GetStatus(UINT StatusArr[])
 	return m_StatusMap.size();
 };
 
-//-----------------------------------------------------------------
-// 查找同类且优先级较高的状态
-//-----------------------------------------------------------------
 bool CGameObject::CanAddStatus(CStatus* pStatus)
 {
 	static int NumDef[2] = { MAX_DEC_STATUS, MAX_INC_STATUS };
@@ -1719,14 +1470,12 @@ bool CGameObject::CanAddStatus(CStatus* pStatus)
 	{
 		TTimeElement<CStatus*, time_t> Elems = itor->second;
 
-		//种类优先级最低的状态ID
 		MinStatusID = Elems.Second()->GetKind() <= pStatus->GetKind() ? Elems.Second()->GetID() : -1;
 		if (MinStatusID != -1)
 		{
 			TempDiffKindItor = itor;
 		}
 
-		//判断增减益
 		if (Elems.Second()->GetStyle() == 1)
 		{
 			Num[1]++;
@@ -1736,7 +1485,6 @@ bool CGameObject::CanAddStatus(CStatus* pStatus)
 			Num[0]++;
 		}
 
-		//找到同类别且级别较低的状态
 		if (Elems.Second()->GetKind() == pStatus->GetKind())
 		{
 			if (Elems.Second()->GetPri() <= pStatus->GetPri())
@@ -1748,7 +1496,6 @@ bool CGameObject::CanAddStatus(CStatus* pStatus)
 		}
 	}
 
-	//替换算法
 	if (Num[pStatus->GetStyle()] < NumDef[pStatus->GetStyle()])
 	{
 		if (HaveSameKind)
@@ -1786,9 +1533,6 @@ bool CGameObject::CanAddStatus(CStatus* pStatus)
 	}
 }
 
-//-----------------------------------------------------------------
-// 处理状态
-//-----------------------------------------------------------------
 void CGameObject::ResolveStatus()
 {
 	bool Updata = false;
@@ -1812,7 +1556,6 @@ void CGameObject::ResolveStatus()
 
 	if (Updata)
 	{
-		//同步状态
 		MSG_STATUS msg_status;
 		msg_status.Head.usSize = sizeof(MSG_STATUS);
 		msg_status.Head.usType = _MSG_STATUS;
@@ -1835,9 +1578,6 @@ void CGameObject::ResolveStatus()
 	}
 }
 
-//-----------------------------------------------------------------
-// 计算经验
-//-----------------------------------------------------------------
 bool CGameObject::CalculateExp(bool TarIsDead, int exp)
 {
 	if (!TarIsDead)
@@ -1862,9 +1602,6 @@ bool CGameObject::CalculateExp(bool TarIsDead, int exp)
 	return false;
 }
 
-//-----------------------------------------------------------------
-// 计算被动技能附加
-//-----------------------------------------------------------------
 void CGameObject::Handler_PS_HPMax(SKillData* Skill, AttributeType Type)
 {
 	if (Type == TYPE_ADD)

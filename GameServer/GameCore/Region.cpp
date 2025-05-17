@@ -1,17 +1,3 @@
-//========================================================
-//
-//    Copyright (c) 2007,欢乐连线工作室
-//    All rights reserved.
-//
-//    文件名称 ： Region.cpp
-//    摘    要 ： 场景管理模块
-//
-//    当前版本 ： 1.00
-//    作    者 ： 林德辉
-//    完成日期 ： 2007-01-12
-//
-//========================================================
-
 #include "StdAfx.h"
 #include <mmsystem.h>
 #include "Region.h"
@@ -151,7 +137,7 @@ CRegion::CRegion()
 	msg_drops.Head.usSize = sizeof(MSG_DROPS);
 
 	msg_talk.Head.usType = _MSG_TALK;
-	msg_talk.Head.usSize = sizeof(MsgHead) + 16; // + chat length + Item Length
+	msg_talk.Head.usSize = sizeof(MsgHead) + 16;
 
 	msg_skill.Head.usType = _MSG_SKILL;
 	msg_skill.Head.usSize = sizeof(MSG_SKILL);
@@ -165,8 +151,6 @@ CRegion::CRegion()
 
 	msg_magic.Head.usType = _MSG_MAGIC_DAMAGE;
 	msg_magic.Head.usSize = sizeof(MSG_MAGIC_DAMAGE);
-	//	msg_magic.usHP     = 10;
-
 	msg_scene_change.Head.usType = _MSG_SCENE_CHANGE;
 	msg_scene_change.Head.usSize = sizeof(MSG_SCENE_CHANGE);
 
@@ -322,7 +306,6 @@ CRegion::CRegion()
 
 	m_pMap = new CMap;
 
-	// 怪物队列初始化，用于优化
 	m_lMonsterQueue = 0;
 	m_lMonsterCount = 0;
 	for (int i = 0; i < MAX_REGION_MONSTER; i++)
@@ -355,7 +338,6 @@ CRegion::~CRegion(void)
 	}
 }
 
-// 初始化
 long CRegion::Init(CWorld* pWorld)
 {
 	m_pWorld = pWorld;
@@ -380,17 +362,10 @@ void CRegion::RemoveMonster(CMonster* pMonster)
 {
 	if (pMonster == NULL)
 		return;
-	/*
-	int gx = CONVERT_REGION_WIDTH_POS(pPlayer->GetPosX());
-	int gy = CONVERT_REGION_HEIGHT_POS(pPlayer->GetPosZ());
-
-	m_Player[gx][gy].remove( pPlayer );
-	*/
 	pMonster->GetCurrentCell()->RemoveObj(pMonster);
 	m_listMonster.remove(pMonster);
 	m_listObject.remove(pMonster);
 
-	// post message to other player
 	msg_leave.uiID = pMonster->GetID();
 	msg_leave.Head.usSize = sizeof(msg_leave);
 
@@ -405,7 +380,6 @@ void CRegion::RemoveNPC(CNPC* pNPC)
 	m_listNPC.remove(pNPC);
 	m_listObject.remove(pNPC);
 
-	// post message to other player
 	msg_leave.uiID = pNPC->GetID();
 	msg_leave.Head.usSize = sizeof(msg_leave);
 
@@ -431,10 +405,8 @@ void CRegion::RemoveObject(long lID)
 	}
 }
 
-// 逻辑处理
 long CRegion::AI(void)
 {
-	// Player逻辑
 	for (PlayerIterator it = m_listPlayer.begin(); it != m_listPlayer.end(); )
 	{
 		CPlayer* p = *it;
@@ -448,7 +420,6 @@ long CRegion::AI(void)
 		}
 	}
 
-	// 功能NPC
 	if (m_listNPC.size() != 0)
 	{
 		for (NPCIterator it = m_listNPC.begin(); it != m_listNPC.end(); it++)
@@ -458,10 +429,8 @@ long CRegion::AI(void)
 		}
 	}
 
-	// 优化循环逻辑
 	if (m_lMonsterQueue > 0)
 	{
-		// 调度怪物AI逻辑
 		int temp = m_lMonsterCount;
 		for (int i = temp; i < temp + 100; i++)
 		{
@@ -474,10 +443,8 @@ long CRegion::AI(void)
 			m_lMonsterCount++;
 		}
 
-		// 怪物基础智能
 		for (int i = 0; i < m_lMonsterQueue; i++)
 		{
-			// 			m_pMonsterQueue[i]->AI();
 			m_pMonsterQueue[i]->Run();
 		}
 	}
@@ -486,9 +453,6 @@ long CRegion::AI(void)
 	return 0;
 }
 
-//-----------------------------------------------------------------------
-//发送区域消息
-//-----------------------------------------------------------------------
 void CRegion::SendAreaMsgOneToOther(std::vector<CCell*> VecCell, void* buf)
 {
 	std::vector<CCell*>::iterator itor = VecCell.begin();
@@ -505,9 +469,6 @@ void CRegion::SendAreaMsgOneToOther(std::vector<CCell*> VecCell, void* buf)
 	}
 }
 
-//-----------------------------------------------------------------------
-//发送区域消息
-//-----------------------------------------------------------------------
 void CRegion::SendCellMsg(CCell* pCell, void* buf, CPlayer* pMySelf)
 {
 	if (NULL == pCell)
@@ -525,16 +486,12 @@ void CRegion::SendCellMsg(CCell* pCell, void* buf, CPlayer* pMySelf)
 
 		if (pMySelf != NULL && pMySelf == pPlayer)
 		{
-			//特殊消息，不要发给自己
 		}
 		else
 			m_pWorld->SendMsgToClient(buf, pPlayer->GetSocket());
 	}
 }
 
-//-----------------------------------------------------------------------
-//发送区域消息
-//-----------------------------------------------------------------------
 void CRegion::SendAreaMsgOneToOther(CCell* pCell, void* buf, CPlayer* pMySelf)
 {
 	if (NULL == pCell)
@@ -547,38 +504,15 @@ void CRegion::SendAreaMsgOneToOther(CCell* pCell, void* buf, CPlayer* pMySelf)
 	{
 		CCell* pCurCell = m_pMap->GetCell(*itor);
 
-		// 		MapPlayer &PlayerMap =  pCurCell->GetPlayerMap();
-		// 		MapPlayer::iterator iter = PlayerMap.begin();
-		// 		for ( ; iter != PlayerMap.end(); iter++ )
-		// 		{
-		// 			CPlayer *pPlayer = iter->second;
-		// 			if ( NULL ==  pPlayer )
-		// 			{
-		// 				continue ;
-		// 			}
-		//
-		// 			if( pMySelf != NULL && pMySelf == pPlayer )
-		// 			{
-		// 				//特殊消息，不要发给自己
-		// 			}
-		// 			else
-		// 				m_pWorld->SendMsgToClient( buf, pPlayer->GetSocket() );
-		// 		}
-
 		SendCellMsg(pCurCell, buf, pMySelf);
 	}
 }
 
-// 玩家进入场景
 long CRegion::Join(CPlayer* pPlayer)
 {
-	//防止进入挡格
-	//pPlayer->m_SceneChangeFlag  = false;
-
 	if (pPlayer == NULL)
 		return -1;
 
-	//const ObjectData * objData =  pPlayer->GetObjData();
 	pPlayer->ClearPath();
 	pPlayer->SetRegion(this);
 	pPlayer->SetPos(pPlayer->GetPosX(), 0.0f, pPlayer->GetPosZ(), true);
@@ -624,24 +558,13 @@ long CRegion::Join(CPlayer* pPlayer)
 	msg2other.Z = 0.0f;
 	msg2other.fAtan2 = 0.0f;
 
-	/*
-		msg_walk.X = 0.0f;
-		msg_walk.Y = 0.0f;
-		msg_walk.Z = 0.0f;
-		msg_walk.usMapID = this->GetID();
-	*/
-
-	//同步玩家基本信息
 	std::vector<BYTE> Area = pPlayer->GetCurrentCell()->GetArea();
 	std::vector<BYTE>::iterator  AreaItor = Area.begin();
 	for (; AreaItor != Area.end(); AreaItor++)
 	{
 		CCell* pCurCell = m_pMap->GetCell(*AreaItor);
-		//#pragma   omp   parallel   sections
 		{
-			//#pragma   omp   section
 			{
-				//玩家信息
 				MapPlayer& PlayerMap = pCurCell->GetPlayerMap();
 				MapPlayer::iterator iter = PlayerMap.begin();
 				for (; iter != PlayerMap.end(); iter++)
@@ -655,7 +578,6 @@ long CRegion::Join(CPlayer* pPlayer)
 						m_pWorld->SendMsgToClient(&msg, p->GetSocket());
 					}
 
-					//	objData = p->GetObjData();
 					msg2other.DB_id = p->GetDBID();
 					msg2other.uiID = p->GetID();
 					msg2other.Stall = p->GetStall()->IsStart();
@@ -697,12 +619,9 @@ long CRegion::Join(CPlayer* pPlayer)
 				}
 			}
 
-			//#pragma   omp   section
 			{
-				//怪物信息
 				MapMonster& MonsterMap = pCurCell->GetMonsterMap();
 				MapMonster::iterator MonsterItor = MonsterMap.begin();
-				//#pragma   omp   parallel   section
 				{
 					for (; MonsterItor != MonsterMap.end(); MonsterItor++)
 					{
@@ -723,7 +642,6 @@ long CRegion::Join(CPlayer* pPlayer)
 								msg_monster.ucLV = p->GetRank();
 								msg_monster.ucCamp = p->GetlFaction();
 								sprintf(msg_monster.cName, "%s", p->GetName());
-								//printf("怪物名字:%s\n",msg_monster.cName);
 								m_pWorld->SendMsgToClient(&msg_monster, pPlayer->GetSocket());
 							}
 						}
@@ -731,9 +649,7 @@ long CRegion::Join(CPlayer* pPlayer)
 				}
 			}
 
-			//#pragma   omp   section
 			{
-				//NPC信息
 				MapNPC& NPCMap = pCurCell->GetNPCMap();
 				MapNPC::iterator NPCItor = NPCMap.begin();
 
@@ -761,7 +677,6 @@ long CRegion::Join(CPlayer* pPlayer)
 		}
 	}
 
-	//add player to cell
 	pPlayer->GetCurrentCell()->AddObj(pPlayer);
 	pPlayer->SetJoinFlag(true);
 
@@ -771,7 +686,6 @@ long CRegion::Join(CPlayer* pPlayer)
 	return 0;
 }
 
-// 玩家离开场景
 long CRegion::RemovePlayer(CPlayer* pPlayer)
 {
 	if (pPlayer == NULL)
@@ -782,13 +696,10 @@ long CRegion::RemovePlayer(CPlayer* pPlayer)
 	sbase::CSingleLock xLock1(&m_xLock);
 	m_listPlayer.remove(pPlayer);
 	m_listObject.remove(pPlayer);
-	// post message to other player
 	msg_leave.uiID = pPlayer->GetID();
 
-	//结束战斗
 	EndFight(pPlayer);
 
-	//结束交易
 	if (pPlayer->GetTrade()->IsTrading())
 	{
 		pPlayer->GetTrade()->GetTrader()->GetTrade()->EndTrade();
@@ -797,11 +708,6 @@ long CRegion::RemovePlayer(CPlayer* pPlayer)
 		pPlayer->GetTrade()->GetTrader()->GetTrade()->ClearTrade();
 		pPlayer->GetTrade()->ClearTrade();
 	}
-
-	//退出队伍
-	// 	if ( pPlayer->IsMember( pPlayer ) )
-	// 		pPlayer->m_pTeam[0]->RemoveMember( pPlayer );
-	//玩家离开场景不把他从队伍中删除
 
 	SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_leave, pPlayer);
 
@@ -812,50 +718,6 @@ long CRegion::GetOnline(void)
 {
 	return (long)m_listPlayer.size();
 }
-
-// long CRegion::TalktoPlayer( CPlayer* pPlayer, CPlayer* pTarget, /*WCHAR* pBuf, int nSize,*/BYTE ucType ,MSG_TALK* _msg/*int _ucNameSize*/)//( CPlayer* pPlayer, CPlayer* pTarget, char* pBuf, int nSize )
-// {
-// 	// post message to other player
-// // 	msg_talk.Head.usSize = sizeof(MsgHead) + 11; // + chat length
-// // 	msg_talk.uiUserID = pPlayer->GetID();
-// // 	if( pTarget == NULL )
-// // 		msg_talk.uiOppositeID = -1;
-// // 	else
-// // 		msg_talk.uiOppositeID = 0;//pTarget->GetID();
-// //
-// // 	msg_talk.ucType = ucType;
-// // 	msg_talk.ucTextSize = nSize;
-// // 	msg_talk.ucNameSize = _ucNameSize;
-// // 	wmemcpy( msg_talk.cContent, pBuf, nSize );
-// //
-// // 	msg_talk.Head.usSize += nSize;
-//
-// 	g_pLoader->SendMsgToClient( &_msg, pTarget->GetSocket() );
-//
-// 	return 0;
-//
-// 	// 	post message to other player
-// 	// 		msg_talk.Head.usSize = sizeof(MsgHead) + 10; // + chat length
-// 	// 		msg_talk.uiUserID = pPlayer->GetID();
-// 	// 		if( pTarget == NULL )
-// 	// 			msg_talk.uiOppositeID = -1;
-// 	// 		else
-// 	// 			msg_talk.uiOppositeID = pTarget->GetID();
-// 	//
-// 	// 		msg_talk.ucType = 4;
-// 	// 		msg_talk.ucTextSize = nSize;
-// 	// 		memcpy( msg_talk.cContent, pBuf, nSize );
-// 	//
-// 	// 		msg_talk.Head.usSize += nSize;
-// 	//
-// 	//  		for( PlayerIterator it=m_listPlayer.begin(); it!=m_listPlayer.end(); it++ )
-// 	//   		{
-// 	//   			CPlayer* p = *it;
-// 	//   			g_pLoader->SendMsgToClient( &msg_talk, p->GetSocket() );
-// 	//   		}
-// 	// 		return 0;
-//
-// }
 
 eError CRegion::Talk_Local(CPlayer* _pPlayer, MSG_TALK* _msg)
 {
@@ -891,7 +753,7 @@ eError CRegion::Talk_Faction(CPlayer* _pPlayer, MSG_TALK* _msg)
 	return	NO_MSG_ERRO;
 }
 
-eError CRegion::Talk_Union(CPlayer* _pPlayer, MSG_TALK* _msg)//工会
+eError CRegion::Talk_Union(CPlayer* _pPlayer, MSG_TALK* _msg)
 {
 	if (!_pPlayer)
 	{
@@ -910,9 +772,8 @@ eError CRegion::Talk_Union(CPlayer* _pPlayer, MSG_TALK* _msg)//工会
 		wmemset(msg_talk.wcContent, 0, 256);
 		wcscpy(msg_talk.wcContent, unFound.c_str());
 		msg_talk.Head.usType = _MSG_TALK;
-		/*msg_talk.Head.usSize = (INT)(sizeof(MSG_TALK) - 512 + msg_talk.ucTextSize);20080714*/
-		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;//Head + INT + INT + BYTE*4
-		if ((msg_talk.ucTextSize % 4) != 0)//不能被四整除
+		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;
+		if ((msg_talk.ucTextSize % 4) != 0)
 			msg_talk.Head.usSize += msg_talk.ucTextSize + 2;
 		else
 			msg_talk.Head.usSize += msg_talk.ucTextSize;
@@ -922,10 +783,6 @@ eError CRegion::Talk_Union(CPlayer* _pPlayer, MSG_TALK* _msg)//工会
 		return NO_MSG_ERRO;
 	}
 
-	// 		if ( m_pWorld->g_pPlayer[i].IsActive()  && ( m_pWorld->g_pPlayer[i].GetcUnion() == _pPlayer->GetcUnion() ) )
-	// 		{
-	// 			g_pLoader->SendMsgToClient(_msg, m_pWorld->g_pPlayer[i].GetSocket());
-	// 		}
 	_pPlayer->BroadcastConsortiaMsg(_msg);
 
 	return NO_MSG_ERRO;
@@ -961,9 +818,8 @@ eError CRegion::Talk_World(CPlayer* _pPlayer, MSG_TALK* _msg)
 		wmemset(msg_talk.wcContent, 0, 256);
 		wcscpy(msg_talk.wcContent, unFound.c_str());
 		msg_talk.Head.usType = _MSG_TALK;
-		/*msg_talk.Head.usSize = (INT)(sizeof(MSG_TALK) - 512 + msg_talk.ucTextSize);*/
-		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;//Head + INT + INT + BYTE*4
-		if ((msg_talk.ucTextSize % 4) != 0)//不能被四整除
+		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;
+		if ((msg_talk.ucTextSize % 4) != 0)
 			msg_talk.Head.usSize += msg_talk.ucTextSize + 2;
 		else
 			msg_talk.Head.usSize += msg_talk.ucTextSize;
@@ -972,6 +828,7 @@ eError CRegion::Talk_World(CPlayer* _pPlayer, MSG_TALK* _msg)
 		return NO_MSG_ERRO;
 	}
 }
+
 eError CRegion::Talk_GM(CPlayer* _pPlayer, MSG_TALK* _msg)
 {
 	if (!_pPlayer || !_msg)
@@ -1000,10 +857,8 @@ eError CRegion::Talk_Team(CPlayer* _pPlayer, MSG_TALK* _msg)
 	}
 	if (NULL != _pPlayer->m_pTeamLeader)
 	{
-		//队伍消息发送给队长
 		if (_pPlayer->m_pTeamLeader->ucChannel & defTEAM)
 			m_pWorld->SendMsgToClient(_msg, _pPlayer->m_pTeamLeader->GetSocket());
-		//队伍消息发送给其他队员
 		for (vector<CPlayer*>::iterator iter = _pPlayer->m_pTeamLeader->m_Teammates.begin();
 			iter != _pPlayer->m_pTeamLeader->m_Teammates.end();
 			iter++)
@@ -1025,9 +880,8 @@ eError CRegion::Talk_Team(CPlayer* _pPlayer, MSG_TALK* _msg)
 		wmemset(msg_talk.wcContent, 0, 256);
 		wcscpy(msg_talk.wcContent, unFound.c_str());
 		msg_talk.Head.usType = _MSG_TALK;
-		/*msg_talk.Head.usSize = (INT)(sizeof(MSG_TALK) - 512 + msg_talk.ucTextSize);*/
-		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;//Head + INT + INT + BYTE*4
-		if ((msg_talk.ucTextSize % 4) != 0)//不能被四整除
+		msg_talk.Head.usSize = sizeof(msg_talk.Head) + 4 + 4 + 4;
+		if ((msg_talk.ucTextSize % 4) != 0)
 			msg_talk.Head.usSize += msg_talk.ucTextSize + 2;
 		else
 			msg_talk.Head.usSize += msg_talk.ucTextSize;
@@ -1039,36 +893,11 @@ eError CRegion::Talk_Team(CPlayer* _pPlayer, MSG_TALK* _msg)
 
 long CRegion::Avatar(CPlayer* pPlayer, int nPos, int nAvatarID)
 {
-	// 失效的處理
-/*
-	msg_avatar.uiAvatarID = nAvatarID;
-	msg_avatar.uiID = pPlayer->GetID();
-	msg_avatar.uiPos = nPos;
-
-	// post other message to it
-	//by FenJune
-	// 	for( PlayerIterator it=m_listPlayer.begin(); it!=m_listPlayer.end(); it++ )
-	// 	{
-	// 		CPlayer* p = *it;
-	// 		g_pLoader->SendMsgToClient( &msg_avatar, p->GetSocket() );
-	// 	}
-	SendAreaMsgOneToOther( pPlayer->GetCurrentCell(), &msg_avatar );
-*/
 	return 0;
 }
 
 eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float, float z, UINT magicID, float x1, float, float z1)
 {
-	/************************************************************************/
-	/* 测试                                                                     */
-	/************************************************************************/
-//	return	NO_MSG_ERRO;
-	//------------------------------------------------------------------------------
-
-	//if( pTarget && pTarget->GetObjData()->m_lHP <= 0 )
-	//	return 0;
-
-	//pPlayer->SetPos( x, 0, z );
 	CPlayer* player = (CPlayer*)pPlayer;
 	if (pPlayer->IsDead())
 		return NO_MSG_ERRO;
@@ -1084,7 +913,6 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 	{
 		return MSG_ERRO_006A;
 	}
-	//找到对应的魔法
 	const MagicData* pMagic = pPlayer->s_World->g_pSkillManager->GetMagic(magicID);
 	if (!pMagic)
 	{
@@ -1092,7 +920,6 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 		sbase::LogException("Message type Exception, Accounts : %s, Role : %s, [_MSG_SKILL_2]", player->GetAccounts(), pPlayer->GetName());
 		return NO_MSG_ERRO;
 	}
-	//该玩家 对应主动技能列表未能找到该技能6
 	if (!pPlayer->FindActiveSkill(magicID) && !pMagic->bIsEquipUse)
 	{
 		pPlayer->AddDanger();
@@ -1100,7 +927,6 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 		return MSG_ERRO_006F;
 	}
 
-	//验证装备需求
 	if (!static_cast<CPlayer*>(pPlayer)->IsEquipThis(pMagic))
 	{
 		pPlayer->AddDanger();
@@ -1108,10 +934,9 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 		return MSG_ERRO_006E;
 	}
 
-	if (!pPlayer->IsPublicCDOK())//公共CD
+	if (!pPlayer->IsPublicCDOK())
 		return MSG_ERRO_006D;
 
-	//该魔法是否正在冷却
 	if (pPlayer->IsActiveSkillCooling(magicID))
 	{
 		int i = 5;
@@ -1119,15 +944,11 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 		return MSG_ERRO_006D;
 	}
 
-	//魔法不足
 	if (pPlayer->GetlMP() - pMagic->sMP < 0)
 		return MSG_ERRO_006C;
 
-	//神恩技能是否冷完毕
-
 	if (static_cast<CPlayer*>(pPlayer)->IsGodSkillTimeOut(magicID))
 	{
-		// 发送执行消息
 		MSG_MAGIC_PERFORM mgicPerform;
 		mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 		mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -1143,7 +964,6 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 
 	if (pPlayer != pTarget)
 	{
-		// 检测两个玩家距离
 		float fPX = 0.0f;
 		float fPZ = 0.0f;
 		float fDist = 0.0f;
@@ -1166,7 +986,6 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 	if (!pPlayer->SetActiveSkillStartTime(magicID))
 		return NO_MSG_ERRO;
 
-	//监测通过
 	msg_skill.uiID = pPlayer->GetID();
 	msg_skill.Head.usSize = sizeof(msg_skill);
 	msg_skill.cType = magicID;
@@ -1181,10 +1000,8 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 	if (pTarget)
 		msg_skill.uiObjectID = pTarget->GetID();
 	else
-		// 区域魔法不需要target
 		msg_skill.uiObjectID = -1;
 
-	//技能数据
 	pPlayer->SetCurActiveSkillID(magicID);
 	pPlayer->m_eState = OBJECT_CAST;
 	pPlayer->ResetTimer(pMagic->usCoolingTime, TIME_STYLE_COOL);
@@ -1192,9 +1009,8 @@ eError CRegion::Skill(CGameObject* pPlayer, CGameObject* pTarget, float x, float
 	pPlayer->SetTarget(pTarget);
 	pPlayer->SetSkillTarget(pTarget);
 
-	pPlayer->ChangeActiveSkillStatus(pPlayer->GetCurActiveSkillID(), TIME_STYLE_COOL);//add by zwx
+	pPlayer->ChangeActiveSkillStatus(pPlayer->GetCurActiveSkillID(), TIME_STYLE_COOL);
 
-	//施法状态
 	if (msg_skill.cStep == 0)
 		SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_skill);
 	else
@@ -1210,29 +1026,22 @@ long CRegion::Effects(CPlayer* pPlayer, void* Msg)
 	MSG_EFFECT* temp = static_cast<MSG_EFFECT*>(Msg);
 	memcpy(&msg_effect, temp, sizeof(MSG_EFFECT));
 
-	//特效改变
 	msg_effect.Head.usSize = sizeof(msg_effect);
 	SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_effect);
 	return 0;
 }
 
-// -----------------------------------------------------------------------------------------------
-//学习被动技能
-// -----------------------------------------------------------------------------------------------
 long CRegion::LearnSkill(CPlayer* pPlayer, unsigned char cType)
 {
-	//先判断玩家能有该技能(技能的等级默认为0)
 	const SKillData* pSkill = pPlayer->s_World->g_pSkillManager->GetSkill(cType, 0);
 	IF_NOT(pSkill)
 		return 0;
 
-	//判断玩家是否已经学习过改技能
 	if (pPlayer->FindPassiveSkill(cType))
 	{
 		return 0;
 	}
 
-	//判断玩家是否满足学习改技能的条件
 	switch (cType)
 	{
 	case 0:
@@ -1378,7 +1187,6 @@ long CRegion::LearnSkill(CPlayer* pPlayer, unsigned char cType)
 		break;
 	}
 
-	//添加被动技能
 	pPlayer->AddPassiveSkill(cType);
 
 	if (pSkill == NULL)
@@ -1394,37 +1202,22 @@ long CRegion::LearnSkill(CPlayer* pPlayer, unsigned char cType)
 	msg_skill_learn.cKinds = 0;
 	msg_skill_learn.uiID = pPlayer->GetID();
 
-	// By Fenjune Li
-	// 	for( PlayerIterator it=m_listPlayer.begin(); it!=m_listPlayer.end(); it++ )
-	// 	{
-	// 		CPlayer* p = *it;
-	// 		if( p == pPlayer)
-	// 		{
-	// 			g_pLoader->SendMsgToClient( &msg_skill_learn, p->GetSocket() );
-	// 		}
-	// 	}
 	SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_skill_learn);
 	return 0;
 }
 
-// -----------------------------------------------------------------------------------------------
-//主动技能的学习请求
-// -----------------------------------------------------------------------------------------------
 long CRegion::LearnMagic(CPlayer* pPlayer, unsigned char cType, BYTE Flag)
 {
-	//查询该技能
 	const  MagicData* pMagic = pPlayer->s_World->g_pSkillManager->GetMagic(cType);
 	if (pMagic == NULL)
 	{
 		return 0;
 	}
-	//自己已经学习
 	if (pPlayer->FindActiveSkill(cType))
 	{
 		return 0;
 	}
 
-	//判断玩家是否满足学习改技能的条件
 	switch (cType)
 	{
 	case 0:
@@ -1569,7 +1362,6 @@ long CRegion::LearnMagic(CPlayer* pPlayer, unsigned char cType, BYTE Flag)
 	default:
 		break;
 	}
-	//添加主动技能
 	pPlayer->AddActiveSkill(cType);
 
 	msg_skill_learn.cType = cType;
@@ -1585,15 +1377,6 @@ long CRegion::LearnMagic(CPlayer* pPlayer, unsigned char cType, BYTE Flag)
 		msg_skill_learn.bIsSucced = true;
 	}
 
-	//By Fenjune Li
-	// 	for( PlayerIterator it=m_listPlayer.begin(); it!=m_listPlayer.end(); it++ )
-	// 	{
-	// 		CPlayer* p = *it;
-	// 		if( p == pPlayer)
-	// 		{
-	// 			g_pLoader->SendMsgToClient( &msg_skill_learn, p->GetSocket() );
-	// 		}
-	// 	}
 	SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_skill_learn);
 	return -1;
 }
@@ -1622,7 +1405,6 @@ eError CRegion::PickupDrops(CPlayer* pPlayer, CMonster* pMonster, int index)
 	{
 		msg_pickup_drops.PickupIndex = index;
 
-		//干掉怪物身上装备
 		pMonster->m_DropItems[index].Clear();
 		pMonster->m_Drops--;
 
@@ -1642,7 +1424,7 @@ eError CRegion::PickupDrops(CPlayer* pPlayer, CMonster* pMonster, int index)
 	return NO_MSG_ERRO;
 }
 
-eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)// tao 使用装备
+eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)
 {
 	Item* pitem = pPlayer->GetItem(index, num);
 
@@ -1652,7 +1434,6 @@ eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)// tao 使用装备
 	if (pitem->IsClear())
 		return MSG_ERRO_00F2;
 
-	//同步用
 	Item temp = *pitem;
 
 	if (pPlayer->UseOrEquip(index, num))
@@ -1662,7 +1443,6 @@ eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)// tao 使用装备
 		msg_useorequip_item.uiID = pPlayer->GetID();
 		msg_useorequip_item.False = false;
 
-		//同步
 		msg_useorequip_item.Base = temp.GetItemBaseAttribute()->ID;
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 		{
@@ -1679,12 +1459,10 @@ eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)// tao 使用装备
 		msg_useorequip_item.BaseLevel = temp.BaseLevel;
 		msg_useorequip_item.AppendLevel = temp.AppLevel;
 
-		// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 		SendAreaMsgOneToOther(pPlayer->GetCurrentCell(), &msg_useorequip_item);
 	}
 	else
 	{
-		//发送失败消息
 		msg_useorequip_item.Index = (USHORT)index;
 		msg_useorequip_item.Num = (USHORT)num;
 		msg_useorequip_item.uiID = pPlayer->GetID();
@@ -1696,9 +1474,6 @@ eError CRegion::UseOrEquip(CPlayer* pPlayer, int index, int num)// tao 使用装备
 	return NO_MSG_ERRO;
 }
 
-//------------------------------------------------------
-//添加角色关系
-//------------------------------------------------------
 long CRegion::AddRelation(CPlayer* pPlayer, CPlayer* pOpsite)
 {
 	__asm int 3;
@@ -1744,7 +1519,6 @@ void CRegion::StartFight(CGameObject* obj, CGameObject* target)
 		msg_fight.Fight = 1;
 		msg_fight.uiID = obj->GetID();
 
-		// by fenjune SendMsgToPlayer(&msg_fight);
 		SendAreaMsgOneToOther(obj->GetCurrentCell(), &msg_fight);
 		if (obj->GetType() == OBJECTTYPE_MONSTER)
 			((CMonster*)obj)->SetFightPosition();
@@ -1759,10 +1533,8 @@ void CRegion::EndFight(CGameObject* obj)
 	msg_fight.Fight = 0;
 	msg_fight.uiID = obj->GetID();
 
-	// by fenjune SendMsgToPlayer(&msg_fight);
 	SendAreaMsgOneToOther(obj->GetCurrentCell(), &msg_fight);
 
-	//清除仇恨列表
 	for (EnmityIterator iter = obj->m_listEnmity.begin(); iter != obj->m_listEnmity.end(); iter++)
 	{
 		iter->pObject->RemoveEnmity(obj);
@@ -1773,8 +1545,6 @@ void CRegion::EndFight(CGameObject* obj)
 
 	obj->EndFight();
 }
-//---------------------------------------------------------------------------------------------------------
-// collect gameobject within sphere
 void CRegion::CollectGameObjectSphere(CGameObject* caster, ObjectList* objlst, float vCenter[3],
 	const MagicData* magicData, int max)
 {
@@ -1813,7 +1583,6 @@ void CRegion::CollectGameObjectSphere(CGameObject* caster, ObjectList* objlst, f
 		squareLength = x * x + z * z;
 		if (squareLength < squareRadius)
 		{
-			//Monster Caster, collect all player
 			if (caster->GetType() == OBJECTTYPE_MONSTER)
 			{
 				if (eType == OBJECTTYPE_PLAYER)
@@ -1821,7 +1590,6 @@ void CRegion::CollectGameObjectSphere(CGameObject* caster, ObjectList* objlst, f
 				continue;
 			}
 
-			//Player Caster, collect right target
 			if (NULL != CollectTarget(caster, p, flags, magicData))
 			{
 				objlst->push_back(p);
@@ -1833,7 +1601,6 @@ void CRegion::CollectGameObjectSphere(CGameObject* caster, ObjectList* objlst, f
 	}
 }
 
-//目标挑选
 CGameObject* CRegion::CollectTarget(CGameObject* pCaster, CGameObject* pTarget, UINT flags, const MagicData* magicData)
 {
 	if (NULL == pTarget)
@@ -1845,13 +1612,11 @@ CGameObject* CRegion::CollectTarget(CGameObject* pCaster, CGameObject* pTarget, 
 	{
 		if (pCaster == pTarget && pTarget->GetlHP() > 0)
 		{
-			// 收集自己
 			bRightTarget = true;
 		}
 	}
 	if (flags & TARGET_SAME_FACTION && pTarget->GetlHP() > 0)
 	{
-		// 收集相同阵营
 		if (pCaster->GetlFaction() == pTarget->GetlFaction() && pCaster != pTarget
 			&& (pTarget->GetcRank() > MAX_LEVEL_LIMIT || magicData->ucStyle == 1))
 		{
@@ -1860,7 +1625,6 @@ CGameObject* CRegion::CollectTarget(CGameObject* pCaster, CGameObject* pTarget, 
 	}
 	if (flags & TARGET_DIFF_FACTION && pTarget->GetlHP() > 0)
 	{
-		// 收集不同阵营
 		if ((pCaster->GetlFaction() != pTarget->GetlFaction()) && pTarget->GetcRank() > MAX_LEVEL_LIMIT && pCaster->GetcRank() > MAX_LEVEL_LIMIT)
 		{
 			bRightTarget = true;
@@ -1868,7 +1632,6 @@ CGameObject* CRegion::CollectTarget(CGameObject* pCaster, CGameObject* pTarget, 
 	}
 	if (flags & TARGET_MONSTER && pTarget->GetlHP() > 0)
 	{
-		// 收集不同阵营
 		if (pTarget->GetType() == OBJECTTYPE_MONSTER)
 		{
 			bRightTarget = true;
@@ -1878,8 +1641,6 @@ CGameObject* CRegion::CollectTarget(CGameObject* pCaster, CGameObject* pTarget, 
 	return bRightTarget ? pTarget : NULL;
 }
 
-//---------------------------------------------------------------------------------------------------------
-// collection gameobject within axis align boudning box
 void CRegion::CollectGameObjectAABB(CPlayer* player, ObjectList* objlst, float vMin[3], float vMax[3], int flags, int max)
 {
 	float x, z;
@@ -1905,14 +1666,12 @@ void CRegion::CollectGameObjectAABB(CPlayer* player, ObjectList* objlst, float v
 			if (flags & TARGET_SELF) {
 				if (player == p && p->GetlHP() > 0)
 				{
-					// 收集自己
 					objlst->push_back(p);
 					continue;
 				}
 			}
 			if (flags & TARGET_SAME_FACTION)
 			{
-				// 收集相同阵营
 				if (player->GetlFaction() == p->GetlFaction() && player != p)
 				{
 					objlst->push_back(p);
@@ -1921,7 +1680,6 @@ void CRegion::CollectGameObjectAABB(CPlayer* player, ObjectList* objlst, float v
 			}
 			if (flags & TARGET_DIFF_FACTION)
 			{
-				// 收集不同阵营
 				if (player->GetlFaction() != p->GetlFaction())
 				{
 					objlst->push_back(p);
@@ -1930,7 +1688,6 @@ void CRegion::CollectGameObjectAABB(CPlayer* player, ObjectList* objlst, float v
 			}
 			if (flags & TARGET_MONSTER && p->GetlHP() > 0)
 			{
-				// 收集不同阵营
 				if (p->GetType() == OBJECTTYPE_MONSTER)
 				{
 					objlst->push_back(p);
@@ -1943,13 +1700,10 @@ void CRegion::CollectGameObjectAABB(CPlayer* player, ObjectList* objlst, float v
 			break;
 	}
 }
-//---------------------------------------------------------------------------------------------------------
-// magic region handle
 void	CRegion::AddMagicRegion(int playerID, int magicID, float vCenter[3], float radius, int flags, int targetID)
 {
 	if (m_lstMgcRgnFree.size())
 	{
-		// there is free slot
 		MgcRgnIterator Iter = m_lstMgcRgnFree.begin();
 		MagicRegion* mgcRgn = *Iter;
 
@@ -1968,23 +1722,18 @@ void	CRegion::AddMagicRegion(int playerID, int magicID, float vCenter[3], float 
 		m_lstMgcRgnFree.erase(Iter);
 	}
 	else {
-		// memory don't enough
 	}
 }
-//---------------------------------------------------------------------------------------------------------
-// free magic region but dont free memory
 void	CRegion::FreeMagicRegion(MgcRgnIterator Iter)
 {
 	m_lstMgcRgnFree.push_back(*Iter);
 	m_lstMgcRgnActive.erase(Iter);
 }
-//---------------------------------------------------------------------------------------------------------
-// collision detection and send message to client
 void	CRegion::UpdateMagicRegion(void)
 {
 	for (MgcRgnIterator MgcIter = m_lstMgcRgnActive.begin(); MgcIter != m_lstMgcRgnActive.end(); )
 	{
-		ObjectList				objlst;
+		ObjectList 	objlst;
 		CGameObject* pTarget;
 		MagicRegion* mgcRgn = *MgcIter;
 		CGameObject* caster = m_pWorld->GetObject(mgcRgn->playerID);
@@ -2020,7 +1769,7 @@ void	CRegion::UpdateMagicRegion(void)
 
 		int count = (int)objlst.size();
 
-		if (/*mgcRgn->targetID==-1*/((magicData->ucTarget & TARGET_POS) == TARGET_POS) || (magicData->ucRange > 0))
+		if (((magicData->ucTarget & TARGET_POS) == TARGET_POS) || (magicData->ucRange > 0))
 		{
 			int size = int(sizeof(MsgHead) + sizeof(int) + 2 * sizeof(UINT) + sizeof(BYTE) + count * sizeof(MAGIC_DAMAGE));
 			MSG_MAGIC_CLUSTER_DAMAGE  tmpDamage;
@@ -2029,7 +1778,7 @@ void	CRegion::UpdateMagicRegion(void)
 			if (clstDamager == NULL)
 				break;
 
-			clstDamager->uiID = mgcRgn->playerID;//Dont forget caster
+			clstDamager->uiID = mgcRgn->playerID;
 			clstDamager->iCount = count;
 			clstDamager->Head.usSize = (USHORT)size;
 			clstDamager->Head.usType = _MSG_MAGIC_CLUSTER_DAMAGE;
@@ -2040,13 +1789,12 @@ void	CRegion::UpdateMagicRegion(void)
 				MAGIC_DAMAGE* mgicDamage = &clstDamager->magicDamage[i];
 				++i;
 
-				// 遍历所有对象
 				pTarget = (CGameObject*)*Iter;
 
 				mgicDamage->uiObjectID = pTarget->GetID();
 
 				pTarget->ClearDamageInfo();
-				ExcScript(caster, pTarget, magicData->ucID/*player->GetCurActiveSkillID()*/);
+				ExcScript(caster, pTarget, magicData->ucID);
 				DAMAGE_INFO damageInfo = pTarget->GetDamageInfo();
 
 				if (damageInfo.HP) {
@@ -2087,7 +1835,6 @@ void	CRegion::UpdateMagicRegion(void)
 			pTarget = (CGameObject*)m_pWorld->GetObject(mgcRgn->targetID);
 			if (!pTarget)
 				return;
-			//assert(pTarget);
 			if (!pTarget)
 				return;
 
@@ -2131,17 +1878,10 @@ void CRegion::BackUpPlayerData()
 	}
 }
 
-//-----------------------------------------------------------------------------
-// 得到对象所在的地图ID
-//-----------------------------------------------------------------------------
 BYTE CRegion::GetCellID(CGameObject* pObj)
 {
 	return (BYTE)m_pMap->GetCell(pObj->GetPosX(), pObj->GetPosZ())->GetCellID();
 }
-
-//-----------------------------------------------------------------------------
-// 玩家进入主动怪视野范围
-//-----------------------------------------------------------------------------
 
 void  CRegion::RefreshInitiativeMonster(CPlayer* player)
 {
@@ -2167,7 +1907,6 @@ void  CRegion::RefreshInitiativeMonster(CPlayer* player)
 			{
 				if (!pMonster->GetFight() && !pMonster->IsLeaveFight() && pMonster->GetDist(player->GetPosX(), player->GetPosZ()) < pMonster->m_fEyeshot)
 				{
-					// 战斗属性更新
 					StartFight(player, pMonster);
 					StartFight(pMonster, player);
 				}
@@ -2228,25 +1967,25 @@ bool CRegion::GM_Handler_placard(ActionElem& elem)
 	{
 		switch (elem.PlacardType)
 		{
-		case 0: //即时消息
+		case 0:
 		{
 			CRegion* pRegion = static_cast<CRegion*>(elem.Obj);
-			if (elem.SendType == 0) //聊天频道式
+			if (elem.SendType == 0)
 			{
 				pRegion->SendSysNoteToClient(elem.PlacardInfo);
 			}
-			else if (elem.SendType == 1)//跑马灯模式
+			else if (elem.SendType == 1)
 			{
 				pRegion->SendMidNoteToClient(elem.PlacardInfo);
 			}
-			else if (elem.SendType == 2)//弹窗式
+			else if (elem.SendType == 2)
 			{
 				pRegion->SendNoteToClient(elem.PlacardInfo);
 			}
 			return true;
 		}
 		break;
-		case 1: //循环消息
+		case 1:
 		{
 			if (time(NULL) >= elem.OriginalTime + elem.EndTime || elem.EndTime < 0)
 			{
@@ -2259,15 +1998,15 @@ bool CRegion::GM_Handler_placard(ActionElem& elem)
 				else if ((time(NULL) - elem.OriginalTime) > elem.HaveRepeat * elem.IntervalTime)
 				{
 					CRegion* pRegion = static_cast<CRegion*>(elem.Obj);
-					if (elem.SendType == 0) //聊天频道式
+					if (elem.SendType == 0)
 					{
 						pRegion->SendSysNoteToClient(elem.PlacardInfo);
 					}
-					else if (elem.SendType == 1)//跑马灯模式
+					else if (elem.SendType == 1)
 					{
 						pRegion->SendMidNoteToClient(elem.PlacardInfo);
 					}
-					else if (elem.SendType == 2)//弹窗式
+					else if (elem.SendType == 2)
 					{
 						pRegion->SendNoteToClient(elem.PlacardInfo);
 					}

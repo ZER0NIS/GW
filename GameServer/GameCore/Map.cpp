@@ -90,7 +90,7 @@ void CCell::RemoveObj(CGameObject* pObj)
 		MapPlayer::iterator itor = m_MapPlayer.find(pObj->GetID());
 		if (itor != m_MapPlayer.end())
 		{
-			m_MapPlayer.erase(itor);
+ m_MapPlayer.erase(itor);
 		}
 	}
 	break;
@@ -99,7 +99,7 @@ void CCell::RemoveObj(CGameObject* pObj)
 		MapNPC::iterator itor = m_MapNPC.find(pObj->GetID());
 		if (itor != m_MapNPC.end())
 		{
-			m_MapNPC.erase(itor);
+ m_MapNPC.erase(itor);
 		}
 	}
 	break;
@@ -108,7 +108,7 @@ void CCell::RemoveObj(CGameObject* pObj)
 		MapMonster::iterator itor = m_MapMonster.find(pObj->GetID());
 		if (itor != m_MapMonster.end())
 		{
-			m_MapMonster.erase(itor);
+ m_MapMonster.erase(itor);
 		}
 	}
 	break;
@@ -160,9 +160,9 @@ void CCell::SynOldObjInfoToPlayer(CPlayer* pPlayer)
 		//send leave message of mine
 		if (iter->second != pPlayer)
 		{
-			MsgLeave.usNum++;
-			MsgLeave.uiID[MsgLeave.usNum - 1] = iter->first;
-			pPlayer->s_World->SendMsgToClient(&MsgLeaveOne, iter->second->GetSocket());
+ MsgLeave.usNum++;
+ MsgLeave.uiID[MsgLeave.usNum - 1] = iter->first;
+ pPlayer->s_World->SendMsgToClient(&MsgLeaveOne, iter->second->GetSocket());
 		}
 	}
 
@@ -232,10 +232,10 @@ void  CCell::SynNewObjInfoToPlayer(CPlayer* pPlayer)
 	{
 		if (pPlayer->GetEquip()[a].GetItemData().Base != -1)
 		{
-			SelfInfo.cEquipPos |= (1 << a);
-			const ItemData& Data = pPlayer->GetEquip()[a].GetItemData();
-			memcpy(&SelfInfo.SEquip[Index], &Data, sizeof(Equip));
-			Index++;
+ SelfInfo.cEquipPos |= (1 << a);
+ const ItemData& Data = pPlayer->GetEquip()[a].GetItemData();
+ memcpy(&SelfInfo.SEquip[Index], &Data, sizeof(Equip));
+ Index++;
 		}
 	}
 
@@ -277,9 +277,9 @@ void  CCell::SynNewObjInfoToPlayer(CPlayer* pPlayer)
 		 //商城道具隐藏名字
 		 //strcpy( PlayerInfo.cName, p->GetName());
 		if (p->IsFalseName())
-			strcpy(PlayerInfo.cName, "蒙面客");
+ strcpy(PlayerInfo.cName, "蒙面客");
 		else
-			strcpy(PlayerInfo.cName, p->GetName());
+ strcpy(PlayerInfo.cName, p->GetName());
 
 		PlayerInfo.iStatusCount = (UINT)p->GetStatus(PlayerInfo.iStautsDis);
 		int Index = 0;
@@ -289,13 +289,13 @@ void  CCell::SynNewObjInfoToPlayer(CPlayer* pPlayer)
 
 		for (int a = 0; a < MAX_EQUIP_COUNT; a++)
 		{
-			if (p->GetEquip()[a].GetItemData().Base != -1)
-			{
-				PlayerInfo.cEquipPos |= (1 << a);
-				const ItemData& Data = p->GetEquip()[a].GetItemData();
-				memcpy(&PlayerInfo.SEquip[Index], &Data, sizeof(Equip));
-				Index++;
-			}
+ if (p->GetEquip()[a].GetItemData().Base != -1)
+ {
+ 	PlayerInfo.cEquipPos |= (1 << a);
+ 	const ItemData& Data = p->GetEquip()[a].GetItemData();
+ 	memcpy(&PlayerInfo.SEquip[Index], &Data, sizeof(Equip));
+ 	Index++;
+ }
 		}
 
 		pPlayer->s_World->SendMsgToClient(&PlayerInfo, pPlayer->GetSocket());
@@ -310,23 +310,23 @@ void  CCell::SynNewObjInfoToPlayer(CPlayer* pPlayer)
 		CMonster* p = MonsterItor->second;
 		if (p->GetState() != MONSTER_STATE_LOST)
 		{
-			if (p->GetState() != MONSTER_STATE_DEAD)
-			{
-				MonsterInfo.uiID = p->GetID();
-				MonsterInfo.uiType = _OBJECT_TYPE_MONSTER;
-				MonsterInfo.usMapID = p->GetRegion()->GetID();
-				MonsterInfo.X = p->GetPosX();
-				MonsterInfo.Y = p->GetPosY();
-				MonsterInfo.Z = p->GetPosZ();
-				MonsterInfo.ucCamp = p->GetlFaction();
-				MonsterInfo.fAtan2 = p->GetAtan2();
-				MonsterInfo.uiHP = p->GetlHP();
-				MonsterInfo.uiMaxHP = p->GetMaxHP();
-				MonsterInfo.ucLV = p->GetRank();
-				MonsterInfo.iStatusCount = (UINT)p->GetStatus(MonsterInfo.iStautsDis);
-				sprintf(MonsterInfo.cName, "%s", p->GetName());
-				pPlayer->s_World->SendMsgToClient(&MonsterInfo, pPlayer->GetSocket());
-			}
+ if (p->GetState() != MONSTER_STATE_DEAD)
+ {
+ 	MonsterInfo.uiID = p->GetID();
+ 	MonsterInfo.uiType = _OBJECT_TYPE_MONSTER;
+ 	MonsterInfo.usMapID = p->GetRegion()->GetID();
+ 	MonsterInfo.X = p->GetPosX();
+ 	MonsterInfo.Y = p->GetPosY();
+ 	MonsterInfo.Z = p->GetPosZ();
+ 	MonsterInfo.ucCamp = p->GetlFaction();
+ 	MonsterInfo.fAtan2 = p->GetAtan2();
+ 	MonsterInfo.uiHP = p->GetlHP();
+ 	MonsterInfo.uiMaxHP = p->GetMaxHP();
+ 	MonsterInfo.ucLV = p->GetRank();
+ 	MonsterInfo.iStatusCount = (UINT)p->GetStatus(MonsterInfo.iStautsDis);
+ 	sprintf(MonsterInfo.cName, "%s", p->GetName());
+ 	pPlayer->s_World->SendMsgToClient(&MonsterInfo, pPlayer->GetSocket());
+ }
 		}
 	}
 
@@ -363,9 +363,9 @@ CMap::CMap()
 	{
 		for (int j = 0; j < NUMBER_OF_REGION_GRID; j++)
 		{
-			m_Cell[i][j].SetCellID((i << 4) | j);
-			/*		  int a = ( i << 4 ) | j;*/
-			m_Cell[i][j].SetIndex(j, i);
+ m_Cell[i][j].SetCellID((i << 4) | j);
+ /*		  int a = ( i << 4 ) | j;*/
+ m_Cell[i][j].SetIndex(j, i);
 		}
 	}
 }

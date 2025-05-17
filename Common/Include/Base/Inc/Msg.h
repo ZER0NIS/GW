@@ -38,20 +38,20 @@ namespace sbase
 		virtual ~CMsg() {}
 
 		const char* GetBuf(void) const { return m_bufMsg; }
-		USHORT				GetSize(void) const { return m_head.usSize; }
-		USHORT				GetType(void) const { return m_head.usType; }
-		USHORT				GetHeadSize(void) const { return sizeof(MsgHead); }
-		bool				IsValid(void) const;
-		ULONG				Release(void) { delete this; return 0; }
+		USHORT 	GetSize(void) const { return m_head.usSize; }
+		USHORT 	GetType(void) const { return m_head.usType; }
+		USHORT 	GetHeadSize(void) const { return sizeof(MsgHead); }
+		bool 	IsValid(void) const;
+		ULONG 	Release(void) { delete this; return 0; }
 
 	protected:
 		union
 		{
-			char		m_bufMsg[_MAX_MSGSIZE];
-			MsgHead		m_head;
+ char		m_bufMsg[_MAX_MSGSIZE];
+ MsgHead		m_head;
 		};
 
-		void				Init(void);
+		void 	Init(void);
 
 	public:
 		virtual bool		Create(const void* pszBuf, USHORT usBufLen);

@@ -54,8 +54,8 @@ namespace login
 
 		m_pDB = rade_db::DatabaseCreate(szDBServer, szLoginName, szPassword, szDBName);
 		if (!m_pDB) {
-			printf("[ERROR] No se pudo conectar a la base de datos\n");
-			return false;
+ printf("[ERROR] No se pudo conectar a la base de datos\n");
+ return false;
 		}
 
 		return true;
@@ -68,7 +68,7 @@ namespace login
 		GAMESERVER_SOCKET::iterator it = m_GameServerInfo.begin();
 		for (; it != m_GameServerInfo.end(); it++)
 		{
-			SAFE_DELETE((*it).second);
+ SAFE_DELETE((*it).second);
 		}
 		m_GameServerInfo.clear();
 		m_GameServerMap.clear();
@@ -79,14 +79,14 @@ namespace login
 	bool CLogin::CheckDB(const char* Name, const char* password, void* socket)
 	{
 		if (!m_pDB)
-			return false;
+ return false;
 
 		CSession* pSession = new CSession(Name, password, socket, *this);
 		if (pSession != NULL)
 		{
-			printf("[DB] Creando nueva sesión para usuario: %s\n", Name);
-			pSession->OnDBRequest();
-			return true;
+ printf("[DB] Creando nueva sesión para usuario: %s\n", Name);
+ pSession->OnDBRequest();
+ return true;
 		}
 
 		return false;
@@ -105,21 +105,21 @@ namespace login
 
 		for (int i = 0; i < len; i++)
 		{
-			if (output[i] >= 'A' && output[i] <= 'Z')
-			{
-				key = (p[len] % 26 + 26) % 26;
-				output[i] = (output[i] - 'A' - key + 26) % 26 + 'A';
-			}
-			else if (output[i] >= 'a' && output[i] <= 'z')
-			{
-				key = (p[len] % 26 + 26) % 26;
-				output[i] = (output[i] - 'a' - key + 26) % 26 + 'a';
-			}
-			else if (output[i] >= '0' && output[i] <= '9')
-			{
-				key = (p[len] % 10 + 10) % 10;
-				output[i] = (output[i] - '0' - key + 10) % 10 + '0';
-			}
+ if (output[i] >= 'A' && output[i] <= 'Z')
+ {
+ 	key = (p[len] % 26 + 26) % 26;
+ 	output[i] = (output[i] - 'A' - key + 26) % 26 + 'A';
+ }
+ else if (output[i] >= 'a' && output[i] <= 'z')
+ {
+ 	key = (p[len] % 26 + 26) % 26;
+ 	output[i] = (output[i] - 'a' - key + 26) % 26 + 'a';
+ }
+ else if (output[i] >= '0' && output[i] <= '9')
+ {
+ 	key = (p[len] % 10 + 10) % 10;
+ 	output[i] = (output[i] - '0' - key + 10) % 10 + '0';
+ }
 		}
 
 		return output;
@@ -139,8 +139,8 @@ namespace login
 		printf(">>Initialize Net...\n");
 		if (!m_pSrvIocp->Init(szIP, szPort, 0, 1, 6, PreNew))
 		{
-			printf("Initialize Net Failed!\n");
-			return false;
+ printf("Initialize Net Failed!\n");
+ return false;
 		}
 		m_pSrvIocp->ShowStatus(true);
 		return true;
@@ -152,9 +152,9 @@ namespace login
 
 		while (NULL != pNewSocket)
 		{
-			printf("[NET] Nueva conexión entrante\n");
-			NewSocketProc(pNewSocket);
-			pNewSocket = m_pSrvIocp->PopNewConnect();
+ printf("[NET] Nueva conexión entrante\n");
+ NewSocketProc(pNewSocket);
+ pNewSocket = m_pSrvIocp->PopNewConnect();
 		}
 
 		OnRead();
@@ -162,7 +162,7 @@ namespace login
 
 		if (m_pDB)
 		{
-			m_pDB->CallBackAsyncSQL();
+ m_pDB->CallBackAsyncSQL();
 		}
 
 		return 0;
@@ -171,21 +171,21 @@ namespace login
 	bool CLogin::Run()
 	{
 		if (!LoadNetService())
-			return false;
+ return false;
 
 #ifdef GODSWAR_TESTSWITCH_ON
 		if (!LoadDBSercice())
-			return false;
+ return false;
 #endif
 
 		try {
-			m_pThread = sbase::CThread::CreateNew(*this, 0, 10);
-			if (m_pThread == nullptr)
-				return false;
+ m_pThread = sbase::CThread::CreateNew(*this, 0, 10);
+ if (m_pThread == nullptr)
+ 	return false;
 		}
 		catch (std::exception& e) {
-			printf("Error al crear thread: %s\n", e.what());
-			return false;
+ printf("Error al crear thread: %s\n", e.what());
+ return false;
 		}
 
 		cout << "Initialize Successfully!\n" << endl;
@@ -202,9 +202,9 @@ namespace login
 		srand((unsigned)timeGetTime());
 		for (int i = 0; i < 6; i++)
 		{
-			RanCheckNum = rand();
-			_itoa(RanCheckNum, keytemp, 16);
-			memcpy(&CLogin::ValidateCode[i * 4], keytemp, strlen(keytemp));
+ RanCheckNum = rand();
+ _itoa(RanCheckNum, keytemp, 16);
+ memcpy(&CLogin::ValidateCode[i * 4], keytemp, strlen(keytemp));
 		}
 		CLogin::ValidateCode[24] = 0x00;
 		return CLogin::ValidateCode;
@@ -225,14 +225,14 @@ namespace login
 
 		for (int a = 0; a < (int)strlen(pMsgLogin->Name); a++)
 		{
-			if (!(isalpha(pMsgLogin->Name[a]) || isdigit(pMsgLogin->Name[a]) || pMsgLogin->Name[a] == '_'))
-			{
-				printf("[AUTH] Nombre de usuario inválido: %s\n", pMsgLogin->Name);
-				Login_info.ucInfo = 0;
-				SendMsg(&Login_info, pSocket, Login_info.Head.usSize);
-				static_cast<snet::CSocket*>(pSocket)->Write();
-				return false;
-			}
+ if (!(isalpha(pMsgLogin->Name[a]) || isdigit(pMsgLogin->Name[a]) || pMsgLogin->Name[a] == '_'))
+ {
+ 	printf("[AUTH] Nombre de usuario inválido: %s\n", pMsgLogin->Name);
+ 	Login_info.ucInfo = 0;
+ 	SendMsg(&Login_info, pSocket, Login_info.Head.usSize);
+ 	static_cast<snet::CSocket*>(pSocket)->Write();
+ 	return false;
+ }
 		}
 
 		return true;
@@ -247,149 +247,149 @@ namespace login
 		{
 		case _MSG_GAMESERVER_INFO:
 		{
-			MSG_GAMESERVER_INFO* Server = (MSG_GAMESERVER_INFO*)pszBuff;
-			printf("[GS] Info de servidor recibida - ID: %d, Estado: %d\n", Server->cID, Server->cState);
-			switch (Server->cState)
-			{
-			case OFFLINE:
-			case NORMAL:
-			case BUSY:
-			case FULL:
-			{
-				GAMESERVER_ID::iterator itor = m_GameServerMap.find(Server->cID);
-				if (itor != m_GameServerMap.end())
-				{
-					MSG_GAMESERVER_INFO* pServer = (*itor).second;
-					pServer->cState = Server->cState;
-					printf("[GS] Actualizado estado del servidor %d a %d\n", Server->cID, Server->cState);
-				}
-				else
-				{
-					MSG_GAMESERVER_INFO* msg_Register = new MSG_GAMESERVER_INFO;
-					memcpy(msg_Register, pszBuff, sizeof(MSG_GAMESERVER_INFO));
-					m_GameServerInfo[pSocket] = msg_Register;
-					m_GameServerMap[msg_Register->cID] = msg_Register;
-					printf("[GS] Nuevo servidor registrado - ID: %d, Nombre: %s\n",
-						msg_Register->cID, msg_Register->ServerName);
-				}
-			}
-			break;
-			}
+ MSG_GAMESERVER_INFO* Server = (MSG_GAMESERVER_INFO*)pszBuff;
+ printf("[GS] Info de servidor recibida - ID: %d, Estado: %d\n", Server->cID, Server->cState);
+ switch (Server->cState)
+ {
+ case OFFLINE:
+ case NORMAL:
+ case BUSY:
+ case FULL:
+ {
+ 	GAMESERVER_ID::iterator itor = m_GameServerMap.find(Server->cID);
+ 	if (itor != m_GameServerMap.end())
+ 	{
+ 		MSG_GAMESERVER_INFO* pServer = (*itor).second;
+ 		pServer->cState = Server->cState;
+ 		printf("[GS] Actualizado estado del servidor %d a %d\n", Server->cID, Server->cState);
+ 	}
+ 	else
+ 	{
+ 		MSG_GAMESERVER_INFO* msg_Register = new MSG_GAMESERVER_INFO;
+ 		memcpy(msg_Register, pszBuff, sizeof(MSG_GAMESERVER_INFO));
+ 		m_GameServerInfo[pSocket] = msg_Register;
+ 		m_GameServerMap[msg_Register->cID] = msg_Register;
+ 		printf("[GS] Nuevo servidor registrado - ID: %d, Nombre: %s\n",
+  msg_Register->cID, msg_Register->ServerName);
+ 	}
+ }
+ break;
+ }
 		}
 		break;
 		case _MSG_REQUEST_GAMESERVER:
 		{
-			MSG_REQUEST_GAMESERVER* Choose = (MSG_REQUEST_GAMESERVER*)pszBuff;
-			printf("[GS] Solicitud de servidor de juego - Usuario: %s, Servidor ID: %d\n",
-				Choose->Name, Choose->cGameServerID);
-			CSession* pPlayerSession = FindAccount(Choose->Name);
-			if (NULL == pPlayerSession)
-			{
-				printf("[GS] Error: Sesión no encontrada para usuario %s\n", Choose->Name);
-				break;
-			}
+ MSG_REQUEST_GAMESERVER* Choose = (MSG_REQUEST_GAMESERVER*)pszBuff;
+ printf("[GS] Solicitud de servidor de juego - Usuario: %s, Servidor ID: %d\n",
+ 	Choose->Name, Choose->cGameServerID);
+ CSession* pPlayerSession = FindAccount(Choose->Name);
+ if (NULL == pPlayerSession)
+ {
+ 	printf("[GS] Error: Sesión no encontrada para usuario %s\n", Choose->Name);
+ 	break;
+ }
 
-			if (pPlayerSession->GetGSCheckFlag())
-			{
-				printf("[GS] Error: Bandera GS ya activada para usuario %s\n", Choose->Name);
-				break;
-			}
+ if (pPlayerSession->GetGSCheckFlag())
+ {
+ 	printf("[GS] Error: Bandera GS ya activada para usuario %s\n", Choose->Name);
+ 	break;
+ }
 
-			GAMESERVER_ID::iterator serveritor;
-			serveritor = m_GameServerMap.find(Choose->cGameServerID);
-			if (serveritor != m_GameServerMap.end())
-			{
-				MSG_GAMESERVER_INFO* temp = (*serveritor).second;
-				GAMESERVER_SOCKET::iterator servesocket = m_GameServerInfo.begin();
-				for (; servesocket != m_GameServerInfo.end(); servesocket++)
-				{
-					if ((*servesocket).second == temp)
-					{
-						MSG_RESPONSE_GAMESERVER Serverok;
-						Serverok.Head.usSize = sizeof(MSG_RESPONSE_GAMESERVER);
-						Serverok.Head.usType = _MSG_RESPONSE_GAMESERVER;
+ GAMESERVER_ID::iterator serveritor;
+ serveritor = m_GameServerMap.find(Choose->cGameServerID);
+ if (serveritor != m_GameServerMap.end())
+ {
+ 	MSG_GAMESERVER_INFO* temp = (*serveritor).second;
+ 	GAMESERVER_SOCKET::iterator servesocket = m_GameServerInfo.begin();
+ 	for (; servesocket != m_GameServerInfo.end(); servesocket++)
+ 	{
+ 		if ((*servesocket).second == temp)
+ 		{
+  MSG_RESPONSE_GAMESERVER Serverok;
+  Serverok.Head.usSize = sizeof(MSG_RESPONSE_GAMESERVER);
+  Serverok.Head.usType = _MSG_RESPONSE_GAMESERVER;
 
-						if (serveritor->second->cState == FULL)
-						{
-							printf("[GS] Servidor %d lleno para usuario %s\n",
-								Choose->cGameServerID, Choose->Name);
-							Serverok.cGameServerID = 0;
-							Serverok.uiPort = 0;
-							strcpy(Serverok.cIP, "");
-							Serverok.cLoginError = 1;
-						}
-						else
-						{
-							printf("[GS] Asignando servidor %d a usuario %s\n",
-								Choose->cGameServerID, Choose->Name);
-							Serverok.cGameServerID = temp->cID;
-							Serverok.uiPort = temp->uiPort;
-							strcpy(Serverok.cIP, temp->cIP);
-							Serverok.cLoginError = 0;
-							strcpy(Serverok.cCheckOutText, CreateValidateCode());
+  if (serveritor->second->cState == FULL)
+  {
+  	printf("[GS] Servidor %d lleno para usuario %s\n",
+  		Choose->cGameServerID, Choose->Name);
+  	Serverok.cGameServerID = 0;
+  	Serverok.uiPort = 0;
+  	strcpy(Serverok.cIP, "");
+  	Serverok.cLoginError = 1;
+  }
+  else
+  {
+  	printf("[GS] Asignando servidor %d a usuario %s\n",
+  		Choose->cGameServerID, Choose->Name);
+  	Serverok.cGameServerID = temp->cID;
+  	Serverok.uiPort = temp->uiPort;
+  	strcpy(Serverok.cIP, temp->cIP);
+  	Serverok.cLoginError = 0;
+  	strcpy(Serverok.cCheckOutText, CreateValidateCode());
 
-							MSG_VALIDATE_GAMESERVER   gameserver_valid;
-							gameserver_valid.Head.usType = _MSG_VALIDATE_GAMESERVER;
-							gameserver_valid.Head.usSize = sizeof(MSG_VALIDATE_GAMESERVER);
-							strcpy(gameserver_valid.cCheckOutText, Serverok.cCheckOutText);
-							strcpy(gameserver_valid.Accounts, Choose->Name);
+  	MSG_VALIDATE_GAMESERVER   gameserver_valid;
+  	gameserver_valid.Head.usType = _MSG_VALIDATE_GAMESERVER;
+  	gameserver_valid.Head.usSize = sizeof(MSG_VALIDATE_GAMESERVER);
+  	strcpy(gameserver_valid.cCheckOutText, Serverok.cCheckOutText);
+  	strcpy(gameserver_valid.Accounts, Choose->Name);
 
-							printf("[GS] Enviando validación al GS para usuario %s\n", Choose->Name);
-							SendMsg(&gameserver_valid, (*servesocket).first, gameserver_valid.Head.usSize);
-							pPlayerSession->GSCheckFlag();
-						}
-						break;
-					}
-				}
-			}
+  	printf("[GS] Enviando validación al GS para usuario %s\n", Choose->Name);
+  	SendMsg(&gameserver_valid, (*servesocket).first, gameserver_valid.Head.usSize);
+  	pPlayerSession->GSCheckFlag();
+  }
+  break;
+ 		}
+ 	}
+ }
 		}
 		break;
 		case _MSG_VALIDATE_GAMESERVER:
 		{
-			MSG_VALIDATE_GAMESERVER* key = (MSG_VALIDATE_GAMESERVER*)pszBuff;
-			printf("[GS] Validación recibida para usuario %s\n", key->Accounts);
-			CSession* pPlayerSession = FindAccount(key->Accounts);
-			if (NULL != pPlayerSession)
-			{
-				pPlayerSession->GSCheckFlag();
-				GAMESERVER_SOCKET::iterator serveritor;
-				serveritor = m_GameServerInfo.find(pSocket);
-				if (serveritor != m_GameServerInfo.end())
-				{
-					MSG_RESPONSE_GAMESERVER Serverok;
-					Serverok.Head.usSize = sizeof(MSG_RESPONSE_GAMESERVER);
-					Serverok.Head.usType = _MSG_RESPONSE_GAMESERVER;
-					if (serveritor->second->cState == FULL)
-					{
-						printf("[GS] Error: Servidor lleno al validar usuario %s\n", key->Accounts);
-						Serverok.cGameServerID = 0;
-						Serverok.uiPort = 0;
-						strcpy(Serverok.cIP, "");
-						Serverok.cLoginError = 1;
-					}
-					else
-					{
-						printf("[GS] Validación exitosa para usuario %s\n", key->Accounts);
-						Serverok.cGameServerID = serveritor->second->cID;
-						Serverok.uiPort = serveritor->second->uiPort;
-						strcpy(Serverok.cIP, serveritor->second->cIP);
-						Serverok.cLoginError = 0;
-						strcpy(Serverok.cCheckOutText, key->cCheckOutText);
-					}
+ MSG_VALIDATE_GAMESERVER* key = (MSG_VALIDATE_GAMESERVER*)pszBuff;
+ printf("[GS] Validación recibida para usuario %s\n", key->Accounts);
+ CSession* pPlayerSession = FindAccount(key->Accounts);
+ if (NULL != pPlayerSession)
+ {
+ 	pPlayerSession->GSCheckFlag();
+ 	GAMESERVER_SOCKET::iterator serveritor;
+ 	serveritor = m_GameServerInfo.find(pSocket);
+ 	if (serveritor != m_GameServerInfo.end())
+ 	{
+ 		MSG_RESPONSE_GAMESERVER Serverok;
+ 		Serverok.Head.usSize = sizeof(MSG_RESPONSE_GAMESERVER);
+ 		Serverok.Head.usType = _MSG_RESPONSE_GAMESERVER;
+ 		if (serveritor->second->cState == FULL)
+ 		{
+  printf("[GS] Error: Servidor lleno al validar usuario %s\n", key->Accounts);
+  Serverok.cGameServerID = 0;
+  Serverok.uiPort = 0;
+  strcpy(Serverok.cIP, "");
+  Serverok.cLoginError = 1;
+ 		}
+ 		else
+ 		{
+  printf("[GS] Validación exitosa para usuario %s\n", key->Accounts);
+  Serverok.cGameServerID = serveritor->second->cID;
+  Serverok.uiPort = serveritor->second->uiPort;
+  strcpy(Serverok.cIP, serveritor->second->cIP);
+  Serverok.cLoginError = 0;
+  strcpy(Serverok.cCheckOutText, key->cCheckOutText);
+ 		}
 
-					SendMsg(&Serverok, (void*)pPlayerSession->GetSocket(), Serverok.Head.usSize);
-					pPlayerSession->AccountCheckFlag();
-				}
-			}
+ 		SendMsg(&Serverok, (void*)pPlayerSession->GetSocket(), Serverok.Head.usSize);
+ 		pPlayerSession->AccountCheckFlag();
+ 	}
+ }
 		}
 		break;
 		case _MSG_BAN_PLAYER:
-			printf("[ADMIN] Paquete de ban recibido\n");
-			break;
+ printf("[ADMIN] Paquete de ban recibido\n");
+ break;
 		default:
-			printf("[NET] Mensaje desconocido recibido - Tipo: %d\n", pszBuff->usType);
-			sbase::LogSave("GS", "UnKnown Msg From Gs\n");
-			break;
+ printf("[NET] Mensaje desconocido recibido - Tipo: %d\n", pszBuff->usType);
+ sbase::LogSave("GS", "UnKnown Msg From Gs\n");
+ break;
 		}
 	}
 
@@ -398,104 +398,104 @@ namespace login
 		char pszBuff[4096] = { 0 };
 		if (pSocket->IsValid())
 		{
-			while (pSocket->Read((char**)pszBuff, 4096))
-			{
-				printf("[NET] Procesando nuevo paquete de conexión - Tipo: %d\n", ((MsgHead*)pszBuff)->usType);
-				switch (((MsgHead*)pszBuff)->usType)
-				{
-				case _MSG_LOGIN:
-				{
-					MSG_LOGIN* msg_Login = (MSG_LOGIN*)pszBuff;
-					printf("[AUTH] Intento de login - Usuario: %s\n", msg_Login->Name);
+ while (pSocket->Read((char**)pszBuff, 4096))
+ {
+ 	printf("[NET] Procesando nuevo paquete de conexión - Tipo: %d\n", ((MsgHead*)pszBuff)->usType);
+ 	switch (((MsgHead*)pszBuff)->usType)
+ 	{
+ 	case _MSG_LOGIN:
+ 	{
+ 		MSG_LOGIN* msg_Login = (MSG_LOGIN*)pszBuff;
+ 		printf("[AUTH] Intento de login - Usuario: %s\n", msg_Login->Name);
 
-					char cAccount[ACCOUNTS_LENGTH] = { 0 };
-					strcpy(cAccount, DecryptionAccount(msg_Login->Name));
-					memset(msg_Login->Name, 0L, sizeof(msg_Login->Name));
-					strcpy(msg_Login->Name, cAccount);
+ 		char cAccount[ACCOUNTS_LENGTH] = { 0 };
+ 		strcpy(cAccount, DecryptionAccount(msg_Login->Name));
+ 		memset(msg_Login->Name, 0L, sizeof(msg_Login->Name));
+ 		strcpy(msg_Login->Name, cAccount);
 
-					/*if (msg_Login->fVersion != m_version)
-					{
-						printf("[AUTH] Error: Versión incorrecta - Esperada: %.2f, Recibida: %.2f\n",
-							m_version, msg_Login->fVersion);
-						MSG_LOGIN_RETURN_INFO  Login_info;
-						Login_info.Head.usSize = sizeof(MSG_LOGIN_RETURN_INFO);
-						Login_info.Head.usType = _MSG_LOGIN_RETURN_INFO;
-						Login_info.ucInfo = 0xff;
-						SendMsg(&Login_info, pSocket, Login_info.Head.usSize);
-						pSocket->Write();
-						break;
-					}*/
+ 		/*if (msg_Login->fVersion != m_version)
+ 		{
+  printf("[AUTH] Error: Versión incorrecta - Esperada: %.2f, Recibida: %.2f\n",
+  	m_version, msg_Login->fVersion);
+  MSG_LOGIN_RETURN_INFO  Login_info;
+  Login_info.Head.usSize = sizeof(MSG_LOGIN_RETURN_INFO);
+  Login_info.Head.usType = _MSG_LOGIN_RETURN_INFO;
+  Login_info.ucInfo = 0xff;
+  SendMsg(&Login_info, pSocket, Login_info.Head.usSize);
+  pSocket->Write();
+  break;
+ 		}*/
 
-					if (!JudgeValidStr(msg_Login, pSocket))
-					{
-						printf("[AUTH] Error: Nombre de usuario inválido\n");
-						break;
-					}
+ 		if (!JudgeValidStr(msg_Login, pSocket))
+ 		{
+  printf("[AUTH] Error: Nombre de usuario inválido\n");
+  break;
+ 		}
 
-					bool Isfind = true;
+ 		bool Isfind = true;
 
-					printf("[AUTH] Usuario %s enviado a DB para validación\n", msg_Login->Name);
+ 		printf("[AUTH] Usuario %s enviado a DB para validación\n", msg_Login->Name);
 
-					//	sprintf(passwordsecond, "%s%s", m_MD5.MDString(PassWord), "");
+ 		//	sprintf(passwordsecond, "%s%s", m_MD5.MDString(PassWord), "");
 
-					if (CheckDB(cAccount, msg_Login->cPassWord, pSocket))
-					{
-						Isfind = true;
-					}
-					else
-					{
-						printf("[AUTH] Error al enviar usuario %s a DB\n", msg_Login->Name);
-					}
-				}
-				break;
-				case _MSG_GAMESERVER_INFO:
-				{
-					MSG_GAMESERVER_INFO* Server = (MSG_GAMESERVER_INFO*)pszBuff;
-					printf("[GS] Info de servidor recibida en nueva conexión - ID: %d, Estado: %d\n",
-						Server->cID, Server->cState);
-					switch (Server->cState)
-					{
-					case OFFLINE:
-					case NORMAL:
-					case BUSY:
-					case FULL:
-					{
-						GAMESERVER_ID::iterator itor = m_GameServerMap.find(Server->cID);
-						if (itor != m_GameServerMap.end())
-						{
-							MSG_GAMESERVER_INFO* pServer = (*itor).second;
-							pServer->cState = Server->cState;
-							printf("[GS] Actualizado estado del servidor %d a %d\n", Server->cID, Server->cState);
-						}
-						else
-						{
-							MSG_GAMESERVER_INFO* msg_Register = new MSG_GAMESERVER_INFO;
-							memcpy(msg_Register, pszBuff, sizeof(MSG_GAMESERVER_INFO));
-							m_GameServerInfo[pSocket] = msg_Register;
-							m_GameServerMap[msg_Register->cID] = msg_Register;
-							printf("[GS] Nuevo servidor registrado - ID: %d, Nombre: %s\n",
-								msg_Register->cID, msg_Register->ServerName);
-						}
-					}
-					break;
-					default:
-						ASSERT(0);
-						break;
-					}
-				}
-				break;
-				default:
-					printf("[NET] Mensaje desconocido en nueva conexión - Tipo: %d\n", ((MsgHead*)pszBuff)->usType);
-					return;
-				}
+ 		if (CheckDB(cAccount, msg_Login->cPassWord, pSocket))
+ 		{
+  Isfind = true;
+ 		}
+ 		else
+ 		{
+  printf("[AUTH] Error al enviar usuario %s a DB\n", msg_Login->Name);
+ 		}
+ 	}
+ 	break;
+ 	case _MSG_GAMESERVER_INFO:
+ 	{
+ 		MSG_GAMESERVER_INFO* Server = (MSG_GAMESERVER_INFO*)pszBuff;
+ 		printf("[GS] Info de servidor recibida en nueva conexión - ID: %d, Estado: %d\n",
+  Server->cID, Server->cState);
+ 		switch (Server->cState)
+ 		{
+ 		case OFFLINE:
+ 		case NORMAL:
+ 		case BUSY:
+ 		case FULL:
+ 		{
+  GAMESERVER_ID::iterator itor = m_GameServerMap.find(Server->cID);
+  if (itor != m_GameServerMap.end())
+  {
+  	MSG_GAMESERVER_INFO* pServer = (*itor).second;
+  	pServer->cState = Server->cState;
+  	printf("[GS] Actualizado estado del servidor %d a %d\n", Server->cID, Server->cState);
+  }
+  else
+  {
+  	MSG_GAMESERVER_INFO* msg_Register = new MSG_GAMESERVER_INFO;
+  	memcpy(msg_Register, pszBuff, sizeof(MSG_GAMESERVER_INFO));
+  	m_GameServerInfo[pSocket] = msg_Register;
+  	m_GameServerMap[msg_Register->cID] = msg_Register;
+  	printf("[GS] Nuevo servidor registrado - ID: %d, Nombre: %s\n",
+  		msg_Register->cID, msg_Register->ServerName);
+  }
+ 		}
+ 		break;
+ 		default:
+  ASSERT(0);
+  break;
+ 		}
+ 	}
+ 	break;
+ 	default:
+ 		printf("[NET] Mensaje desconocido en nueva conexión - Tipo: %d\n", ((MsgHead*)pszBuff)->usType);
+ 		return;
+ 	}
 
-				//    pSocket->Remove(pszBuff->usSize);
-			}
+ 	//    pSocket->Remove(pszBuff->usSize);
+ }
 		}
 		else
 		{
-			printf("[NET] Conexión no válida, cerrando\n");
-			m_pSrvIocp->PushNewClose(pSocket);
+ printf("[NET] Conexión no válida, cerrando\n");
+ m_pSrvIocp->PushNewClose(pSocket);
 		}
 	}
 
@@ -510,68 +510,68 @@ namespace login
 		SESSION_MAP::iterator itor = m_AccountsMap.begin();
 		while (itor != m_AccountsMap.end())
 		{
-			pSocket = static_cast<snet::CSocket*>(itor->second->GetSocket());
+ pSocket = static_cast<snet::CSocket*>(itor->second->GetSocket());
 
-			if (!pSocket)
-			{
-				itor++;
-				continue;
-			}
+ if (!pSocket)
+ {
+ 	itor++;
+ 	continue;
+ }
 
-			if (pSocket->IsValid())
-			{
-				while (pSocket->Read((char**)&pszBuff, 4096))
-				{
-					printf("[NET] Paquete recibido de usuario %s\n", itor->second->GetAccount());
-					ReslovePacket(pszBuff, pSocket);
+ if (pSocket->IsValid())
+ {
+ 	while (pSocket->Read((char**)&pszBuff, 4096))
+ 	{
+ 		printf("[NET] Paquete recibido de usuario %s\n", itor->second->GetAccount());
+ 		ReslovePacket(pszBuff, pSocket);
 
-					//    pSocket->Remove(pszBuff->usSize);
-				}
-			}
-			else
-			{
-				printf("[NET] Socket no válido para usuario %s, cerrando\n", itor->second->GetAccount());
-				pSocket->GetIOCP()->PushNewClose(pSocket);
-				ClearAccount(itor->second->GetAccount());
-				break;
-			}
-			itor++;
+ 		//    pSocket->Remove(pszBuff->usSize);
+ 	}
+ }
+ else
+ {
+ 	printf("[NET] Socket no válido para usuario %s, cerrando\n", itor->second->GetAccount());
+ 	pSocket->GetIOCP()->PushNewClose(pSocket);
+ 	ClearAccount(itor->second->GetAccount());
+ 	break;
+ }
+ itor++;
 		}
 
 		GAMESERVER_SOCKET::iterator pos = m_GameServerInfo.begin();
 		while (pos != m_GameServerInfo.end())
 		{
-			pSocket = pos->first;
+ pSocket = pos->first;
 
-			if (pSocket->IsValid())
-			{
-				bool ret = pSocket->Read((char**)&pszBuff);
-				while (ret)
-				{
-					printf("[NET] Paquete recibido de GameServer ID: %d\n", pos->second->cID);
-					ReslovePacket(pszBuff, pSocket);
+ if (pSocket->IsValid())
+ {
+ 	bool ret = pSocket->Read((char**)&pszBuff);
+ 	while (ret)
+ 	{
+ 		printf("[NET] Paquete recibido de GameServer ID: %d\n", pos->second->cID);
+ 		ReslovePacket(pszBuff, pSocket);
 
-					//pSocket->Remove(pszBuff->usSize);
+ 		//pSocket->Remove(pszBuff->usSize);
 
-					ret = pSocket->Read((char**)&pszBuff);
-				}
-			}
-			else
-			{
-				printf("[NET] Socket no válido para GameServer ID: %d, cerrando\n", pos->second->cID);
-				pSocket->GetIOCP()->PushNewClose(pSocket);
+ 		ret = pSocket->Read((char**)&pszBuff);
+ 	}
+ }
+ else
+ {
+ 	printf("[NET] Socket no válido para GameServer ID: %d, cerrando\n", pos->second->cID);
+ 	pSocket->GetIOCP()->PushNewClose(pSocket);
 
-				GAMESERVER_ID::iterator it = m_GameServerMap.find(pos->second->cID);
-				if (it != m_GameServerMap.end())
-				{
-					SAFE_DELETE((*it).second);
-					m_GameServerMap.erase(it);
-				}
-				m_GameServerInfo.erase(pos);
-				break;
-			}
+ 	GAMESERVER_ID::iterator it = m_GameServerMap.find(pos->second->cID);
+ 	if (it != m_GameServerMap.end())
+ 	{
+ 		SAFE_DELETE((*it).second);
+ 		m_GameServerMap.erase(it);
+ 	}
+ 	m_GameServerInfo.erase(pos);
+ 	break;
+ }
 
-			pos++;
+ pos++;
 		}
 	}
 
@@ -585,63 +585,63 @@ namespace login
 		SESSION_MAP::iterator itor = m_AccountsMap.begin();
 		while (itor != m_AccountsMap.end())
 		{
-			pSocket = static_cast<snet::CSocket*>(itor->second->GetSocket());
+ pSocket = static_cast<snet::CSocket*>(itor->second->GetSocket());
 
-			if (!pSocket)
-			{
-				itor++;
-				continue;
-			}
+ if (!pSocket)
+ {
+ 	itor++;
+ 	continue;
+ }
 
-			if (pSocket->IsValid())
-			{
-				//printf("[NET] Escribiendo datos para usuario %s\n", itor->second->GetAccount());
-				pSocket->Write();
+ if (pSocket->IsValid())
+ {
+ 	//printf("[NET] Escribiendo datos para usuario %s\n", itor->second->GetAccount());
+ 	pSocket->Write();
 
-				if (itor->second->GetAccountFlag())
-				{
-					printf("[NET] Limpiando cuenta %s por bandera de cuenta\n", itor->second->GetAccount());
-					ClearAccount(itor->second->GetAccount());
+ 	if (itor->second->GetAccountFlag())
+ 	{
+ 		printf("[NET] Limpiando cuenta %s por bandera de cuenta\n", itor->second->GetAccount());
+ 		ClearAccount(itor->second->GetAccount());
 
-					break;
-				}
-			}
-			else
-			{
-				printf("[NET] Socket no válido para usuario %s, cerrando\n", itor->second->GetAccount());
-				pSocket->GetIOCP()->PushNewClose(pSocket);
-				ClearAccount(itor->second->GetAccount());
-				break;
-			}
-			itor++;
+ 		break;
+ 	}
+ }
+ else
+ {
+ 	printf("[NET] Socket no válido para usuario %s, cerrando\n", itor->second->GetAccount());
+ 	pSocket->GetIOCP()->PushNewClose(pSocket);
+ 	ClearAccount(itor->second->GetAccount());
+ 	break;
+ }
+ itor++;
 		}
 
 		GAMESERVER_SOCKET::iterator pos = m_GameServerInfo.begin();
 		while (pos != m_GameServerInfo.end())
 		{
-			pSocket = pos->first;
+ pSocket = pos->first;
 
-			if (pSocket->IsValid())
-			{
-				//	printf("[NET] Escribiendo datos para GameServer ID: %d\n", pos->second->cID);
-				pSocket->Write();
-			}
-			else
-			{
-				printf("[NET] Socket no válido para GameServer ID: %d, cerrando\n", pos->second->cID);
-				pSocket->GetIOCP()->PushNewClose(pSocket);
+ if (pSocket->IsValid())
+ {
+ 	//	printf("[NET] Escribiendo datos para GameServer ID: %d\n", pos->second->cID);
+ 	pSocket->Write();
+ }
+ else
+ {
+ 	printf("[NET] Socket no válido para GameServer ID: %d, cerrando\n", pos->second->cID);
+ 	pSocket->GetIOCP()->PushNewClose(pSocket);
 
-				GAMESERVER_ID::iterator it = m_GameServerMap.find(pos->second->cID);
-				if (it != m_GameServerMap.end())
-				{
-					SAFE_DELETE((*it).second);
-					m_GameServerMap.erase(it);
-				}
-				m_GameServerInfo.erase(pos);
-				break;
-			}
+ 	GAMESERVER_ID::iterator it = m_GameServerMap.find(pos->second->cID);
+ 	if (it != m_GameServerMap.end())
+ 	{
+ 		SAFE_DELETE((*it).second);
+ 		m_GameServerMap.erase(it);
+ 	}
+ 	m_GameServerInfo.erase(pos);
+ 	break;
+ }
 
-			pos++;
+ pos++;
 		}
 	}
 
@@ -657,8 +657,8 @@ namespace login
 		SESSION_MAP::iterator  itor = m_AccountsMap.find(StrName);
 		if (itor != m_AccountsMap.end())
 		{
-			printf("[SESSION] Cuenta encontrada: %s\n", StrName.c_str());
-			return itor->second;
+ printf("[SESSION] Cuenta encontrada: %s\n", StrName.c_str());
+ return itor->second;
 		}
 
 		printf("[SESSION] Cuenta NO encontrada: %s\n", StrName.c_str());
@@ -673,9 +673,9 @@ namespace login
 
 		if (itor != m_AccountsMap.end())
 		{
-			printf("[SESSION] Limpiando cuenta: %s\n", StrName.c_str());
-			SAFE_DELETE(itor->second);
-			m_AccountsMap.erase(itor);
+ printf("[SESSION] Limpiando cuenta: %s\n", StrName.c_str());
+ SAFE_DELETE(itor->second);
+ m_AccountsMap.erase(itor);
 		}
 	}
 
@@ -685,28 +685,28 @@ namespace login
 		GAMESERVER_ID::iterator itor = m_GameServerMap.begin();
 		while (itor != m_GameServerMap.end())
 		{
-			printf(" ID¡¾%d¡¿ %-25s %-16s:%d\t×´Ì¬¡¾", itor->second->cID,
-				itor->second->ServerName, itor->second->cIP, itor->second->uiPort);
+ printf(" ID¡¾%d¡¿ %-25s %-16s:%d\t×´Ì¬¡¾", itor->second->cID,
+ 	itor->second->ServerName, itor->second->cIP, itor->second->uiPort);
 
-			switch (itor->second->cState)
-			{
-			case 0:
-				printf("Æô¶¯¡¿\n");
-				break;
-			case 1:
-				printf("Õý³£¡¿\n");
-				break;
-			case 2:
-				printf("·±Ã¦¡¿\n");
-				break;
-			case 3:
-				printf("ÒÑÂú¡¿\n");
-				break;
-			default:
-				break;
-			}
+ switch (itor->second->cState)
+ {
+ case 0:
+ 	printf("Æô¶¯¡¿\n");
+ 	break;
+ case 1:
+ 	printf("Õý³£¡¿\n");
+ 	break;
+ case 2:
+ 	printf("·±Ã¦¡¿\n");
+ 	break;
+ case 3:
+ 	printf("ÒÑÂú¡¿\n");
+ 	break;
+ default:
+ 	break;
+ }
 
-			itor++;
+ itor++;
 		}
 	}
 }

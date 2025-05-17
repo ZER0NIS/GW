@@ -26,9 +26,9 @@ namespace sbase
 		// virtual ~CTimer() {}
 		CTimer& operator = (const CTimer& rhs)
 		{
-			m_nInterval = rhs.m_nInterval;
-			m_tUpdateTime = rhs.m_tUpdateTime;
-			return *this;
+ m_nInterval = rhs.m_nInterval;
+ m_tUpdateTime = rhs.m_tUpdateTime;
+ return *this;
 		}
 
 	public:
@@ -64,7 +64,7 @@ namespace sbase
 
 		// 时钟会积累，但积累值不超过间隔值。其它同ToNextTime(...)
 		bool	ToNextTick(int nSecs);
-		//	void	AppendInterval	(int nSecs)			{ if(ToNextTime()) m_nInterval=nSecs; else m_nInterval+=nSecs; }	// ToNextTime(): 保证至少有nSecs秒
+		//	void	AppendInterval	(int nSecs) { if(ToNextTime()) m_nInterval=nSecs; else m_nInterval+=nSecs; }	// ToNextTime(): 保证至少有nSecs秒
 
 	public: // get
 		time_t		GetRemain() { return m_tUpdateTime ? __min(__max(m_nInterval - (time(NULL) - (int)m_tUpdateTime), 0), m_nInterval) : 0; }
@@ -93,9 +93,9 @@ namespace sbase
 		// virtual ~CTimerMS() {}
 		CTimerMS& operator = (const CTimerMS& rhs)
 		{
-			m_nInterval = rhs.m_nInterval;
-			m_tUpdateTime = rhs.m_tUpdateTime;
-			return *this;
+ m_nInterval = rhs.m_nInterval;
+ m_tUpdateTime = rhs.m_tUpdateTime;
+ return *this;
 		}
 
 	public:

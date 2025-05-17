@@ -41,19 +41,19 @@ public:		// Êý¾Ý²Ù×÷
 public:
 	CRegion* m_pRegion;
 
-	long			m_lID;
+	long m_lID;
 	long            m_LogicID;
-	string				m_strName;
-	string				m_strNameCH;
-	string				m_strNumenName;		// Numen/Boss
+	string 	m_strName;
+	string 	m_strNameCH;
+	string 	m_strNumenName;		// Numen/Boss
 	CWorld* m_pWorld;
 
 public:
-	void				SetName(const char* pName) { m_strName = pName; }
-	void				SetNameCH(const char* pName) { m_strNameCH = pName; }
-	void				SetNumenName(const char* pName) { m_strNumenName = pName; }
+	void 	SetName(const char* pName) { m_strName = pName; }
+	void 	SetNameCH(const char* pName) { m_strNameCH = pName; }
+	void 	SetNumenName(const char* pName) { m_strNumenName = pName; }
 
-	string				GetName(void) { return m_strName; }
-	string				GetNameCH(void) { return m_strNameCH; }
-	string				GetNumenName(void) { return m_strNumenName; }
+	string 	GetName(void) { return m_strName; }
+	string 	GetNameCH(void) { return m_strNameCH; }
+	string 	GetNumenName(void) { return m_strNumenName; }
 };

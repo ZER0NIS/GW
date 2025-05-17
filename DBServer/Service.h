@@ -90,7 +90,7 @@ public:
 	virtual int		OnThreadProcess(void);
 
 	const string	PopQueSql();
-	void			PushQueSql(string strSql);
+	void PushQueSql(string strSql);
 
 protected:
 private:
@@ -98,9 +98,9 @@ private:
 	DBService* m_DBMgr;
 	sbase::CThread* m_pThread;
 	ipc_np::CPipe* m_Pipe;
-	SQL_DEQUE			m_QueSql;
+	SQL_DEQUE m_QueSql;
 
-	HMODULE				m_PipeDll;
+	HMODULE 	m_PipeDll;
 };
 
 class  DBService : public IService
@@ -173,21 +173,21 @@ public:
 
 	bool                    LoadNetService();
 	int                     Process();
-	void					NewSocketProc(snet::CSocket* pSocket);
-	void					OnRead();
-	void					OnWrite();
-	void					ReslovePacket(const void* pPacket, snet::CSocket* pSocket);
+	void 		NewSocketProc(snet::CSocket* pSocket);
+	void 		OnRead();
+	void 		OnWrite();
+	void 		ReslovePacket(const void* pPacket, snet::CSocket* pSocket);
 
 	void	SendMsg(void* buf, void* pSocket, int nLen) const;
 
 	void                    CacheAccounts(void* socket);
 
-	bool					FindAccount(void* socket);
+	bool 		FindAccount(void* socket);
 
-	void					ClearAccount(void* socket);
+	void 		ClearAccount(void* socket);
 
-	const string			PopQueSql();
-	void					PushQueSql(string strSql);
+	const string PopQueSql();
+	void 		PushQueSql(string strSql);
 
 protected:
 	virtual    int		    OnThreadCreate(void) { return 0; }
@@ -206,7 +206,7 @@ private:
 	sbase::CCriticalSection	m_xLock;
 	DBService* m_DBMgr;
 	sbase::CThread* m_pThread;
-	SQL_DEQUE			m_QueSql;
+	SQL_DEQUE m_QueSql;
 };
 
 class CommandService;
@@ -249,7 +249,7 @@ private:
 #define CMD_FORMAT(a) a,(sizeof(a)-1)
 static KeyCommand Commands[] =
 {
-	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",             			                0},
+	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",                              0},
 	{CMD_FORMAT("quit"),		  &CommandService::Key_ShutdownServ,    "ShutDown the DB server in several times",             	    1},
 	{CMD_FORMAT("exit"),          &CommandService::Key_ShutdownServ,    "ShutDown the DB server immediately",             	        2},
 };

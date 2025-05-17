@@ -41,10 +41,10 @@ class CNPC : public CGameObject
 	//消费类型
 	enum
 	{
-		ITEM_TRADE_PRESTIGE = 0,			//声望
+		ITEM_TRADE_PRESTIGE = 0, //声望
 		ITEM_TRADE_CONSORTIA_CONTRIBUTE,//公会贡献
-		ITEM_TRADE_MONEY,				//银币
-		ITEM_TRADE_BIJOU,				//宝石
+		ITEM_TRADE_MONEY, 	//银币
+		ITEM_TRADE_BIJOU, 	//宝石
 	};
 public:
 

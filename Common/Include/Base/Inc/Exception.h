@@ -9,7 +9,7 @@ namespace sbase
 	{
 	public:	
 		const char*		GetName() const;
-		bool			TraceStack(char* buf);
+		bool TraceStack(char* buf);
 		EXCEPTION_POINTERS* GetExceptionInfo(void);
 	public:
 		Exception(EXCEPTION_POINTERS * m_pExp);	

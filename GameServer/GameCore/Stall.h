@@ -25,8 +25,8 @@ struct Goods
 	{
 		if (item->m_Lock)
 		{
-			//ASSERT(0);
-			return false;
+ //ASSERT(0);
+ return false;
 		}
 
 		this->item = item;

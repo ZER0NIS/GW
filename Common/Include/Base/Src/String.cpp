@@ -21,15 +21,15 @@ namespace sbase
 	{
 		if (fmt)
 		{
-			try {
-				char buffer[MAX_STRING] = "";
-				vsprintf(buffer, fmt, (char*)((&fmt) + 1));
-				this->assign(buffer);
-			}
-			catch (...)
-			{
-				//LogSave("Error: too big size of string in format.");
-			}
+ try {
+ 	char buffer[MAX_STRING] = "";
+ 	vsprintf(buffer, fmt, (char*)((&fmt) + 1));
+ 	this->assign(buffer);
+ }
+ catch (...)
+ {
+ 	//LogSave("Error: too big size of string in format.");
+ }
 		}
 	}
 
@@ -42,16 +42,16 @@ namespace sbase
 	void sstring::format(const char* fmt, ...)
 	{
 		if (!fmt)
-			return;
+ return;
 
 		try {
-			char buffer[MAX_STRING] = "";
-			vsprintf(buffer, fmt, (char*)((&fmt) + 1));
-			this->assign(buffer);
+ char buffer[MAX_STRING] = "";
+ vsprintf(buffer, fmt, (char*)((&fmt) + 1));
+ this->assign(buffer);
 		}
 		catch (...)
 		{
-			//LogSave("Error: too big size of string in format.");
+ //LogSave("Error: too big size of string in format.");
 		}
 	}
 }

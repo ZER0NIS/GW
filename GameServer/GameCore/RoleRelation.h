@@ -115,17 +115,17 @@ struct ConsortiaRelationElem
 //公会维护费用配置表结构体
 struct ConsortiaConsume
 {
-	int  level;						   //公会等级
+	int  level;     //公会等级
 	long lfound;                       //资金
 	long lbijou;                       //宝石
 };
 struct ConsortiaLevelUp
 {
-	int  level;						   //公会等级
+	int  level;     //公会等级
 	long lfound;                       //资金
 	long lbijou;                       //宝石
-	int member;						   //公会人数
-	int altarNum;					   //祭坛个数
+	int member;     //公会人数
+	int altarNum; 		   //祭坛个数
 };
 //工会信息
 class   ConsortiaElem
@@ -240,7 +240,7 @@ public:
 	{
 		struct
 		{
-			T  _Ttype;
+ T  _Ttype;
 		};
 		CPlayer* m_player;
 
@@ -249,17 +249,17 @@ public:
 
 		// Copy constructor
 		NewType(const NewType& other) {
-			m_player = other.m_player;
-			_Ttype = other._Ttype;
+ m_player = other.m_player;
+ _Ttype = other._Ttype;
 		}
 
 		// Copy assignment operator
 		NewType& operator=(const NewType& other) {
-			if (this != &other) {
-				m_player = other.m_player;
-				_Ttype = other._Ttype;
-			}
-			return *this;
+ if (this != &other) {
+ 	m_player = other.m_player;
+ 	_Ttype = other._Ttype;
+ }
+ return *this;
 		}
 
 		// Destructor
@@ -283,7 +283,7 @@ public:
 	// Copy assignment operator
 	Clustering<T>& operator=(const Clustering<T>& other) {
 		if (this != &other) {
-			m_Data = other.m_Data;
+ m_Data = other.m_Data;
 		}
 		return *this;
 	};
@@ -309,12 +309,12 @@ protected:
 	{
 		if (m_MemberNameMap.size() >= MAXSIZE)
 		{
-			return  RELATION_MEMEBER_FULL;
+ return  RELATION_MEMEBER_FULL;
 		}
 
 		if (m_MemberNameMap.find(rElements.strName) != m_MemberNameMap.end())
 		{
-			return  RELATION_MEMEBER_EXIST;
+ return  RELATION_MEMEBER_EXIST;
 		}
 
 		m_MemberNameMap[rElements.strName] = rElements;
@@ -325,8 +325,8 @@ protected:
 		stdext::hash_map< std::string, Clustering<T> >::iterator itor = m_MemberNameMap.find(Name);
 		if (itor != m_MemberNameMap.end())
 		{
-			m_MemberNameMap.erase(itor);
-			return true;
+ m_MemberNameMap.erase(itor);
+ return true;
 		}
 
 		return false;
@@ -364,11 +364,11 @@ public:
 	static void DealWith_DelConsortia(rade_db::PSQL_RESULT result);
 	bool LoadConsortiaInfo(const char* path);  //添加公会的一些配置（每日维护公会的消耗，公会升级的消耗等）
 	ConsortiaLevelUp* GetConsortiaLevelUp(int level); //获取公会升级需要的资源
-	int GetConsortiaMaxAltar(int level);				//获取公会当前等级可以创建的祭坛个数
+	int GetConsortiaMaxAltar(int level); 	//获取公会当前等级可以创建的祭坛个数
 	bool CreateAltarFromDB(ConsortiaElem* pConsrotiaInfo, string DBString); //从数据库读取公会创建的祭坛
 	void DelConsortiaFormDB(ConsortiaElem* pConsrotiaInfo);		//公会解散时删除数据库中的公会信息
 	bool DismissConsortia(ConsortiaElem* pConsortia);     //删除公会
-	bool DelRole(const std::string& Name);					//玩家删除角色，处理工会相关数据
+	bool DelRole(const std::string& Name); 		//玩家删除角色，处理工会相关数据
 	/////by cdx/////////////////////////////////////////////////////////////
 
 	//the operator of member of one consortia
@@ -377,8 +377,8 @@ public:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			itor->second[rElements.strName] = rElements;
-			return false;
+ itor->second[rElements.strName] = rElements;
+ return false;
 		}
 
 		return true;
@@ -388,15 +388,15 @@ public:
 	{
 		//ASSERT(pConsortia);
 		if (!pConsortia)
-			return true;
+ return true;
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			Member::iterator iter = itor->second.find(Name);
-			if (iter != itor->second.end())
-			{
-				return true;
-			}
+ Member::iterator iter = itor->second.find(Name);
+ if (iter != itor->second.end())
+ {
+ 	return true;
+ }
 		}
 		return false;
 	}
@@ -406,12 +406,12 @@ public:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			Member::iterator iter = itor->second.find(Name);
-			if (iter != itor->second.end())
-			{
-				itor->second.erase(iter);
-				return true;
-			}
+ Member::iterator iter = itor->second.find(Name);
+ if (iter != itor->second.end())
+ {
+ 	itor->second.erase(iter);
+ 	return true;
+ }
 		}
 
 		return false;
@@ -423,7 +423,7 @@ public:
 		stdext::hash_map< std::string, ConsortiaElem >::iterator itor = m_ConsortiaInfoMap.find(Name);
 		if (itor != m_ConsortiaInfoMap.end())
 		{
-			return &(itor->second);
+ return &(itor->second);
 		}
 		return NULL;
 	};
@@ -434,10 +434,10 @@ public:
 		stdext::hash_map< std::string, ConsortiaElem >::iterator itor = m_ConsortiaInfoMap.begin();
 		for (; itor != m_ConsortiaInfoMap.end(); itor++)
 		{
-			if (itor->second.uiID == ID)
-			{
-				return &(itor->second);
-			}
+ if (itor->second.uiID == ID)
+ {
+ 	return &(itor->second);
+ }
 		}
 		return NULL;
 	}
@@ -447,10 +447,10 @@ public:
 	{
 		if (m_ConsortiaInfoMap.find(Info.acName) == m_ConsortiaInfoMap.end())
 		{
-			Member tempMember;
-			m_ConsortiaInfoMap[Info.acName] = Info;
-			m_ConsortiaMemberMap[&m_ConsortiaInfoMap[Info.acName]] = tempMember;
-			return &m_ConsortiaInfoMap[Info.acName];
+ Member tempMember;
+ m_ConsortiaInfoMap[Info.acName] = Info;
+ m_ConsortiaMemberMap[&m_ConsortiaInfoMap[Info.acName]] = tempMember;
+ return &m_ConsortiaInfoMap[Info.acName];
 		}
 
 		return NULL;
@@ -462,8 +462,8 @@ public:
 		stdext::hash_map< std::string, ConsortiaElem >::iterator itor = m_ConsortiaInfoMap.find(Name);
 		if (itor != m_ConsortiaInfoMap.end())
 		{
-			m_ConsortiaInfoMap.erase(itor);
-			return true;
+ m_ConsortiaInfoMap.erase(itor);
+ return true;
 		}
 		return false;
 	};
@@ -476,15 +476,15 @@ public:
 		pNew = GetFutureMemberWithJob(pConsortia, NewPlayerName);
 		if (pOld && pNew)
 		{
-			if (pOld->m_Data._Ttype.Job >= CONSORTIA_ASSISTANT_CHAIRMAN)
-			{
-				pNew->m_Data._Ttype.Job = (BYTE)Duty;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+ if (pOld->m_Data._Ttype.Job >= CONSORTIA_ASSISTANT_CHAIRMAN)
+ {
+ 	pNew->m_Data._Ttype.Job = (BYTE)Duty;
+ 	return true;
+ }
+ else
+ {
+ 	return false;
+ }
 		}
 		return false;
 	};
@@ -495,25 +495,25 @@ public:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			Member MemberMap = itor->second;
-			Member::iterator MemberItor = MemberMap.begin();
-			for (; MemberItor != MemberMap.end(); MemberItor++)
-			{
-				if (strName == "")
-				{
-					if (MemberItor->second.m_Data._Ttype.Job == EType)
-					{
-						return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
-					}
-				}
-				else
-				{
-					if (MemberItor->second.m_Data._Ttype.Job == EType && strName == MemberItor->second.m_Data._Ttype.strName)
-					{
-						return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
-					}
-				}
-			}
+ Member MemberMap = itor->second;
+ Member::iterator MemberItor = MemberMap.begin();
+ for (; MemberItor != MemberMap.end(); MemberItor++)
+ {
+ 	if (strName == "")
+ 	{
+ 		if (MemberItor->second.m_Data._Ttype.Job == EType)
+ 		{
+  return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
+ 		}
+ 	}
+ 	else
+ 	{
+ 		if (MemberItor->second.m_Data._Ttype.Job == EType && strName == MemberItor->second.m_Data._Ttype.strName)
+ 		{
+  return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
+ 		}
+ 	}
+ }
 		}
 
 		return NULL;
@@ -526,7 +526,7 @@ public:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			return itor->second.size() >= MaxMember;
+ return itor->second.size() >= MaxMember;
 		}
 		return true;
 	}
@@ -537,7 +537,7 @@ public:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			return (UINT)itor->second.size();
+ return (UINT)itor->second.size();
 		}
 		return 0;
 	}
@@ -546,7 +546,7 @@ public:
 	{
 		if (!pConsortia)
 		{
-			return 0;
+ return 0;
 		}
 		return m_ConsortiaLevelUpMap[pConsortia->iLevel].member;
 	}
@@ -570,12 +570,12 @@ private:
 		stdext::hash_map< ConsortiaElem*, Member >::iterator itor = m_ConsortiaMemberMap.find(pConsortia);
 		if (itor != m_ConsortiaMemberMap.end())
 		{
-			Member MemberMap = itor->second;
-			Member::iterator MemberItor = MemberMap.find(PlayerName);
-			if (MemberItor != MemberMap.end())
-			{
-				return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
-			}
+ Member MemberMap = itor->second;
+ Member::iterator MemberItor = MemberMap.find(PlayerName);
+ if (MemberItor != MemberMap.end())
+ {
+ 	return &m_ConsortiaMemberMap[pConsortia][MemberItor->second.m_Data._Ttype.strName];
+ }
 		}
 		return NULL;
 	};

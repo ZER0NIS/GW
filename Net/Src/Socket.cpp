@@ -47,10 +47,10 @@ namespace net
 		//memset(m_bufMsg, 0L, sizeof(m_bufMsg));
 
 		if (pEncryptorSnd)
-			m_pEncryptorSnd = pEncryptorSnd->Duplicate();
+ m_pEncryptorSnd = pEncryptorSnd->Duplicate();
 
 		if (pEncryptorRcv)
-			m_pEncryptorRcv = pEncryptorRcv->Duplicate();
+ m_pEncryptorRcv = pEncryptorRcv->Duplicate();
 	}
 
 	CSocket::~CSocket(void)
@@ -67,11 +67,11 @@ namespace net
 	{
 		CONST ULONG _MAX_MSGBUF = 16 * 1024;
 		if (!buf || nSize <= 0 || nSize >= _MAX_MSGBUF)
-			return false;
+ return false;
 
 		if (INVALID_SOCKET == m_sock)
 		{
-			return false;
+ return false;
 		}
 		// 探测可写性
 		FD_ZERO(&m_fdset);
@@ -80,16 +80,16 @@ namespace net
 		timeval timeout = { 0, 0 };
 		if (SOCKET_ERROR == ::select(FD_SETSIZE, (fd_set*)NULL, &m_fdset, (fd_set*)NULL, &timeout))
 		{
-			CSocket::DumpError("CSocket::Send(), call ::select() error");
+ CSocket::DumpError("CSocket::Send(), call ::select() error");
 
-			this->Close();
-			return false;
+ this->Close();
+ return false;
 		}
 
 		if (!FD_ISSET(m_sock, &m_fdset))
 		{ // 不可写，关闭此socket
-			this->Close();
-			return false;
+ this->Close();
+ return false;
 		}
 
 		// 	// 加密消息
@@ -98,36 +98,36 @@ namespace net
 		// 		char	bufEn[_MAX_MSGBUF];		//???
 		// 		::memcpy(bufEn, buf, nSize);	//???
 		//
-		// 		buf = bufEn;					//???
+		// 		buf = bufEn; 		//???
 		// 		m_pEncryptorSnd->Encrypt((unsigned char*)buf, nSize);
 		// 	}
 		// 加密消息
 
 		if (m_pEncryptorSnd)
 		{
-			//加密
-			//m_pEncryptorSnd->Encrypt((unsigned char*)buf, nSize);
+ //加密
+ //m_pEncryptorSnd->Encrypt((unsigned char*)buf, nSize);
 		}
 
 		// 发送
 		int ret = ::send(m_sock, (const char*)buf, nSize, 0);
 		if (ret == nSize)
 		{
-			// sbase::DebugLogMsg("CSocket::Send() success，SOCKET[%d]!", this->Socket());
-			//			printf("Socket[%d] Send\n",m_sock);
-			return true;
+ // sbase::DebugLogMsg("CSocket::Send() success，SOCKET[%d]!", this->Socket());
+ // printf("Socket[%d] Send\n",m_sock);
+ return true;
 		}
 		else
 		{
-			int err = CSocket::DumpError("CSocket::Send(), Client close socket exceptional");
-			if (err != WSAEWOULDBLOCK)
-			{
-				printf("Socket[%d] close __Send\n", m_sock);
-				this->Close();
-				return false;
-			}
+ int err = CSocket::DumpError("CSocket::Send(), Client close socket exceptional");
+ if (err != WSAEWOULDBLOCK)
+ {
+ 	printf("Socket[%d] close __Send\n", m_sock);
+ 	this->Close();
+ 	return false;
+ }
 
-			return true;
+ return true;
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace net
 		//能取到包头
 		if (m_iBuffer.GetLength() >= 4)
 		{
-			return true;
+ return true;
 		}
 
 		return false;
@@ -146,29 +146,29 @@ namespace net
 		CSocket::Recv(int& nLen, bool bDetectData/*= false*/)
 	{
 		IF_NOT(INVALID_SOCKET != m_sock)
-			return NULL;
+ return NULL;
 
 		if (bDetectData)
 		{
-			//fd_set readset;
-			FD_ZERO(&m_fdset);
-			FD_SET(m_sock, &m_fdset);
+ //fd_set readset;
+ FD_ZERO(&m_fdset);
+ FD_SET(m_sock, &m_fdset);
 
-			timeval timeout = { 0, 0 };
-			if (SOCKET_ERROR == ::select(FD_SETSIZE, &m_fdset, (fd_set*)NULL, (fd_set*)NULL, &timeout))
-			{	// closed or network
-				CSocket::DumpError("CSocket::Recv(), call ::select() error");
+ timeval timeout = { 0, 0 };
+ if (SOCKET_ERROR == ::select(FD_SETSIZE, &m_fdset, (fd_set*)NULL, (fd_set*)NULL, &timeout))
+ {	// closed or network
+ 	CSocket::DumpError("CSocket::Recv(), call ::select() error");
 
-				//this->Close();
-				return NULL;
-			}
+ 	//this->Close();
+ 	return NULL;
+ }
 
-			if (!FD_ISSET(m_sock, &m_fdset))	// no data
-			{
-				nLen = m_iBuffer.GetLength();
-				return m_iBuffer.GetStart();;
-				//return m_bufMsg;
-			}
+ if (!FD_ISSET(m_sock, &m_fdset))	// no data
+ {
+ 	nLen = m_iBuffer.GetLength();
+ 	return m_iBuffer.GetStart();;
+ 	//return m_bufMsg;
+ }
 		}
 
 		// 接收
@@ -177,34 +177,34 @@ namespace net
 		int ret = ::recv(m_sock, buf, RCV_BUFFER_SIZE, 0);
 		if (ret > 0)
 		{// 解密消息
-			//解密
-			//if (m_pEncryptorRcv)
-			  //m_pEncryptorRcv->Decrypt((unsigned char*)(buf), ret);
+ //解密
+ //if (m_pEncryptorRcv)
+   //m_pEncryptorRcv->Decrypt((unsigned char*)(buf), ret);
 
-			m_nLen += ret;
-			if (!m_iBuffer.Write(buf, ret))
-			{
-				assert(0);
-				::MessageBox(NULL, "网络通讯失败！0204", "错误", MB_OK);
-				return NULL;
-			}
+ m_nLen += ret;
+ if (!m_iBuffer.Write(buf, ret))
+ {
+ 	assert(0);
+ 	::MessageBox(NULL, "网络通讯失败！0204", "错误", MB_OK);
+ 	return NULL;
+ }
 		}
 		else if (ret == 0)
 		{
-			sbase::DebugMsg("Client close the socket.");
+ sbase::DebugMsg("Client close the socket.");
 
-			//this->Close();
-			return NULL;
+ //this->Close();
+ return NULL;
 		}
 		else
 		{
-			int err = CSocket::DumpError("CSocket::Recv(), Client close socket exceptional");
-			if (err != WSAEWOULDBLOCK)
-			{
-				printf("Socket[%d] close __Recv\n", m_sock);
-				this->Close();
-				return NULL;
-			}
+ int err = CSocket::DumpError("CSocket::Recv(), Client close socket exceptional");
+ if (err != WSAEWOULDBLOCK)
+ {
+ 	printf("Socket[%d] close __Recv\n", m_sock);
+ 	this->Close();
+ 	return NULL;
+ }
 		}
 
 		nLen = m_iBuffer.GetLength();
@@ -216,14 +216,14 @@ namespace net
 		CSocket::ClrPacket(int nLen)
 	{
 		if (nLen <= 0)
-			return;
+ return;
 
 		if (nLen >= m_nLen)
-			m_nLen = 0;
+ m_nLen = 0;
 		else
 		{
-			//::memcpy(m_bufMsg, m_bufMsg + nLen, m_nLen - nLen);
-			m_nLen -= nLen;
+ //::memcpy(m_bufMsg, m_bufMsg + nLen, m_nLen - nLen);
+ m_nLen -= nLen;
 		}
 
 		m_iBuffer.Remove(nLen);
@@ -234,12 +234,12 @@ namespace net
 		CSocket::Close(void)
 	{
 		if (m_sock == INVALID_SOCKET)
-			return;
+ return;
 
 		int err = ::closesocket(m_sock);
 		if (SOCKET_ERROR == err)
 		{
-			CSocket::DumpError("CSocket::Close(), call ::closesocket() error");
+ CSocket::DumpError("CSocket::Close(), call ::closesocket() error");
 		}
 
 		m_sock = INVALID_SOCKET;
@@ -254,22 +254,22 @@ namespace net
 	{
 		if (m_strIP.empty())
 		{
-			sockaddr_in	inAddr;
-			::memset(&inAddr, 0, sizeof(inAddr));
-			int		nLen = sizeof(inAddr);
-			if (::getpeername(m_sock, (sockaddr*)&inAddr, &nLen))
-			{
-				CSocket::DumpError("CSocket::GetPeerIP(), call ::getpeername() error");
+ sockaddr_in	inAddr;
+ ::memset(&inAddr, 0, sizeof(inAddr));
+ int		nLen = sizeof(inAddr);
+ if (::getpeername(m_sock, (sockaddr*)&inAddr, &nLen))
+ {
+ 	CSocket::DumpError("CSocket::GetPeerIP(), call ::getpeername() error");
 
-				this->Close();
-				return NULL;
-			}
+ 	this->Close();
+ 	return NULL;
+ }
 
-			char* pszIP = ::inet_ntoa(inAddr.sin_addr);
-			if (!pszIP)
-				return NULL;
+ char* pszIP = ::inet_ntoa(inAddr.sin_addr);
+ if (!pszIP)
+ 	return NULL;
 
-			m_strIP = pszIP;
+ m_strIP = pszIP;
 		}
 
 		return m_strIP.c_str();
@@ -283,20 +283,20 @@ namespace net
 		int		optval = nSndBuf;
 		if (nSndBuf && ::setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, (char*)&optval, sizeof(optval)))
 		{
-			CSocket::DumpError("CSocket::SetBufSize(), call ::setsockopt(snd buf) error");
+ CSocket::DumpError("CSocket::SetBufSize(), call ::setsockopt(snd buf) error");
 
-			this->Close();
-			return false;
+ this->Close();
+ return false;
 		}
 
 		// 设置RECVBUG
 		optval = nRcvBuf;
 		if (nRcvBuf && ::setsockopt(m_sock, SOL_SOCKET, SO_RCVBUF, (char*)&optval, sizeof(optval)))
 		{
-			CSocket::DumpError("CSocket::SetBufSize(), setsockopt, rcv buf");
+ CSocket::DumpError("CSocket::SetBufSize(), setsockopt, rcv buf");
 
-			this->Close();
-			return false;
+ this->Close();
+ return false;
 		}
 
 		return true;
@@ -307,22 +307,22 @@ namespace net
 		CSocket::SocketInit(void)
 	{
 		if (CSocket::s_bInit)
-			return true;
+ return true;
 
 		// 初始化网络
 		WSADATA		wsaData;
 		int ret = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
 		if (ret != 0)
 		{
-			sbase::LogSave("Net", "ERROR: Init WSAStartup() failed.");
-			return false;
+ sbase::LogSave("Net", "ERROR: Init WSAStartup() failed.");
+ return false;
 		}
 
 		// 检查版本
 		if (LOBYTE(wsaData.wVersion) != 0x02 || HIBYTE(wsaData.wVersion) != 0x02)
 		{
-			sbase::LogSave("Net", "ERROR: WSAStartup Version not match 2.0");
-			return false;
+ sbase::LogSave("Net", "ERROR: WSAStartup Version not match 2.0");
+ return false;
 		}
 
 		CSocket::s_bInit = true;
@@ -343,7 +343,7 @@ namespace net
 	{
 		int err = WSAGetLastError();
 		if (WSAEWOULDBLOCK != err)
-			sbase::LogSave("Net", "DUMP: WSABASEERR+%d, from %s", err - WSABASEERR, pszInfo ? pszInfo : "");
+ sbase::LogSave("Net", "DUMP: WSABASEERR+%d, from %s", err - WSABASEERR, pszInfo ? pszInfo : "");
 
 		return err;
 	}
@@ -353,11 +353,11 @@ namespace net
 		CSocket::QueryEncryptor(ENCRYPTOR_TYPE nType)
 	{
 		if (ENCRYPTOR_SND == nType)
-			return m_pEncryptorSnd;
+ return m_pEncryptorSnd;
 		else if (ENCRYPTOR_RCV == nType)
-			return m_pEncryptorRcv;
+ return m_pEncryptorRcv;
 		else
-			return NULL;
+ return NULL;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -365,59 +365,59 @@ namespace net
 		CSocket::ChgEncryptor(ENCRYPTOR_TYPE nType, IEncryptor* pEncryptor)
 	{
 		IF_NOT(pEncryptor)
-			return;
+ return;
 
 		switch (nType)
 		{
 		case ENCRYPTOR_SND:
-			if (m_pEncryptorSnd)
-			{
-				SAFE_RELEASE(m_pEncryptorSnd);
-				m_pEncryptorSnd = pEncryptor->Duplicate();
-			}
-			break;
+ if (m_pEncryptorSnd)
+ {
+ 	SAFE_RELEASE(m_pEncryptorSnd);
+ 	m_pEncryptorSnd = pEncryptor->Duplicate();
+ }
+ break;
 
 		case ENCRYPTOR_RCV:
-			if (m_pEncryptorRcv)
-			{
-				// rencrypt the overflow buf
+ if (m_pEncryptorRcv)
+ {
+ 	// rencrypt the overflow buf
 
-				SAFE_RELEASE(m_pEncryptorRcv);
-				m_pEncryptorRcv = pEncryptor->Duplicate();
+ 	SAFE_RELEASE(m_pEncryptorRcv);
+ 	m_pEncryptorRcv = pEncryptor->Duplicate();
 
-				// decrypt the overflow buf with the new decryptor
+ 	// decrypt the overflow buf with the new decryptor
 #ifdef _ENCRYPT_
-				if (m_nLen > 0)
-					m_pEncryptorRcv->Decrypt((unsigned char*)m_bufMsg, m_nLen);
+ 	if (m_nLen > 0)
+ 		m_pEncryptorRcv->Decrypt((unsigned char*)m_bufMsg, m_nLen);
 #endif
-			}
-			break;
+ }
+ break;
 
 		default:
 		{
-			if (m_pEncryptorSnd)
-			{
-				SAFE_RELEASE(m_pEncryptorSnd);
-				m_pEncryptorSnd = pEncryptor->Duplicate();
-			}
+ if (m_pEncryptorSnd)
+ {
+ 	SAFE_RELEASE(m_pEncryptorSnd);
+ 	m_pEncryptorSnd = pEncryptor->Duplicate();
+ }
 
-			if (m_pEncryptorRcv)
-			{
-				// rencrypt the overflow buf
+ if (m_pEncryptorRcv)
+ {
+ 	// rencrypt the overflow buf
 #ifdef _ENCRYPT_
-				if (m_nLen > 0)
-					m_pEncryptorRcv->Rencrypt((unsigned char*)m_bufMsg, m_nLen);
+ 	if (m_nLen > 0)
+ 		m_pEncryptorRcv->Rencrypt((unsigned char*)m_bufMsg, m_nLen);
 #endif
 
-				SAFE_RELEASE(m_pEncryptorRcv);
-				m_pEncryptorRcv = pEncryptor->Duplicate();
+ 	SAFE_RELEASE(m_pEncryptorRcv);
+ 	m_pEncryptorRcv = pEncryptor->Duplicate();
 
-				// decrypt the overflow buf with the new decryptor
+ 	// decrypt the overflow buf with the new decryptor
 #ifdef _ENCRYPT_
-				if (m_nLen > 0)
-					m_pEncryptorRcv->Decrypt((unsigned char*)m_bufMsg, m_nLen);
+ 	if (m_nLen > 0)
+ 		m_pEncryptorRcv->Decrypt((unsigned char*)m_bufMsg, m_nLen);
 #endif
-			}
+ }
 		}
 		break;
 		}

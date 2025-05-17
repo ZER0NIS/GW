@@ -37,7 +37,7 @@ namespace serve
 		sbase::CSingleLock lock(&m_cs);
 		if (m_setMsg.size() == 0)
 		{
-			return NULL;
+ return NULL;
 		}
 		//cout<<"接受队列消息:"<<m_setMsg.size()<<"条"<<endl;
 		//char hint[128];
@@ -65,16 +65,16 @@ namespace serve
 		sbase::CSingleLock lock(&m_cs);
 		if (m_bEnable)
 		{
-			m_setMsg.push_back(pMsg);
-			char hint[128];
-			sprintf_s(hint, "[压入]消息数量:%d;\n", m_setMsg.size());
-			::OutputDebugString(_T(hint));
+ m_setMsg.push_back(pMsg);
+ char hint[128];
+ sprintf_s(hint, "[压入]消息数量:%d;\n", m_setMsg.size());
+ ::OutputDebugString(_T(hint));
 
-			return true;
+ return true;
 		}
 		else
 		{
-			return false;
+ return false;
 		}
 	}
 
@@ -85,12 +85,12 @@ namespace serve
 		sbase::CSingleLock lock(&m_cs);
 		if (m_bEnable)
 		{
-			m_outMsg.push_back(pMsg);
-			return true;
+ m_outMsg.push_back(pMsg);
+ return true;
 		}
 		else
 		{
-			return false;
+ return false;
 		}
 	}
 
@@ -103,8 +103,8 @@ namespace serve
 		MSG_LST::iterator it = m_setMsg.begin();
 		for (; it != m_setMsg.end(); it++)
 		{
-			sbase::IMessage* pMsg = *it;
-			SAFE_RELEASE(pMsg);
+ sbase::IMessage* pMsg = *it;
+ SAFE_RELEASE(pMsg);
 		}
 		m_setMsg.clear();
 
@@ -112,8 +112,8 @@ namespace serve
 		MSG_LST::iterator itor = m_outMsg.begin();
 		for (; itor != m_outMsg.end(); itor++)
 		{
-			sbase::IMessage* pMsgout = *itor;
-			SAFE_RELEASE(pMsgout);
+ sbase::IMessage* pMsgout = *itor;
+ SAFE_RELEASE(pMsgout);
 		}
 		m_outMsg.clear();
 	}
@@ -125,7 +125,7 @@ namespace serve
 		sbase::CSingleLock lock(&m_cs);
 		if (m_outMsg.size() == 0)
 		{
-			return NULL;
+ return NULL;
 		}
 
 		sbase::IMessage* pMsg = m_outMsg.front();

@@ -48,7 +48,7 @@ bool CircularBuffer::Write(const char* s, size_t l)
 		memcpy(buf + m_t, s, l);
 		m_t += l;
 		if (m_t >= m_max)
-			m_t -= m_max;
+ m_t -= m_max;
 		m_q += l;
 	}
 	return true;
@@ -66,8 +66,8 @@ bool CircularBuffer::Read(char* s, size_t l)
 		size_t l1 = m_max - m_b;
 		if (s)
 		{
-			memcpy(s, buf + m_b, l1);
-			memcpy(s + l1, buf, l - l1);
+ memcpy(s, buf + m_b, l1);
+ memcpy(s + l1, buf, l - l1);
 		}
 		m_b = l - l1;
 		m_q -= l;
@@ -76,11 +76,11 @@ bool CircularBuffer::Read(char* s, size_t l)
 	{
 		if (s)
 		{
-			memcpy(s, buf + m_b, l);
+ memcpy(s, buf + m_b, l);
 		}
 		m_b += l;
 		if (m_b >= m_max)
-			m_b -= m_max;
+ m_b -= m_max;
 		m_q -= l;
 	}
 	if (!m_q)
@@ -101,15 +101,15 @@ bool CircularBuffer::SoftRead(char* s, size_t l)
 		size_t l1 = m_max - m_b;
 		if (s)
 		{
-			memcpy(s, buf + m_b, l1);
-			memcpy(s + l1, buf, l - l1);
+ memcpy(s, buf + m_b, l1);
+ memcpy(s + l1, buf, l - l1);
 		}
 	}
 	else
 	{
 		if (s)
 		{
-			memcpy(s, buf + m_b, l);
+ memcpy(s, buf + m_b, l);
 		}
 	}
 	return true;

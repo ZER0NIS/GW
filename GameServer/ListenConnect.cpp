@@ -86,10 +86,10 @@ void __cdecl  OnDealWithAttribute(CPlayer* pPlayer, void* Loader)
 	{
 		if (pPlayer->GetEquip()[a].GetItemData().Base != -1)
 		{
-			msg.cEquipPos |= (1 << a);
-			const ItemData& Data = pPlayer->GetEquip()[a].GetItemData();
-			memcpy(&msg.SEquip[Index], &Data, sizeof(Equip));
-			Index++;
+ msg.cEquipPos |= (1 << a);
+ const ItemData& Data = pPlayer->GetEquip()[a].GetItemData();
+ memcpy(&msg.SEquip[Index], &Data, sizeof(Equip));
+ Index++;
 		}
 	}
 	(static_cast<CWorld*>(Loader))->SendMsgToClient(&msg, pPlayer->GetSocket());

@@ -21,12 +21,12 @@ int Bag::UseQuestItem(int questid)
 	{
 		if (!m_Grids[i].IsClear() && !m_Grids[i].m_Lock)
 		{
-			if (m_Grids[i].GetItemBaseAttribute()->QuestID == questid)
-			{
-				if ((--m_Grids[i].m_Overlap) == 0)
-					m_Grids[i].Clear();
-				return i;
-			}
+ if (m_Grids[i].GetItemBaseAttribute()->QuestID == questid)
+ {
+ 	if ((--m_Grids[i].m_Overlap) == 0)
+ 		m_Grids[i].Clear();
+ 	return i;
+ }
 		}
 	}
 
@@ -44,11 +44,11 @@ int Bag::GetItemFreeOverlap(Item* item)
 	{
 		if (!m_Grids[i].IsClear() && !m_Grids[i].m_Lock)
 		{
-			if (m_Grids[i].GetItemBaseAttribute()->ID == item->GetItemBaseAttribute()->ID && m_Grids[i].m_Binding == item->m_Binding)
-				if (m_Grids[i].GetItemBaseAttribute()->Overlap > m_Grids[i].m_Overlap)
-				{
-					num = m_Grids[i].GetItemBaseAttribute()->Overlap - m_Grids[i].m_Overlap;
-				}
+ if (m_Grids[i].GetItemBaseAttribute()->ID == item->GetItemBaseAttribute()->ID && m_Grids[i].m_Binding == item->m_Binding)
+ 	if (m_Grids[i].GetItemBaseAttribute()->Overlap > m_Grids[i].m_Overlap)
+ 	{
+ 		num = m_Grids[i].GetItemBaseAttribute()->Overlap - m_Grids[i].m_Overlap;
+ 	}
 		}
 	}
 
@@ -84,7 +84,7 @@ Item* Bag::GetEmptyItem()
 	for (int i = 0; i < MAX_BAG_GRID; i++)
 	{
 		if (m_Grids[i].IsClear())
-			return &m_Grids[i];
+ return &m_Grids[i];
 	}
 
 	return NULL;
@@ -129,13 +129,13 @@ bool Bag::Push(Item* p)
 	{
 		for (int i = 0; i < MAX_BAG_GRID; i++)
 		{
-			if (m_Grids[i].IsClear())
-			{
-				//值复制,
-				m_Grids[i] = *p;
+ if (m_Grids[i].IsClear())
+ {
+ 	//值复制,
+ 	m_Grids[i] = *p;
 
-				return true;
-			}
+ 	return true;
+ }
 		}
 
 		return false;
@@ -146,24 +146,24 @@ bool Bag::Push(Item* p)
 	{
 		if (!m_Grids[i].IsClear())
 		{
-			if (m_Grids[i].GetItemBaseAttribute()->ID == p->GetItemBaseAttribute()->ID &&
-				!m_Grids[i].m_Lock &&
-				m_Grids[i].m_Binding == p->m_Binding)
-				if (m_Grids[i].GetItemBaseAttribute()->Overlap > m_Grids[i].m_Overlap)
-				{
-					if (m_Grids[i].m_Overlap + p->m_Overlap > m_Grids[i].GetItemBaseAttribute()->Overlap)
-					{
-						p->m_Overlap = m_Grids[i].m_Overlap + p->m_Overlap - m_Grids[i].GetItemBaseAttribute()->Overlap;
+ if (m_Grids[i].GetItemBaseAttribute()->ID == p->GetItemBaseAttribute()->ID &&
+ 	!m_Grids[i].m_Lock &&
+ 	m_Grids[i].m_Binding == p->m_Binding)
+ 	if (m_Grids[i].GetItemBaseAttribute()->Overlap > m_Grids[i].m_Overlap)
+ 	{
+ 		if (m_Grids[i].m_Overlap + p->m_Overlap > m_Grids[i].GetItemBaseAttribute()->Overlap)
+ 		{
+  p->m_Overlap = m_Grids[i].m_Overlap + p->m_Overlap - m_Grids[i].GetItemBaseAttribute()->Overlap;
 
-						m_Grids[i].m_Overlap = m_Grids[i].GetItemBaseAttribute()->Overlap;
+  m_Grids[i].m_Overlap = m_Grids[i].GetItemBaseAttribute()->Overlap;
 
-						continue;
-					}
-					else
-						m_Grids[i].m_Overlap = m_Grids[i].m_Overlap + p->m_Overlap;
+  continue;
+ 		}
+ 		else
+  m_Grids[i].m_Overlap = m_Grids[i].m_Overlap + p->m_Overlap;
 
-					return true;
-				}
+ 		return true;
+ 	}
 		}
 	}
 
@@ -171,20 +171,20 @@ bool Bag::Push(Item* p)
 	{
 		if (m_Grids[i].IsClear())
 		{
-			if (p->m_Overlap > p->GetItemBaseAttribute()->Overlap)
-			{
-				p->m_Overlap -= p->GetItemBaseAttribute()->Overlap;
-				m_Grids[i] = *p;
-				m_Grids[i].m_Overlap = p->GetItemBaseAttribute()->Overlap;
-				continue;
-			}
-			else
-			{
-				//值复制,
-				m_Grids[i] = *p;
-			}
+ if (p->m_Overlap > p->GetItemBaseAttribute()->Overlap)
+ {
+ 	p->m_Overlap -= p->GetItemBaseAttribute()->Overlap;
+ 	m_Grids[i] = *p;
+ 	m_Grids[i].m_Overlap = p->GetItemBaseAttribute()->Overlap;
+ 	continue;
+ }
+ else
+ {
+ 	//值复制,
+ 	m_Grids[i] = *p;
+ }
 
-			return true;
+ return true;
 		}
 	}
 
@@ -265,43 +265,43 @@ bool Bag::Move(Bag* other, int index, int otherindex/*,int overlay*/)
 
 	if (!m_Grids[index].IsClear())
 		if (m_Grids[index].m_Lock)
-			return false;
+ return false;
 
 	if (!other->m_Grids[otherindex].IsClear())
 		if (other->m_Grids[otherindex].m_Lock)
-			return false;
+ return false;
 
 	if (!m_Grids[index].IsClear()
 		&& !other->m_Grids[otherindex].IsClear())
 	{
 		//物品的叠加
 		if (m_Grids[index].GetItemBaseAttribute()->ID == other->m_Grids[otherindex].GetItemBaseAttribute()->ID
-			&& m_Grids[index].m_Binding == other->m_Grids[otherindex].m_Binding
-			&& m_Grids[index].GetItemBaseAttribute()->Overlap > 1
-			&& other->m_Grids[otherindex].GetItemBaseAttribute()->Overlap > 1)
+ && m_Grids[index].m_Binding == other->m_Grids[otherindex].m_Binding
+ && m_Grids[index].GetItemBaseAttribute()->Overlap > 1
+ && other->m_Grids[otherindex].GetItemBaseAttribute()->Overlap > 1)
 		{
-			int allOverlay = m_Grids[index].m_Overlap + other->m_Grids[otherindex].m_Overlap;
-			//合并为一个物品
-			if (allOverlay <= m_Grids[index].GetItemBaseAttribute()->Overlap)
-			{
-				other->m_Grids[otherindex] = m_Grids[index];
-				other->m_Grids[otherindex].m_Overlap = allOverlay;
-				m_Grids[index].Clear();
-			}
-			//2个物品
-			else
-			{
-				m_Grids[index].m_Overlap = allOverlay - m_Grids[index].GetItemBaseAttribute()->Overlap;
-				other->m_Grids[otherindex] = m_Grids[index];
-				other->m_Grids[otherindex].m_Overlap = m_Grids[index].GetItemBaseAttribute()->Overlap;
-			}
+ int allOverlay = m_Grids[index].m_Overlap + other->m_Grids[otherindex].m_Overlap;
+ //合并为一个物品
+ if (allOverlay <= m_Grids[index].GetItemBaseAttribute()->Overlap)
+ {
+ 	other->m_Grids[otherindex] = m_Grids[index];
+ 	other->m_Grids[otherindex].m_Overlap = allOverlay;
+ 	m_Grids[index].Clear();
+ }
+ //2个物品
+ else
+ {
+ 	m_Grids[index].m_Overlap = allOverlay - m_Grids[index].GetItemBaseAttribute()->Overlap;
+ 	other->m_Grids[otherindex] = m_Grids[index];
+ 	other->m_Grids[otherindex].m_Overlap = m_Grids[index].GetItemBaseAttribute()->Overlap;
+ }
 		}
 		else
 		{
-			//物品位置的互换
-			Item temp = m_Grids[index];
-			m_Grids[index] = other->m_Grids[otherindex];
-			other->m_Grids[otherindex] = temp;
+ //物品位置的互换
+ Item temp = m_Grids[index];
+ m_Grids[index] = other->m_Grids[otherindex];
+ other->m_Grids[otherindex] = temp;
 		}
 	}
 	//物品位置的互换
@@ -350,17 +350,17 @@ bool Bag::Break(Bag* other, int index, int otherindex, int overlay)
 		//判断目标格子是否被用了。如果被占有了，就不执行操作。tavia
 		if (!other->m_Grids[otherindex].IsClear())
 		{
-			return false;
+ return false;
 		}//endif
 		else
 		{
-			if (m_Grids[index].m_Lock)
-			{
-				m_Grids[index].m_Lock = false;
-			}//endif
-			m_Grids[index].m_Overlap -= overlay;
-			other->m_Grids[otherindex] = m_Grids[index];
-			other->m_Grids[otherindex].m_Overlap = overlay;
+ if (m_Grids[index].m_Lock)
+ {
+ 	m_Grids[index].m_Lock = false;
+ }//endif
+ m_Grids[index].m_Overlap -= overlay;
+ other->m_Grids[otherindex] = m_Grids[index];
+ other->m_Grids[otherindex].m_Overlap = overlay;
 		}//endelse
 	}
 	else
@@ -423,14 +423,14 @@ bool Bag::MoveBag(Storage* storage, int index, int CurNum)
 	{
 		if (storage->GetItem(i))
 		{
-			if (storage->GetItem(i)->GetItemBaseAttribute() != NULL)
-			{
-				if (storage->GetItem(i)->GetItemBaseAttribute()->ID == m_Grids[index].GetItemBaseAttribute()->ID)
-				{
-					CmpId = 1;
-				}
-				Full++;
-			}
+ if (storage->GetItem(i)->GetItemBaseAttribute() != NULL)
+ {
+ 	if (storage->GetItem(i)->GetItemBaseAttribute()->ID == m_Grids[index].GetItemBaseAttribute()->ID)
+ 	{
+ 		CmpId = 1;
+ 	}
+ 	Full++;
+ }
 		}
 	}
 
@@ -442,18 +442,18 @@ bool Bag::MoveBag(Storage* storage, int index, int CurNum)
 	for (int i = 0; i < CurNum; i++)//MAX_STORAGE_GRID
 	{
 		if (!storage->GetItem(i))
-			continue;
+ continue;
 
 		if (storage->GetItem(i)->IsClear())
 		{
-			storage->SetItem(&m_Grids[index], i);
-			m_Grids[index].Clear();
+ storage->SetItem(&m_Grids[index], i);
+ m_Grids[index].Clear();
 
-			return true;
+ return true;
 		}
 		else if (storage->GetItem(i)->Push(&m_Grids[index]))
 		{
-			return true;
+ return true;
 		}
 	}
 

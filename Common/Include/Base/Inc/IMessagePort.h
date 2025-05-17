@@ -14,29 +14,29 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-#define	MAX_PORT_ID			59999
+#define	MAX_PORT_ID 59999
 #define	MAX_PACKET_ID		59999
 #define	MAX_MSG_TYPE		59999
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 enum VAR_TYPE {	
-		VARTYPE_NONE = MAX_MSG_TYPE+1,			// 没有一个结构尺寸会大于这个值，小于该值表示结构
+		VARTYPE_NONE = MAX_MSG_TYPE+1, // 没有一个结构尺寸会大于这个值，小于该值表示结构
 		VARTYPE_CHAR, VARTYPE_UCHAR, VARTYPE_SHORT, VARTYPE_USHORT, 
 		VARTYPE_LONG, VARTYPE_ULONG, VARTYPE_INT, VARTYPE_UINT, 
 		VARTYPE_FLOAT, VARTYPE_DOUBLE };
-#define	STRUCT_TYPE(x)							((VAR_TYPE)sizeof(x))
-#define	STRING_TYPE(x)							((VAR_TYPE)(strlen(x)+1))
-#define	BUFFER_TYPE(x)							((VAR_TYPE)(x))
+#define	STRUCT_TYPE(x)  	((VAR_TYPE)sizeof(x))
+#define	STRING_TYPE(x)  	((VAR_TYPE)(strlen(x)+1))
+#define	BUFFER_TYPE(x)  	((VAR_TYPE)(x))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-const int	PORT_ANY		= -1;				// 正常PORT范围，0 - XXX
+const int	PORT_ANY		= -1; 	// 正常PORT范围，0 - XXX
 const int	INVALID_PORT	= MAX_PORT_ID+1;	// 正常PORT，不会发送
-const int	PACKET_ANY		= -1;				// 正常PACKET范围，1 - XXX
+const int	PACKET_ANY		= -1; 	// 正常PACKET范围，1 - XXX
 
-enum {	STATUS_FLAG_OK			= 0,				// 没有错误
-		STATUS_FLAG_CLOSE,							// 连接正常断开，对方对象不接收消息。
-		STATUS_FLAG_ERROR,							// 连接发生错误。溢出？
-		STATUS_FLAG_FATAL,							// 致命错误。
+enum {	STATUS_FLAG_OK = 0, 	// 没有错误
+		STATUS_FLAG_CLOSE,  	// 连接正常断开，对方对象不接收消息。
+		STATUS_FLAG_ERROR,  	// 连接发生错误。溢出？
+		STATUS_FLAG_FATAL,  	// 致命错误。
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public:
 	static void	ClearPortSet();
 	static IMessagePort*	GetInterface(int nPort);
 
-	IMessagePort			() {}
+	IMessagePort () {}
 	virtual ~IMessagePort	() {}
 
 	virtual bool	IsOpen	() =0;

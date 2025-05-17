@@ -67,7 +67,7 @@ namespace sbase
 	void Stack<T, CONT>::pop()
 	{
 		if (elems.empty()) {
-			throw std::out_of_range("Stack<>::pop(): empty stack");
+ throw std::out_of_range("Stack<>::pop(): empty stack");
 		}
 		elems.pop_back();
 	}
@@ -76,7 +76,7 @@ namespace sbase
 	T Stack<T, CONT>::top() const
 	{
 		if (elems.empty()) {
-			throw std::out_of_range("Stack<>::top(): empty stack");
+ throw std::out_of_range("Stack<>::top(): empty stack");
 		}
 		return elems.back();
 	}
@@ -87,7 +87,7 @@ namespace sbase
 		Stack<T, CONT>::operator= (Stack<T2, CONT2> const& op2)
 	{
 		if ((void*)this == (void*)&op2) {
-			return *this;
+ return *this;
 		}
 
 		Stack<T2, CONT2> tmp(op2);
@@ -95,8 +95,8 @@ namespace sbase
 		elems.clear();
 		while (!tmp.empty())
 		{
-			elems.push_front(tmp.top());
-			tmp.pop();
+ elems.push_front(tmp.top());
+ tmp.pop();
 		}
 
 		return *this;

@@ -27,15 +27,15 @@ namespace snet
 {
 	#define MAX_COMPLETION_THREAD_COUNT 32 
 	#define DEFAULT_OVERLAPPED_COUNT	8
-	#define DEFAULT_BUFFER_SIZE			1024
-	#define	BURST_ACCEPT_COUNT			50
+	#define DEFAULT_BUFFER_SIZE 1024
+	#define	BURST_ACCEPT_COUNT 50
 	#define MAX_OVERLAPPED_ACCEPTS      500
 	#define MAX_OVERLAPPED_SENDS		200
     #define MAX_OVERLAPPED_RECVS        200
-	#define SINGLE_BUFF_SIZE			1024
-	#define OP_ACCEPT					0                  
-	#define OP_READ						1                  
-	#define OP_WRITE					2 
+	#define SINGLE_BUFF_SIZE 1024
+	#define OP_ACCEPT 		0                  
+	#define OP_READ  1                  
+	#define OP_WRITE 		2 
 
 }
 

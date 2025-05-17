@@ -36,7 +36,7 @@
 #include "..\ErrorMessage.h"
 #include "../World.h"
 
-#define PLAYER_AI_TIMER			100				// 毫秒
+#define PLAYER_AI_TIMER 100 	// 毫秒
 #define PLAYER_DEAD_TIMER		20000
 
 #ifndef  GODSWAR_TESTSWITCH_ON
@@ -93,9 +93,9 @@ enum eCharacterAttribute
 	CHARACTER_GMFLAG,                                      //GM标志
 	CHARACTER_CAMP,                                        //角色阵营
 	CHARACTER_PROFESSION,                                  //角色职业
-	CHARACTER_LV,					                       //等级
+	CHARACTER_LV, 		                       //等级
 	CHARACTER_SCHOLAR_LV,                                  //学者职业等级  已停用@@@
-	CHARACTER_EXP,					                       //经验
+	CHARACTER_EXP, 		                       //经验
 	CHARACTER_SCHOLAR_EXP,                                 //学者经验      已停用@@@
 	CHARACTER_HP_CUR,                                      //HP当前
 	CHARACTER_MP_CUR,                                      //MP当前
@@ -105,11 +105,11 @@ enum eCharacterAttribute
 	CHARACTER_EARL_RANK,                                   //爵位
 	CHARACTER_CONSORTIA,                                   //工会
 	CHARACTER_CONSORTIA_JOB,                               //工会职业
-	CHARACTER_CONSORTIA_CONTRIBUTE,						   //工会贡献
-	CHARACTER_STORE_NUM,								   //仓库个数
-	CHARACTER_BAG_NUM,									   //包裹个数
+	CHARACTER_CONSORTIA_CONTRIBUTE,     //工会贡献
+	CHARACTER_STORE_NUM,  		   //仓库个数
+	CHARACTER_BAG_NUM,      //包裹个数
 	CHARACTER_HAIRSTYLE,                                   //发型
-	CHARACTER_FACESHAP,									   //脸型
+	CHARACTER_FACESHAP,      //脸型
 	CHARACTER_CURMAP,                                      //当前地图
 	CHARACTER_CURPOS_X,                                    //当前X坐标
 	CHARACTER_CURPOS_Z,                                    //当前Z坐标
@@ -129,14 +129,14 @@ enum EquipType
 {
 	EquipHead = 0,		//头盔
 	EquipAmulet,		//护身符
-	EquipGlove,			//手套
-	EquipArmor,			//盔甲
-	EquipCuff,			//护腕
+	EquipGlove, //手套
+	EquipArmor, //盔甲
+	EquipCuff, //护腕
 	EquipGirdle,		//腰带
-	EquipShoes,			//鞋子
+	EquipShoes, //鞋子
 	EquipLeggins,		//护胫
-	EquipRing1,			//戒指1
-	EquipRing2,			//戒指2
+	EquipRing1, //戒指1
+	EquipRing2, //戒指2
 
 	EquipMainHand1,		//主手1
 	EquipAuxiliaryHand1,//副手1
@@ -263,7 +263,7 @@ struct  ROLE_ATTRIBUTE
 	BYTE     ucCamp;                            //阵营
 	BYTE     uProfession;                       //职业
 	BYTE     ucHairStyle;                       //发型
-	BYTE	 ucFaceShap;						//脸型
+	BYTE	 ucFaceShap;  //脸型
 	BYTE     ucBelief;                          //信仰
 	bool     bIsSuccess;                        //是否添加成功
 };
@@ -289,7 +289,7 @@ public:
 		std::string::const_iterator p, p_end;
 		for (p = s.begin(), p_end = s.end(); p != p_end; ++p)
 		{
-			h = 31 * h + (*p);
+ h = 31 * h + (*p);
 		}
 		return h;
 	}
@@ -360,11 +360,11 @@ public:
 
 		if (SynDBOutStand == 0)
 		{
-			CGameObject::Release();
+ CGameObject::Release();
 		}
 		else
 		{
-			WillRelease = true;
+ WillRelease = true;
 		}
 	}
 
@@ -476,21 +476,21 @@ public:
 		//		int Auxiliary = EquipAuxiliaryHand1;
 
 		if (m_Equips[main].IsClear())
-			return ATTACK_UBAEMED;
+ return ATTACK_UBAEMED;
 		else if (m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Axes ||
-			m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_TwoHandsAxes)
-			return ATTACK_HAMMER;
+ m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_TwoHandsAxes)
+ return ATTACK_HAMMER;
 		else if (m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Swords ||
-			m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_TwoHandsSwords)
-			return ATTACK_CHOP;
+ m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_TwoHandsSwords)
+ return ATTACK_CHOP;
 		else if (m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Spears ||
-			m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Javelins)
-			return ATTACK_STICK;
+ m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Javelins)
+ return ATTACK_STICK;
 		else if (m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Bows)
-			return ATTACK_SHOT;
+ return ATTACK_SHOT;
 		else if (m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Wands ||
-			m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Staffs)
-			return ATTACK_STAFF;
+ m_Equips[main].GetItemBaseAttribute()->eSkillFlag == SF_Staffs)
+ return ATTACK_STAFF;
 
 		return   ATTACK_UBAEMED;
 	}
@@ -726,42 +726,42 @@ public:
 
 	//公会相关
 	//******************************************************************************************************************
-	long GetConsortia_lfound()							//获取公会资金
+	long GetConsortia_lfound()  	//获取公会资金
 	{
 		if (m_pConsortia)
 		{
-			return m_pConsortia->lfound;
+ return m_pConsortia->lfound;
 		}
 		return 0;
 	};
-	void SetConsortia_lfound(long lfound)				//设置公会资金
+	void SetConsortia_lfound(long lfound) 	//设置公会资金
 	{
 		if (m_pConsortia)
 		{
-			m_pConsortia->lfound += lfound;
-			if (m_pConsortia->lfound < 0)
-			{
-				m_pConsortia->lfound = 0;
-			}
+ m_pConsortia->lfound += lfound;
+ if (m_pConsortia->lfound < 0)
+ {
+ 	m_pConsortia->lfound = 0;
+ }
 		}
 	};
-	long GetConsortia_lbijou()							//获取公会宝石
+	long GetConsortia_lbijou()  	//获取公会宝石
 	{
 		if (m_pConsortia)
 		{
-			return m_pConsortia->lbijou;
+ return m_pConsortia->lbijou;
 		}
 		return 0;
 	};
-	void SetConsortia_lbijou(long lbijou)				//设置公会宝石
+	void SetConsortia_lbijou(long lbijou) 	//设置公会宝石
 	{
 		if (m_pConsortia)
 		{
-			m_pConsortia->lbijou += lbijou;
-			if (m_pConsortia->lbijou < 0)
-			{
-				m_pConsortia->lbijou = 0;
-			}
+ m_pConsortia->lbijou += lbijou;
+ if (m_pConsortia->lbijou < 0)
+ {
+ 	m_pConsortia->lbijou = 0;
+ }
 		}
 	};
 	void SetConsortiaInfo(ConsortiaElem* Consortia)     //设置公会信息
@@ -769,15 +769,15 @@ public:
 		m_pConsortia = Consortia;
 		if (NULL == Consortia)
 		{
-			SetcUnion(0);
+ SetcUnion(0);
 		}
 		else
 		{
-			SetcUnion((USHORT)Consortia->uiID);
+ SetcUnion((USHORT)Consortia->uiID);
 		}
 	};
 	ConsortiaElem* GetConsortia() { return m_pConsortia; };                              //获得自己的公会
-	int GetConsortiaLevel() { return m_pConsortia->iLevel; };								//获得自己公会的等级
+	int GetConsortiaLevel() { return m_pConsortia->iLevel; };  		//获得自己公会的等级
 	void AddConsortiaMember(ConsortiaRelationElem& rElems);                           //添加成员
 	eError DismissConsortia();                                                          //解散公会
 	bool HaveConsortia();                                                               //是否有公会
@@ -788,14 +788,14 @@ public:
 	bool AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty);                   //任命职务
 	eError DelMemeber(std::string StrName);                                           //移出成员
 	bool BroadcastConsortiaMsg(void* buf);                                            //广播公会消息
-	bool BroadcastConsortiaBaseInfo();													//广播公会的基本信息
-	bool BroadcastConMemberInfo();														//广播公会成员列表（添加删除或是离开公会是用到）
-	int GetConsortiaMaxMember();														//获取公会的人数上限
-	int GetConsortiaCurrentMember();													//获取公会的当前人数
-	int GetConsortiaMaxAltar();															//返回公会能建造的最大祭坛数
-	int GetConCurrentAltarNum();														//获取公会当前的祭坛个数
-	vector<int>& GetHavePlayerAltars();													//获取玩家当前已有的供奉祭坛
-	void InitAltar(UINT id, UINT level);													//初始化加载数据库的供奉祭坛
+	bool BroadcastConsortiaBaseInfo();    	//广播公会的基本信息
+	bool BroadcastConMemberInfo();    		//广播公会成员列表（添加删除或是离开公会是用到）
+	int GetConsortiaMaxMember();    		//获取公会的人数上限
+	int GetConsortiaCurrentMember();    	//获取公会的当前人数
+	int GetConsortiaMaxAltar();     //返回公会能建造的最大祭坛数
+	int GetConCurrentAltarNum();    		//获取公会当前的祭坛个数
+	vector<int>& GetHavePlayerAltars();    	//获取玩家当前已有的供奉祭坛
+	void InitAltar(UINT id, UINT level);    	//初始化加载数据库的供奉祭坛
 	/*--------------------------------------------------------
 	功能：公会成员提升公会等级
 	参数：无
@@ -864,10 +864,10 @@ public:
 	bool  UPOblationLV(UINT ID);  //升级供奉等级后的处理
 	bool DelOblation(UINT ID);  //删除供奉等级后的处理
 
-	void ClearAllAltar();					//玩家离开公会或者被公会踢出时就没有祭坛
-	void LoadAllAltar(UINT ID);					//人物上线时 加载祭坛的特效
-	void UpdateAltarMsg();					//向客户端发送更新祭坛
-	void ClearOneAltar(UINT ID);			//(公会删除祭坛时调用)  删除玩家身上对应的祭坛及所影响的数据 （处理在线玩家）
+	void ClearAllAltar(); 		//玩家离开公会或者被公会踢出时就没有祭坛
+	void LoadAllAltar(UINT ID); 		//人物上线时 加载祭坛的特效
+	void UpdateAltarMsg(); 		//向客户端发送更新祭坛
+	void ClearOneAltar(UINT ID); //(公会删除祭坛时调用)  删除玩家身上对应的祭坛及所影响的数据 （处理在线玩家）
 	void ClearOneAltar_fromDB(const char* name, UINT ID);		//(公会删除祭坛时调用)  删除玩家身上对应的祭坛及所影响的数据 （处理下线玩家）
 	void DelConMember_AltarInfo(UINT ID);	//(公会删除祭坛时调用)  删除玩家身上对应的祭坛及所影响的数据
 	//***************************************************************************************************************************************************
@@ -916,10 +916,10 @@ public:
 		m_WorldStatus = eStatus;
 		if (eGAMEWORLD == eStatus)
 		{
-			time_t  timep;
-			time(&timep);
-			m_Login_time = localtime(&timep);
-			m_LastUpte_time = m_Login_time;
+ time_t  timep;
+ time(&timep);
+ m_Login_time = localtime(&timep);
+ m_LastUpte_time = m_Login_time;
 		}
 	}
 	GAMESTATUS  GetWorldStatus() { return m_WorldStatus; }
@@ -941,9 +941,9 @@ public:
 	//组队部分（新）//
 public:
 	GAMESTATUS m_WorldStatus;
-	//	CPlayer* m_pTeam[MAX_TEAM_NUMBER];			// 组队信息
-	bool	 m_bIsLeader;						// 队长标记
-	CPlayer* m_pTeamLeader;						// 队长实体指针
+	//	CPlayer* m_pTeam[MAX_TEAM_NUMBER]; // 组队信息
+	bool	 m_bIsLeader;  // 队长标记
+	CPlayer* m_pTeamLeader;  // 队长实体指针
 
 #define Max_TEAMMATES_NUM	4
 
@@ -960,8 +960,8 @@ public:
 	bool	InitTeam_New();
 	void	GetTeamState(int& _count, bool& _IfCouples);
 	//职业部分 by lion 20080327
-	int m_ClassCount;								//职业数量
-	vector<vector<int>> m_ClassPassiveSkill;					//职业被动技能表
+	int m_ClassCount;  		//职业数量
+	vector<vector<int>> m_ClassPassiveSkill; 		//职业被动技能表
 
 	bool QuestTeamLimit(int qid);//组队限制检查
 	bool QuestClassLimit(int qid);//职业限制检查
@@ -972,27 +972,27 @@ public:
 	Trade	 m_Trade;
 
 	void SetSkillMsg(MSG_SKILL* pSkillMsg);
-	MSG_SKILL		m_SkillMsg;						// skillmsg备份
+	MSG_SKILL		m_SkillMsg;  // skillmsg备份
 	static ATTACK_PARAM         AttackParam;
-	// bool m_SceneChangeFlag;								//场景切换标记
+	// bool m_SceneChangeFlag;  		//场景切换标记
 	 //del warning
-	bool IsGoldBoxExist(int keyid);							//宝箱、钥匙是否存在
-	void SetGoldBoxId(UINT base_id) { m_GoldBoxId = base_id; }					//设置宝箱ID
-	UINT GetGoldBoxId() { return m_GoldBoxId; }						//获取宝箱ID
+	bool IsGoldBoxExist(int keyid);  	//宝箱、钥匙是否存在
+	void SetGoldBoxId(UINT base_id) { m_GoldBoxId = base_id; } 		//设置宝箱ID
+	UINT GetGoldBoxId() { return m_GoldBoxId; }  //获取宝箱ID
 	void SetInDialItemID(UINT index, UINT ID) { m_InDialItemID[index] = ID; }		//设置入围物品ID
-	void SetSumRand(UINT Sum) { m_SumRand = Sum; }						//设置入围物品总几率
-	UINT* GetInDialItemID() { return m_InDialItemID; }					//设置入围物品ID
-	UINT GetSumRand() { return m_SumRand; }						//设置入围物品总几率
-	bool ExpendGoldBoxId(int gold_box_id, int keyid);		//旧			//宝箱消耗
-	bool ExpendGoldBoxKey(BYTE Iter);							//钥匙消耗
-	bool ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid);		//临时			//消耗宝箱和钥匙
+	void SetSumRand(UINT Sum) { m_SumRand = Sum; }  //设置入围物品总几率
+	UINT* GetInDialItemID() { return m_InDialItemID; } 		//设置入围物品ID
+	UINT GetSumRand() { return m_SumRand; }  //设置入围物品总几率
+	bool ExpendGoldBoxId(int gold_box_id, int keyid);		//旧 //宝箱消耗
+	bool ExpendGoldBoxKey(BYTE Iter);  	//钥匙消耗
+	bool ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid);		//临时 //消耗宝箱和钥匙
 
-	BYTE CanOpenbox(BYTE Iter, UINT base_id, int keyid);							//是否可开启宝箱
-	bool IsDoubleItem();								//宝箱计数增加 返回值决定是否双倍发送物品
-	void SetCurrentIter(BYTE Iter) { current_iter = Iter; }				//设置当前宝箱位置
-	BYTE GetCurrentIter() { return current_iter; }						//获取当前宝箱位置
-	void SetCurBoxItem(Item& item) { memcpy(&cur_box_item, &item, sizeof(Item)); }				//设置当前宝箱位置
-	Item& GetCurBoxItem() { return cur_box_item; }				//设置当前宝箱位置
+	BYTE CanOpenbox(BYTE Iter, UINT base_id, int keyid);  	//是否可开启宝箱
+	bool IsDoubleItem();  		//宝箱计数增加 返回值决定是否双倍发送物品
+	void SetCurrentIter(BYTE Iter) { current_iter = Iter; } 	//设置当前宝箱位置
+	BYTE GetCurrentIter() { return current_iter; }  //获取当前宝箱位置
+	void SetCurBoxItem(Item& item) { memcpy(&cur_box_item, &item, sizeof(Item)); } 	//设置当前宝箱位置
+	Item& GetCurBoxItem() { return cur_box_item; } 	//设置当前宝箱位置
 
 	// 	/*------------------------------------------------------------------------------
 	// 	 *作者：C.D
@@ -1038,14 +1038,14 @@ private:
 	Storage m_Storage;
 	Stall m_Stall;
 
-	int m_Kills;				//杀怪数量
-	int m_OverQuests;			//完成任务数量
-	UINT GoldOpendNum;			//宝箱开启次数
-	UINT m_GoldBoxId;			//正在开启的宝箱ID
+	int m_Kills; 	//杀怪数量
+	int m_OverQuests; //完成任务数量
+	UINT GoldOpendNum; //宝箱开启次数
+	UINT m_GoldBoxId; //正在开启的宝箱ID
 	UINT m_InDialItemID[DIALITEMCOUNT];	//入围物品ID
-	UINT m_SumRand;				//入围物品总几率
-	BYTE current_iter;			//当前锁定宝箱
-	Item cur_box_item;			//当前生成物品
+	UINT m_SumRand; 	//入围物品总几率
+	BYTE current_iter; //当前锁定宝箱
+	Item cur_box_item; //当前生成物品
 
 	// 	/*------------------------------------------------------------------------------
 	// 	 *作者：C.D
@@ -1067,7 +1067,7 @@ private:
 	CRelationManager    m_RelationMgr;
 
 	map<string, ROLE_ATTRIBUTE> m_AddRole;     //新加角色
-	map<string, UINT> m_HaveRole;			  //已有角色
+	map<string, UINT> m_HaveRole;   //已有角色
 	vector<string> m_DeleteRole;              //删除角色
 
 	static PARAME Param;

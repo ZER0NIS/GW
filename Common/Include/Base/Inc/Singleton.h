@@ -14,16 +14,16 @@ namespace sbase
 	public:
 		static T& Instance()
 		{
-			if (NULL == S_instance)
-			{
-				Guard();
-				if (NULL == S_instance)
-				{
-					S_instance = new T;
-				}
-			}
+ if (NULL == S_instance)
+ {
+ 	Guard();
+ 	if (NULL == S_instance)
+ 	{
+ 		S_instance = new T;
+ 	}
+ }
 
-			return *S_instance;
+ return *S_instance;
 		}
 	protected:
 		Singleton() {};

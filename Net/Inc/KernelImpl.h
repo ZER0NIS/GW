@@ -52,19 +52,19 @@ namespace serve
 	private:
 
 		enum STATUS { STATUS_NONE, STATUS_READY, STATUS_NORMAL, STATUS_ERR, };
-		STATUS			m_eStatus;
+		STATUS m_eStatus;
 
 	protected:
-		void			UpdateInitInfo(const char* pszInfo);
+		void UpdateInitInfo(const char* pszInfo);
 
 		// Register
 	public:
-		bool			RegisterServe(IServe* pServe, HMODULE hModule = NULL);
-		bool			UnRegisterServe(CServe* pServe);
+		bool RegisterServe(IServe* pServe, HMODULE hModule = NULL);
+		bool UnRegisterServe(CServe* pServe);
 
 	private:
-		typedef std::vector<CServe*>			SERVE_VEC;
-		SERVE_VEC			m_setServe;
+		typedef std::vector<CServe*> SERVE_VEC;
+		SERVE_VEC m_setServe;
 		typedef std::map<USHORT, CServe*>		SERVE_PORT_MAP;
 		SERVE_PORT_MAP		m_setPortServe;
 

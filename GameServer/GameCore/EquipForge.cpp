@@ -44,7 +44,7 @@ eError EquipForge::ClearEquip()
 	for (int i = 0; i < 6; i++)
 	{
 		//if (m_Equip[i])
-			//m_Equip[i]->m_Lock = false;
+ //m_Equip[i]->m_Lock = false;
 
 		m_Equip[i] = NULL;
 	}
@@ -206,14 +206,14 @@ void EquipForge::Clear()
 	{
 		if (m_Equip[i] != NULL)
 		{
-			//m_Equip[i]->m_Lock = false;
-			m_Equip[i] = NULL;
+ //m_Equip[i]->m_Lock = false;
+ m_Equip[i] = NULL;
 		}
 
 		if (m_Material[i] != NULL)
 		{
-			//m_Material[i]->m_Lock = false;
-			m_Material[i] = NULL;
+ //m_Material[i]->m_Lock = false;
+ m_Material[i] = NULL;
 		}
 	}
 }
@@ -225,42 +225,42 @@ eError EquipForge::Forge(int type)
 	{
 		if (!m_Equip[0] || !m_Material[0])
 		{
-			return MSG_ERRO_0287;
+ return MSG_ERRO_0287;
 		}
 
 		if (m_Equip[0]->IsClear() || m_Material[0]->IsClear())
 		{
-			return MSG_ERRO_0287;
+ return MSG_ERRO_0287;
 		}
 
 		if (m_Equip[0]->BaseLevel <= 0 || m_Equip[0]->BaseLevel > 5 || m_Equip[0]->AppLevel <= 0 || m_Equip[0]->AppLevel > 10)
 		{
-			return MSG_ERRO_0287;
+ return MSG_ERRO_0287;
 		}
 
 		if (!m_Equip[0]->GetItemBaseAttribute() || !m_Material[0]->GetItemBaseAttribute())
 		{
-			return MSG_ERRO_0287;
+ return MSG_ERRO_0287;
 		}
 
 		//判断合成对象类型(武器或是装备)
 		EquipForgeBase* efb = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
 		if (!efb)
 		{
-			return MSG_ERRO_0287;
+ return MSG_ERRO_0287;
 		}
 
 		if (efb->MaterialType == 1)  //A_ID宝石1,2 Id change
 		{
-			ForgeBase();
+ ForgeBase();
 		}
 		if (efb->MaterialType == 2)//A_基础属性宝石1,2 up lv
 		{
-			ForgeBaseData();
+ ForgeBaseData();
 		}
 		if (efb->MaterialType == 3)//A_基础属性宝石1,2 up lv
 		{
-			ForgeAppend();
+ ForgeAppend();
 		}
 
 		Clear();
@@ -269,11 +269,11 @@ eError EquipForge::Forge(int type)
 	{
 		for (int i = 0; i < 6; i++)
 		{
-			if (!m_Material[i]) { return NO_MSG_ERRO; }
-			else
-			{
-				if (!m_Material[i]->GetItemBaseAttribute()) { return NO_MSG_ERRO; }
-			}
+ if (!m_Material[i]) { return NO_MSG_ERRO; }
+ else
+ {
+ 	if (!m_Material[i]->GetItemBaseAttribute()) { return NO_MSG_ERRO; }
+ }
 		}
 
 		ForgeMaterial();
@@ -284,22 +284,22 @@ eError EquipForge::Forge(int type)
 
 		for (int i = 0; i < 4; i++)
 		{
-			if (!m_Equip[Eid[i]])
-			{
-				return NO_MSG_ERRO;
-			}
-			else
-			{
-				if (!m_Equip[Eid[i]]->GetItemBaseAttribute())
-				{
-					return NO_MSG_ERRO;
-				}
+ if (!m_Equip[Eid[i]])
+ {
+ 	return NO_MSG_ERRO;
+ }
+ else
+ {
+ 	if (!m_Equip[Eid[i]]->GetItemBaseAttribute())
+ 	{
+ 		return NO_MSG_ERRO;
+ 	}
 
-				if (m_Equip[Eid[i]]->BaseLevel <= 0 || m_Equip[Eid[i]]->BaseLevel > 5 || m_Equip[Eid[i]]->AppLevel <= 0 || m_Equip[Eid[i]]->AppLevel > 10)
-				{
-					return NO_MSG_ERRO;
-				}
-			}
+ 	if (m_Equip[Eid[i]]->BaseLevel <= 0 || m_Equip[Eid[i]]->BaseLevel > 5 || m_Equip[Eid[i]]->AppLevel <= 0 || m_Equip[Eid[i]]->AppLevel > 10)
+ 	{
+ 		return NO_MSG_ERRO;
+ 	}
+ }
 		}
 
 		ForgeEquip();
@@ -347,48 +347,48 @@ void EquipForge::ForgeBase()//id
 	{
 		if (m_Material[1]->GetItemBaseAttribute() != NULL)
 		{
-			efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
-			if (!efbC)
-			{
-				return;
-			}
-			ProyAdd[0] = efbC->MaterialProyAdd;
+ efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
+ if (!efbC)
+ {
+ 	return;
+ }
+ ProyAdd[0] = efbC->MaterialProyAdd;
 		}
 	}
 	if (m_Material[2])
 	{
 		if (m_Material[2]->GetItemBaseAttribute() != NULL)
 		{
-			efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
-			if (!efbB1)
-			{
-				return;
-			}
-			ProyAdd[1] = efbB1->MaterialProyAdd;
+ efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
+ if (!efbB1)
+ {
+ 	return;
+ }
+ ProyAdd[1] = efbB1->MaterialProyAdd;
 		}
 	}
 	if (m_Material[3])
 	{
 		if (m_Material[3]->GetItemBaseAttribute() != NULL)
 		{
-			efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
-			if (!efbB2)
-			{
-				return;
-			}
-			ProyAdd[2] = efbB2->MaterialProyAdd;
+ efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
+ if (!efbB2)
+ {
+ 	return;
+ }
+ ProyAdd[2] = efbB2->MaterialProyAdd;
 		}
 	}
 	if (m_Material[4])
 	{
 		if (m_Material[4]->GetItemBaseAttribute() != NULL)
 		{
-			efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
-			if (!efbB3)
-			{
-				return;
-			}
-			ProyAdd[3] = efbB3->MaterialProyAdd;
+ efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
+ if (!efbB3)
+ {
+ 	return;
+ }
+ ProyAdd[3] = efbB3->MaterialProyAdd;
 		}
 	}
 
@@ -396,12 +396,12 @@ void EquipForge::ForgeBase()//id
 	{
 		if (m_Material[0]->GetItemBaseAttribute() != NULL)
 		{
-			efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
-			if (!efbA)
-			{
-				return;
-			}
-			ProyAdd[4] = efbA->MaterialProyAdd;
+ efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
+ if (!efbA)
+ {
+ 	return;
+ }
+ ProyAdd[4] = efbA->MaterialProyAdd;
 		}
 	}
 
@@ -411,19 +411,19 @@ void EquipForge::ForgeBase()//id
 		EquipForgeBase* efA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
 		if (!efA)
 		{
-			return;
+ return;
 		}
 		if (efA->MaterialType == 1)
 		{
-			ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 		else if (efA->MaterialType == 2)
 		{
-			ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2;//宝石成功率+成
+ ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2;//宝石成功率+成
 		}
 		else if (efA->MaterialType == 3)
 		{
-			ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2;//宝石成功率+成
+ ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2;//宝石成功率+成
 		}
 	}
 
@@ -454,21 +454,21 @@ void EquipForge::ForgeBase()//id
 	else
 	{
 		/*	m_Equip[0]->AppLevel-=2;
-			m_Equip[0]->BaseLevel--;
+ m_Equip[0]->BaseLevel--;
 
-			if(m_Equip[0]->AppLevel<1){ m_Equip[0]->AppLevel = 1; }
-			if(m_Equip[0]->BaseLevel<1){ m_Equip[0]->BaseLevel = 1; }
+ if(m_Equip[0]->AppLevel<1){ m_Equip[0]->AppLevel = 1; }
+ if(m_Equip[0]->BaseLevel<1){ m_Equip[0]->BaseLevel = 1; }
 
-			//合成新装备id
-			int Base = efb->BadID;
+ //合成新装备id
+ int Base = efb->BadID;
 
-			//等于原有装备基本属性
-			ItemData data = m_Equip[0]->GetItemData();
-			data.Base = Base;
+ //等于原有装备基本属性
+ ItemData data = m_Equip[0]->GetItemData();
+ data.Base = Base;
 
-			ItemManager::Instance()->CreateItem(&data , m_Equip[0]);*/
+ ItemManager::Instance()->CreateItem(&data , m_Equip[0]);*/
 
-			//失败
+ //失败
 		msg_equipforge.Success = false;
 	}
 
@@ -486,11 +486,11 @@ void EquipForge::ForgeBase()//id
 	{
 		if (m_Material[i] != NULL)
 		{
-			m_Material[i]->m_Overlap--;
+ m_Material[i]->m_Overlap--;
 
-			if (m_Material[i]->m_Overlap == 0)
-				m_Material[i]->Clear();
-			m_Material[i] = NULL;
+ if (m_Material[i]->m_Overlap == 0)
+ 	m_Material[i]->Clear();
+ m_Material[i] = NULL;
 		}
 	}
 
@@ -537,60 +537,60 @@ void EquipForge::ForgeBaseData()
 	{
 		if (m_Material[1]->GetItemBaseAttribute() != NULL)
 		{
-			efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
-			if (!efbC)
-			{
-				return;
-			}
-			ProyAdd[0] = efbC->MaterialProyAdd;
+ efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
+ if (!efbC)
+ {
+ 	return;
+ }
+ ProyAdd[0] = efbC->MaterialProyAdd;
 		}
 	}
 	if (m_Material[2])
 	{
 		if (m_Material[2]->GetItemBaseAttribute() != NULL)
 		{
-			efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
-			if (!efbB1)
-			{
-				return;
-			}
-			ProyAdd[1] = efbB1->MaterialProyAdd;
+ efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
+ if (!efbB1)
+ {
+ 	return;
+ }
+ ProyAdd[1] = efbB1->MaterialProyAdd;
 		}
 	}
 	if (m_Material[3])
 	{
 		if (m_Material[3]->GetItemBaseAttribute() != NULL)
 		{
-			efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
-			if (!efbB2)
-			{
-				return;
-			}
-			ProyAdd[2] = efbB2->MaterialProyAdd;
+ efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
+ if (!efbB2)
+ {
+ 	return;
+ }
+ ProyAdd[2] = efbB2->MaterialProyAdd;
 		}
 	}
 	if (m_Material[4])
 	{
 		if (m_Material[4]->GetItemBaseAttribute() != NULL)
 		{
-			efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
-			if (!efbB3)
-			{
-				return;
-			}
-			ProyAdd[3] = efbB3->MaterialProyAdd;
+ efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
+ if (!efbB3)
+ {
+ 	return;
+ }
+ ProyAdd[3] = efbB3->MaterialProyAdd;
 		}
 	}
 	if (m_Material[0])
 	{
 		if (m_Material[0]->GetItemBaseAttribute() != NULL)
 		{
-			efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
-			if (!efbA)
-			{
-				return;
-			}
-			ProyAdd[4] = efbA->MaterialProyAdd;
+ efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
+ if (!efbA)
+ {
+ 	return;
+ }
+ ProyAdd[4] = efbA->MaterialProyAdd;
 		}
 	}
 
@@ -600,19 +600,19 @@ void EquipForge::ForgeBaseData()
 		EquipForgeBase* efA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
 		if (!efA)
 		{
-			return;
+ return;
 		}
 		if (efA->MaterialType == 1)
 		{
-			ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 		else if (efA->MaterialType == 2)
 		{
-			ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 		else if (efA->MaterialType == 3)
 		{
-			ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 	}
 
@@ -629,11 +629,11 @@ void EquipForge::ForgeBaseData()
 		//升级基本品质
 		if (m_Equip[0]->BaseLevel < 5)
 		{
-			//按照几率使得基础属性等级+1
-			//int rand = rand()%100;
-			//if (rand < 100){}
-			//失败惩罚：基础属性等级降低为最低级
-			m_Equip[0]->BaseLevel++;
+ //按照几率使得基础属性等级+1
+ //int rand = rand()%100;
+ //if (rand < 100){}
+ //失败惩罚：基础属性等级降低为最低级
+ m_Equip[0]->BaseLevel++;
 		}
 		msg_equipforge.Success = true;
 	}
@@ -652,11 +652,11 @@ void EquipForge::ForgeBaseData()
 	{
 		if (m_Material[i] != NULL)
 		{
-			m_Material[i]->m_Overlap--;
+ m_Material[i]->m_Overlap--;
 
-			if (m_Material[i]->m_Overlap == 0)
-				m_Material[i]->Clear();
-			m_Material[i] = NULL;
+ if (m_Material[i]->m_Overlap == 0)
+ 	m_Material[i]->Clear();
+ m_Material[i] = NULL;
 		}
 	}
 
@@ -693,60 +693,60 @@ void EquipForge::ForgeAppend()
 	{
 		if (m_Material[1]->GetItemBaseAttribute() != NULL)
 		{
-			efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
-			if (!efbC)
-			{
-				return;
-			}
-			ProyAdd[0] = efbC->MaterialProyAdd;
+ efbC = ItemManager::Instance()->GetEquipForgeBase(m_Material[1]->GetItemBaseAttribute()->ID);
+ if (!efbC)
+ {
+ 	return;
+ }
+ ProyAdd[0] = efbC->MaterialProyAdd;
 		}
 	}
 	if (m_Material[2])
 	{
 		if (m_Material[2]->GetItemBaseAttribute() != NULL)
 		{
-			efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
-			if (!efbB1)
-			{
-				return;
-			}
-			ProyAdd[1] = efbB1->MaterialProyAdd;
+ efbB1 = ItemManager::Instance()->GetEquipForgeBase(m_Material[2]->GetItemBaseAttribute()->ID);
+ if (!efbB1)
+ {
+ 	return;
+ }
+ ProyAdd[1] = efbB1->MaterialProyAdd;
 		}
 	}
 	if (m_Material[3])
 	{
 		if (m_Material[3]->GetItemBaseAttribute() != NULL)
 		{
-			efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
-			if (!efbB2)
-			{
-				return;
-			}
-			ProyAdd[2] = efbB2->MaterialProyAdd;
+ efbB2 = ItemManager::Instance()->GetEquipForgeBase(m_Material[3]->GetItemBaseAttribute()->ID);
+ if (!efbB2)
+ {
+ 	return;
+ }
+ ProyAdd[2] = efbB2->MaterialProyAdd;
 		}
 	}
 	if (m_Material[4])
 	{
 		if (m_Material[4]->GetItemBaseAttribute() != NULL)
 		{
-			efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
-			if (!efbB3)
-			{
-				return;
-			}
-			ProyAdd[3] = efbB3->MaterialProyAdd;
+ efbB3 = ItemManager::Instance()->GetEquipForgeBase(m_Material[4]->GetItemBaseAttribute()->ID);
+ if (!efbB3)
+ {
+ 	return;
+ }
+ ProyAdd[3] = efbB3->MaterialProyAdd;
 		}
 	}
 	if (m_Material[0])
 	{
 		if (m_Material[0]->GetItemBaseAttribute() != NULL)
 		{
-			efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
-			if (!efbA)
-			{
-				return;
-			}
-			ProyAdd[4] = efbA->MaterialProyAdd;
+ efbA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
+ if (!efbA)
+ {
+ 	return;
+ }
+ ProyAdd[4] = efbA->MaterialProyAdd;
 		}
 	}
 
@@ -756,19 +756,19 @@ void EquipForge::ForgeAppend()
 		EquipForgeBase* efA = ItemManager::Instance()->GetEquipForgeBase(m_Material[0]->GetItemBaseAttribute()->ID);
 		if (!efA)
 		{
-			return;
+ return;
 		}
 		if (efA->MaterialType == 1)
 		{
-			ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->Probability + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 		else if (efA->MaterialType == 2)
 		{
-			ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->BaseProyAdd[m_Equip[0]->BaseLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 		else if (efA->MaterialType == 3)
 		{
-			ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
+ ForgeOk = efb->AppendProyAdd[m_Equip[0]->AppLevel - 1] + ProyAdd[0] + ProyAdd[1] + ProyAdd[2] * Modulus1 + ProyAdd[3] * Modulus2 + ProyAdd[4];//宝石成功率+成
 		}
 	}
 
@@ -807,11 +807,11 @@ void EquipForge::ForgeAppend()
 	{
 		if (m_Material[i] != NULL)
 		{
-			m_Material[i]->m_Overlap--;
+ m_Material[i]->m_Overlap--;
 
-			if (m_Material[i]->m_Overlap == 0)
-				m_Material[i]->Clear();
-			m_Material[i] = NULL;
+ if (m_Material[i]->m_Overlap == 0)
+ 	m_Material[i]->Clear();
+ m_Material[i] = NULL;
 		}
 	}
 
@@ -830,7 +830,7 @@ void EquipForge::ForgeMaterial()
 	{
 		if (m_Material[i])
 		{
-			if (m_Material[i]->m_Binding > 0) { Binding = 1; }
+ if (m_Material[i]->m_Binding > 0) { Binding = 1; }
 		}
 	}
 
@@ -872,12 +872,12 @@ void EquipForge::ForgeMaterial()
 	{
 		if (m_Material[i] != NULL)
 		{
-			//m_Material[i]->m_ItemState = Item::Idle;
-			m_Material[i]->m_Overlap--;
+ //m_Material[i]->m_ItemState = Item::Idle;
+ m_Material[i]->m_Overlap--;
 
-			if (m_Material[i]->m_Overlap == 0)
-				m_Material[i]->Clear();
-			m_Material[i] = NULL;
+ if (m_Material[i]->m_Overlap == 0)
+ 	m_Material[i]->Clear();
+ m_Material[i] = NULL;
 		}
 	}
 
@@ -912,40 +912,40 @@ void EquipForge::ForgeEquip()
 		attribute = m_Equip[0]->GetItemAppendAttribute(i);
 		if (attribute != NULL)
 		{
-			AppNum[0]++;
-			attribute = NULL;
+ AppNum[0]++;
+ attribute = NULL;
 		}
 
 		if (m_Equip[3] != NULL)
 		{
-			attribute = NULL;
-			attribute = m_Equip[3]->GetItemAppendAttribute(i);
-			if (attribute != NULL)
-			{
-				AppNum[1]++;
-			}
+ attribute = NULL;
+ attribute = m_Equip[3]->GetItemAppendAttribute(i);
+ if (attribute != NULL)
+ {
+ 	AppNum[1]++;
+ }
 		}
 		else { return; }
 
 		if (m_Equip[4] != NULL)
 		{
-			attribute = NULL;
-			attribute = m_Equip[4]->GetItemAppendAttribute(i);
-			if (attribute != NULL)
-			{
-				AppNum[2]++;
-			}
+ attribute = NULL;
+ attribute = m_Equip[4]->GetItemAppendAttribute(i);
+ if (attribute != NULL)
+ {
+ 	AppNum[2]++;
+ }
 		}
 		else { return; }
 
 		if (m_Equip[5] != NULL)
 		{
-			attribute = NULL;
-			attribute = m_Equip[5]->GetItemAppendAttribute(i);
-			if (attribute != NULL)
-			{
-				AppNum[3]++;
-			}
+ attribute = NULL;
+ attribute = m_Equip[5]->GetItemAppendAttribute(i);
+ if (attribute != NULL)
+ {
+ 	AppNum[3]++;
+ }
 		}
 		else { return; }
 	}
@@ -1014,10 +1014,10 @@ void EquipForge::ForgeEquip()
 	{
 		if (m_Equip[i] != NULL)
 		{
-			m_Equip[i]->m_Overlap--;
-			if (m_Equip[i]->m_Overlap == 0)
-				m_Equip[i]->Clear();
-			m_Equip[i] = NULL;
+ m_Equip[i]->m_Overlap--;
+ if (m_Equip[i]->m_Overlap == 0)
+ 	m_Equip[i]->Clear();
+ m_Equip[i] = NULL;
 		}
 	}
 

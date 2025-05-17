@@ -57,26 +57,26 @@ namespace login
 		bool LoadDBSercice();
 		int  Process();
 
-		void					NewSocketProc(snet::CSocket* pSocket);
-		void					OnRead();
-		void					OnWrite();
-		void					ReslovePacket(const void* pPacket, snet::CSocket* pSocket);
+		void 		NewSocketProc(snet::CSocket* pSocket);
+		void 		OnRead();
+		void 		OnWrite();
+		void 		ReslovePacket(const void* pPacket, snet::CSocket* pSocket);
 
-		void					SessionProc();
-		void					GSPacketProc();
+		void 		SessionProc();
+		void 		GSPacketProc();
 
 		bool CheckDB(const char* Name, const char* password, void* socket);
 		bool JudgeValidStr(MSG_LOGIN* pMsgLogin, void* pSocket);
 
 		void CacheAccounts(std::string StrName, CSession* pSession);
 		CSession* FindAccount(std::string StrName);
-		void					ClearAccount(std::string StrName);
+		void 		ClearAccount(std::string StrName);
 
-		void					Close();
+		void 		Close();
 		char* DecryptionAccount(const char* account);
 	private:
 		//	HMODULE                 m_NetService;
-		SESSION_MAP				m_AccountsMap;
+		SESSION_MAP 	m_AccountsMap;
 
 		snet::CIOCP* m_pSrvIocp;
 		sbase::CThread* m_pThread;

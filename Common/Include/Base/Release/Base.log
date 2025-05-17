@@ -1,3 +1,59 @@
-﻿  Timer.cpp
+﻿  Analyst.cpp
+E:\GW\Common\Include\Base\inc\Analyst.h(40,31): warning C4100: 'nAmount': parámetro formal sin referencia
+  (compilando archivo de origen "Src/Analyst.cpp")
+  
+E:\GW\Common\Include\Base\inc\Analyst.h(40,22): warning C4100: 'idx': parámetro formal sin referencia
+  (compilando archivo de origen "Src/Analyst.cpp")
+  
+E:\GW\Common\Include\Base\Src\Analyst.cpp(29,20): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\Common\Include\Base\Src\Analyst.cpp(67,20): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\Common\Include\Base\Src\Analyst.cpp(250,20): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\Common\Include\Base\Src\Analyst.cpp(315,7): warning C4189: 'k': la variable local se ha inicializado pero no se hace referencia a ella
+E:\GW\Common\Include\Base\Src\Analyst.cpp(356,49): warning C4100: 'nAmount': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\Analyst.cpp(356,38): warning C4100: 'szKey': parámetro formal sin referencia
+  Heap.cpp
+  IMessage.cpp
+  Ini.cpp
+  IniFile.cpp
+E:\GW\Common\Include\Base\Src\IniFile.cpp(91,9): warning C4456: la declaración de 'pBuf' oculta la declaración local anterior
+      E:\GW\Common\Include\Base\Src\IniFile.cpp(72,8):
+      vea la declaración de 'pBuf'
+  
+  LogSystem.cpp
+E:\GW\Common\Include\Base\Src\LogSystem.cpp(42,20): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\Common\Include\Base\Src\LogSystem.cpp(73,45): warning C4100: 'pszLoggerName': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\LogSystem.cpp(83,20): warning C4018: '<': no coinciden signed/unsigned
+  Logger.cpp
+E:\GW\Common\Include\Base\Src\Logger.cpp(280,27): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 5 tiene el tipo 'time_t'
+      E:\GW\Common\Include\Base\Src\Logger.cpp(280,27):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\Base\Src\Logger.cpp(280,27):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+  Msg.cpp
+  String.cpp
+  SvrBase.cpp
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(98,26): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 5 tiene el tipo 'time_t'
+      E:\GW\Common\Include\Base\Src\SvrBase.cpp(98,26):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\Base\Src\SvrBase.cpp(98,26):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(179,34): warning C4100: 'fmt': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(434,25): warning C4838: la conversión de 'WORD' en 'SHORT' requiere una conversión de restricción
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(434,40): warning C4838: la conversión de 'WORD' en 'SHORT' requiere una conversión de restricción
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(618,32): warning C4100: 'pszString': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(622,73): warning C4100: 'pException': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(622,33): warning C4100: 'nLevel': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(627,52): warning C4100: 'n64Money': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(627,36): warning C4100: 'dwUserID': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(631,52): warning C4100: 'dwToken': parámetro formal sin referencia
+E:\GW\Common\Include\Base\Src\SvrBase.cpp(631,36): warning C4100: 'dwUserID': parámetro formal sin referencia
+  mempool.cpp
+  XMLBase.cpp
+  tinystr.cpp
+  tinyxml.cpp
+  tinyxmlerror.cpp
+  tinyxmlparser.cpp
 e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1557,5): warning MSB8012: TargetPath(E:\GW\Release\Base.lib) no coincide con el valor de la propiedad OutputFile de Library (E:\GW\Common\lib\Release\Base.lib). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Lib.OutputFile).
   Base.vcxproj -> E:\GW\Release\Base.lib

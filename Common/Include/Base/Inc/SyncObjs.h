@@ -20,23 +20,23 @@ namespace sbase
 	public:
 		CCriticalSection(DWORD = 2000)
 		{
-			//InitializeCriticalSectionAndSpinCount( &m_CritSec , spincount);
-			InitializeCriticalSection(&m_CritSec);
+ //InitializeCriticalSectionAndSpinCount( &m_CritSec , spincount);
+ InitializeCriticalSection(&m_CritSec);
 		};
 
 		virtual ~CCriticalSection()
 		{
-			DeleteCriticalSection(&m_CritSec);
+ DeleteCriticalSection(&m_CritSec);
 		};
 
 		void    Lock(void)
 		{
-			EnterCriticalSection(&m_CritSec);
+ EnterCriticalSection(&m_CritSec);
 		};
 
 		void    Unlock(void)
 		{
-			LeaveCriticalSection(&m_CritSec);
+ LeaveCriticalSection(&m_CritSec);
 		};
 
 	private:
@@ -60,27 +60,27 @@ namespace sbase
 	public:
 		static CMutexLock* CreateNew(const char* pszName = NULL, bool bExistTest = false)
 		{
-			CMutexLock* pMutex = new CMutexLock;
-			if (!pMutex)
-				return NULL;
+ CMutexLock* pMutex = new CMutexLock;
+ if (!pMutex)
+ 	return NULL;
 
-			pMutex->m_hMutex = ::CreateMutexA(NULL, false, pszName);
-			if (!pMutex->m_hMutex)
-			{
-				delete pMutex;
-				return NULL;
-			}
+ pMutex->m_hMutex = ::CreateMutexA(NULL, false, pszName);
+ if (!pMutex->m_hMutex)
+ {
+ 	delete pMutex;
+ 	return NULL;
+ }
 
-			if (pszName && bExistTest)
-			{
-				if (ERROR_ALREADY_EXISTS == ::GetLastError())
-				{
-					delete pMutex;
-					return NULL;
-				}
-			}
+ if (pszName && bExistTest)
+ {
+ 	if (ERROR_ALREADY_EXISTS == ::GetLastError())
+ 	{
+ 		delete pMutex;
+ 		return NULL;
+ 	}
+ }
 
-			return pMutex;
+ return pMutex;
 		}
 	};
 
@@ -89,26 +89,26 @@ namespace sbase
 	{
 	public:
 		CSingleLock(ILockObj* pLock)
-			: m_pLock(pLock)
+ : m_pLock(pLock)
 		{
-			if (m_pLock)
-				m_pLock->Lock();
+ if (m_pLock)
+ 	m_pLock->Lock();
 		}
 		bool Unlock()
 		{
-			if (m_pLock)
-				m_pLock->Unlock();
-			return true;
+ if (m_pLock)
+ 	m_pLock->Unlock();
+ return true;
 		}
 
 		~CSingleLock(void)
 		{
-			if (m_pLock)
-			{
-				//printf("Unlock Start...\n");
-				m_pLock->Unlock();
-				//printf("Unlock Over...\n");
-			}
+ if (m_pLock)
+ {
+ 	//printf("Unlock Start...\n");
+ 	m_pLock->Unlock();
+ 	//printf("Unlock Over...\n");
+ }
 		}
 
 	private:
@@ -123,11 +123,11 @@ namespace sbase
 
 		struct Lock
 		{
-			Lock() {}
-			Lock(const T&) {}
-			Lock(const SingleThreaded<T>&)
-			{
-			}
+ Lock() {}
+ Lock(const T&) {}
+ Lock(const SingleThreaded<T>&)
+ {
+ }
 		};
 
 		typedef T VolatileType;
@@ -146,9 +146,9 @@ namespace sbase
 		class Lock
 		{
 		public:
-			Lock() { ClassLevelLockable<MUTEX>::si_mtx.acquire(); }
-			Lock(ClassLevelLockable<MUTEX>&) { ClassLevelLockable<MUTEX>::si_mtx.acquire(); }
-			~Lock() { ClassLevelLockable<MUTEX>::si_mtx.release(); }
+ Lock() { ClassLevelLockable<MUTEX>::si_mtx.acquire(); }
+ Lock(ClassLevelLockable<MUTEX>&) { ClassLevelLockable<MUTEX>::si_mtx.acquire(); }
+ ~Lock() { ClassLevelLockable<MUTEX>::si_mtx.release(); }
 		};
 
 	private:

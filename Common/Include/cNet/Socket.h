@@ -86,7 +86,7 @@ namespace cnet
 
 		CRITICAL_SECTION   StatusCritSec;
 		volatile bool   m_bEncrypt;
-		string			m_strIP;
+		string m_strIP;
 		CIOCP* m_pIOCP;
 		PerIOData* OutOfOrderSends;
 		CircularBuffer	m_iBuffer;

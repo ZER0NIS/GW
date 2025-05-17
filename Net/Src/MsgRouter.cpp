@@ -12,12 +12,12 @@ namespace serve
 		//这里只需要创建一个网络Router，包含发送和接受两个链表
 		CMsgRouter* pRouter = new CMsgRouter(PORT_ALL);
 		IF_NOT(pRouter)
-			return NULL;
+ return NULL;
 
 		IF_NOT(pRouter->Init(/*pAccessCtrl*/))
 		{
-			SAFE_DELETE(pRouter);
-			return NULL;
+ SAFE_DELETE(pRouter);
+ return NULL;
 		}
 
 		return pRouter;
@@ -28,9 +28,9 @@ namespace serve
 	{
 		for (int i = 0; i < nMaxPort; i++)
 		{
-			CMsgRouter& router = *this;
-			CRouterPort* pPort = new CRouterPort(router, i);
-			m_setPort.push_back(pPort);
+ CMsgRouter& router = *this;
+ CRouterPort* pPort = new CRouterPort(router, i);
+ m_setPort.push_back(pPort);
 		}
 	}
 
@@ -40,11 +40,11 @@ namespace serve
 		PORT_VEC::iterator it = m_setPort.begin();
 		for (; it != m_setPort.end(); it++)
 		{
-			if (*it)
-			{
-				(*it)->CleanMsg();
-			}
-			SAFE_DELETE(*it);
+ if (*it)
+ {
+ 	(*it)->CleanMsg();
+ }
+ SAFE_DELETE(*it);
 		}
 
 		m_setPort.clear();
@@ -63,7 +63,7 @@ namespace serve
 		CMsgRouter::IsValidPort(ULONG nPort) const
 	{
 		if (nPort >= 0 && nPort <= m_setPort.size())
-			return true;
+ return true;
 
 		return false;
 	}
@@ -74,12 +74,12 @@ namespace serve
 	{
 		// param check
 		IF_NOT(this->IsValidPort(nPort))
-			return false;
+ return false;
 
 		// duplicate msg
 		sbase::IMessage* pNewMsg = new sbase::IMessage(msg/*msg.GetBuf(), msg.GetFrom(), msg.GetTo()*/);
 		IF_NOT(pNewMsg)
-			return false;
+ return false;
 
 		return m_setPort[nPort] ? m_setPort[nPort]->PushMsg(pNewMsg) : false;
 	}
@@ -90,12 +90,12 @@ namespace serve
 	{
 		// param check
 		IF_NOT(this->IsValidPort(nPort))
-			return false;
+ return false;
 
 		// duplicate msg
 		sbase::IMessage* pNewMsg = new sbase::IMessage(msg/*msg.GetBuf(), msg.GetFrom(), msg.GetTo()*/);
 		IF_NOT(pNewMsg)
-			return false;
+ return false;
 
 		return m_setPort[nPort] ? m_setPort[nPort]->PushOutMsg(pNewMsg) : false;
 	}
@@ -106,7 +106,7 @@ namespace serve
 	{
 		// param check
 		IF_NOT(this->IsValidPort(nPort))
-			return NULL;
+ return NULL;
 
 		return m_setPort[nPort] ? m_setPort[nPort]->TakeMsg() : NULL;
 	}
@@ -120,12 +120,12 @@ namespace serve
 		// param check
 		if (PORT_ALL != nPortDst)
 		{
-			IF_NOT(this->IsValidPort(nPortDst))
-				return false;
+ IF_NOT(this->IsValidPort(nPortDst))
+ 	return false;
 		}
 
 		IF_NOT(this->IsValidPort(nPortSrc))
-			return false;
+ return false;
 
 		return this->PushMsg(nPortDst, msg);
 	}
@@ -139,12 +139,12 @@ namespace serve
 		// param check
 		if (PORT_ALL != nPortDst)
 		{
-			IF_NOT(this->IsValidPort(nPortDst))
-				return false;
+ IF_NOT(this->IsValidPort(nPortDst))
+ 	return false;
 		}
 
 		IF_NOT(this->IsValidPort(nPortSrc))
-			return false;
+ return false;
 
 		return this->PushOutMsg(nPortDst, msg);
 	}
@@ -154,7 +154,7 @@ namespace serve
 		CMsgRouter::QueryPort(ULONG nPort) const
 	{
 		IF_NOT(this->IsValidPort(nPort))
-			return NULL;
+ return NULL;
 
 		return m_setPort[nPort];
 	}

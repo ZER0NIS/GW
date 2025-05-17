@@ -31,11 +31,11 @@ namespace ns
 	{
 		if (pCommonSocketServer != NULL)
 		{
-			SAFE_RELEASE(m_pServeSocket);
-			m_pPort->CleanMsg();
-			m_pPort->Stop();
-			m_setPort.clear();
-			pCommonSocketServer = NULL;
+ SAFE_RELEASE(m_pServeSocket);
+ m_pPort->CleanMsg();
+ m_pPort->Stop();
+ m_setPort.clear();
+ pCommonSocketServer = NULL;
 		}
 	}
 
@@ -58,18 +58,18 @@ namespace ns
 		// create serve socket
 		if (m_Type == RECEIVE)
 		{
-			m_pServeSocket = net::ServeSocketCreate(*this, nServePort, cIP, new CEncryptor, new CEncryptor);
-			if (NULL == pCommonSocketServer)
-				pCommonSocketServer = m_pServeSocket;
+ m_pServeSocket = net::ServeSocketCreate(*this, nServePort, cIP, new CEncryptor, new CEncryptor);
+ if (NULL == pCommonSocketServer)
+ 	pCommonSocketServer = m_pServeSocket;
 		}
 		else if (m_Type == SEND)
 		{
-			if (NULL != pCommonSocketServer)
-				m_pServeSocket = pCommonSocketServer;
+ if (NULL != pCommonSocketServer)
+ 	m_pServeSocket = pCommonSocketServer;
 		}
 
 		IF_NOT(m_pServeSocket)
-			return false;
+ return false;
 
 		return true;
 	}
@@ -109,7 +109,7 @@ namespace ns
 	{
 		PORT_MAP::iterator iter = m_setPort.find(socket);
 		if (iter == m_setPort.end())
-			return;
+ return;
 
 		// inform GameServe closed virtual connect
 		MSG_CONNECT_CLOSE info = { socket };
@@ -134,18 +134,18 @@ namespace ns
 		CNetworkServeImpl::OnRcvMsg(SOCKET socket, const char* buf, int nLen)
 	{
 		IF_NOT(socket != INVALID_SOCKET)
-			return 0;
+ return 0;
 
 		IF_NOT(buf || nLen >= sizeof(WORD))
-			return 0;
+ return 0;
 
 		IF_NOT(m_pPort->IsValid())
-			return 0;
+ return 0;
 
 		// integral chk
 		int nSize = *((WORD*)buf);
 		if (nLen < nSize)
-			return 0;
+ return 0;
 
 		// statistic socket info
 		m_infoSck.dwBytesRcv += nLen;
@@ -159,7 +159,7 @@ namespace ns
 		// search des port
 		PORT_MAP::iterator iter = m_setPort.find(socket);
 		if (iter == m_setPort.end())
-			return 0;
+ return 0;
 
 		// send msg to des port
 		//sbase::IMessage msg(buf, serve::PORT_NETWORK, socket);
@@ -187,69 +187,69 @@ namespace ns
 	{
 		IF_NOT(m_pServeSocket)
 		{
-			return 0;
+ return 0;
 		}
 		//::OutputDebugStr(_T("OnProcess\n"));
 		///cout<<"OnProcess"<<endl;
 
 		if (RECEIVE == m_Type)
 		{
-			// serve socket process
-			//::OutputDebugStr(_T("接受线程!\n"));
-			m_pServeSocket->Process();
+ // serve socket process
+ //::OutputDebugStr(_T("接受线程!\n"));
+ m_pServeSocket->Process();
 		}
 		else if (SEND == m_Type)
 		{
-			//::OutputDebugStr(_T("发送线程!\n"));
-			// take msg from port
-			if (!m_pPort->IsValid())
-				return 0;
+ //::OutputDebugStr(_T("发送线程!\n"));
+ // take msg from port
+ if (!m_pPort->IsValid())
+ 	return 0;
 
-			// process msg
-			sbase::IMessage* pPortMsg = NULL;
-			//从发送链表中取出消息
+ // process msg
+ sbase::IMessage* pPortMsg = NULL;
+ //从发送链表中取出消息
 
-			while ((pPortMsg = m_pPort->TakeMsg()) != NULL)
-			{
-				//				cout<<"收到数据...."<<endl;
-				switch (pPortMsg->usMsgType)
-				{
-				case _KERNEL_MSG_SCK_CLOSE:
-				{
-					MSG_SCK_CLOSE* pMsg = (MSG_SCK_CLOSE*)(pPortMsg->bufMsg + sizeof(MSG_HEADER));
-					m_pServeSocket->CloseSocket(pMsg->socket);
-					m_setPort.erase(pMsg->socket);
-				}
-				break;
+ while ((pPortMsg = m_pPort->TakeMsg()) != NULL)
+ {
+ 	// 	cout<<"收到数据...."<<endl;
+ 	switch (pPortMsg->usMsgType)
+ 	{
+ 	case _KERNEL_MSG_SCK_CLOSE:
+ 	{
+ 		MSG_SCK_CLOSE* pMsg = (MSG_SCK_CLOSE*)(pPortMsg->bufMsg + sizeof(MSG_HEADER));
+ 		m_pServeSocket->CloseSocket(pMsg->socket);
+ 		m_setPort.erase(pMsg->socket);
+ 	}
+ 	break;
 
-				default:
-				{
-					IF_OK(m_pServeSocket)
-					{
-						//if (m_pServeSocket->SendMsg(pPortMsg->GetTo(), pPortMsg->GetBuf(), pPortMsg->GetSize()))
-						if (m_pServeSocket->SendMsg(reinterpret_cast<SOCKET>(pPortMsg->GetTo()), pPortMsg->GetBuf(), pPortMsg->GetSize()))
+ 	default:
+ 	{
+ 		IF_OK(m_pServeSocket)
+ 		{
+  //if (m_pServeSocket->SendMsg(pPortMsg->GetTo(), pPortMsg->GetBuf(), pPortMsg->GetSize()))
+  if (m_pServeSocket->SendMsg(reinterpret_cast<SOCKET>(pPortMsg->GetTo()), pPortMsg->GetBuf(), pPortMsg->GetSize()))
 
-						{
-							//						cout<<"已经发送.."<<pPortMsg->GetSize()<<endl;
-						}
+  {
+  	//  cout<<"已经发送.."<<pPortMsg->GetSize()<<endl;
+  }
 
-						// statistic socket info
-						m_infoSck.dwBytesSnd += pPortMsg->GetSize();
-						m_infoSck.dwTotalBytesSnd += pPortMsg->GetSize();
-					}
-				}
-				break;
-				}
+  // statistic socket info
+  m_infoSck.dwBytesSnd += pPortMsg->GetSize();
+  m_infoSck.dwTotalBytesSnd += pPortMsg->GetSize();
+ 		}
+ 	}
+ 	break;
+ 	}
 
-				//SAFE_RELEASE (pPortMsg);
-			}
+ 	//SAFE_RELEASE (pPortMsg);
+ }
 		}
 
 		// update socket info
 		if (m_tm.ToNextTime())
 		{
-			m_infoSck.dwSckPerAccept = 0;
-			m_infoSck.dwSckPerClose = 0;
+ m_infoSck.dwSckPerAccept = 0;
+ m_infoSck.dwSckPerClose = 0;
 		}
 
 		//---------导致内存使用量不断增大-----------
@@ -273,43 +273,43 @@ namespace ns
 		serve::IPort* pPort = NULL;
 		if (RECEIVE == netType)
 		{
-			pPort = pRouter->QueryPort(serve::PORT_IN);
-			IF_NOT(pPort)
-				return NULL;
+ pPort = pRouter->QueryPort(serve::PORT_IN);
+ IF_NOT(pPort)
+ 	return NULL;
 		}
 		else if (SEND == netType)
 		{
-			pPort = pRouter->QueryPort(serve::PORT_OUT);
-			IF_NOT(pPort)
-				return NULL;
+ pPort = pRouter->QueryPort(serve::PORT_OUT);
+ IF_NOT(pPort)
+ 	return NULL;
 		}
 
 		CNetworkServeImpl* pServe = new CNetworkServeImpl(pPort, usInterval, netType);
 		IF_NOT(pServe)
-			return NULL;
+ return NULL;
 
 		if (RECEIVE == netType)
 		{
-			sbase::CIniFile ini("./config.ini", "System");
-			const int nListenPort = ini.GetInt("ListenPort");
-			char IP[32] = "";
-			ini.GetString("IP", IP, sizeof(IP));
+ sbase::CIniFile ini("./config.ini", "System");
+ const int nListenPort = ini.GetInt("ListenPort");
+ char IP[32] = "";
+ ini.GetString("IP", IP, sizeof(IP));
 
-			IF_NOT(pServe->Init(nListenPort, IP))
-			{
-				SAFE_DELETE(pServe);
-				return NULL;
-			}
+ IF_NOT(pServe->Init(nListenPort, IP))
+ {
+ 	SAFE_DELETE(pServe);
+ 	return NULL;
+ }
 		}
 		else if (SEND == netType)
 		{
-			sbase::CIniFile ini("./config.ini", "System");
-			const int nListenPort = 6500;
-			IF_NOT(pServe->Init(nListenPort, "127.0.0.1"))
-			{
-				SAFE_DELETE(pServe);
-				return NULL;
-			}
+ sbase::CIniFile ini("./config.ini", "System");
+ const int nListenPort = 6500;
+ IF_NOT(pServe->Init(nListenPort, "127.0.0.1"))
+ {
+ 	SAFE_DELETE(pServe);
+ 	return NULL;
+ }
 		}
 
 		return pServe;

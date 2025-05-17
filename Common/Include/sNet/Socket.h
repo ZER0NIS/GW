@@ -86,8 +86,8 @@ namespace snet
 		PerIOData* OutOfOrderSends;
 		IEncryptor* m_Encryptor;
 		volatile SOCKET_MODE m_eMode;
-		char			m_IP[NI_MAXHOST];
-		char			m_PORT[NI_MAXSERV];
+		char m_IP[NI_MAXHOST];
+		char m_PORT[NI_MAXSERV];
 	};
 }
 

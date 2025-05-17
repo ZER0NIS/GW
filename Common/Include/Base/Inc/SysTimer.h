@@ -25,7 +25,7 @@ namespace sbase
 		bool	Sys_TickInit(bool bUseHighResolute = false);
 		I64		Sys_GetTicks();
 		I64		Sys_TicksToMS(I64 ticks);
-		I64		Sys_Milliseconds();				// Get the milliseconds from init
+		I64		Sys_Milliseconds(); 	// Get the milliseconds from init
 	private:
 		// Low-resolution ticks value of the application
 		I64 ticks_start;

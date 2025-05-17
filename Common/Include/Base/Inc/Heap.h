@@ -34,15 +34,15 @@ namespace sbase
 }	// end of namespace sbase
 
 // Marco define
-#define	MYHEAP_DECLARATION(VAR)											\
+#define	MYHEAP_DECLARATION(VAR)   		\
 		void*  operator new	(size_t size)	{ return VAR.Alloc(size); }	\
-		void   operator delete	(void* p)	{ VAR.Free(p); }			\
+		void   operator delete	(void* p)	{ VAR.Free(p); } \
 		void*  operator new[] (size_t size)	{ return VAR.Alloc(size); }	\
-		void   operator delete[] (void* p)	{ VAR.Free(p); }			\
-	public:																\
+		void   operator delete[] (void* p)	{ VAR.Free(p); } \
+	public:     	\
 		static bool	IsValidPt(void* p)		{ return VAR.IsValidPt(p); }\
-	protected:															\
+	protected:     \
 		static sbase::CHeap	VAR;
 
-#define	MYHEAP_IMPLEMENTATION(T,VAR)									\
+#define	MYHEAP_IMPLEMENTATION(T,VAR)   \
 	sbase::CHeap	T::VAR(#T);

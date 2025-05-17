@@ -22,22 +22,22 @@ namespace sbase
 	{
 		CRITICAL_SECTION handle;
 		operator CRITICAL_SECTION* ()	{ return &handle; } 
-		CriticalSection()				{ InitializeCriticalSection(&handle); }
-		~CriticalSection()				{ DeleteCriticalSection(&handle); }
+		CriticalSection() 	{ InitializeCriticalSection(&handle); }
+		~CriticalSection() 	{ DeleteCriticalSection(&handle); }
 	};
 
 	typedef struct 
 	{
-		I64			totalTicks;		// 总共ticks消耗
-		I64			maxTicks;		// 最大ticks消耗
-		I64			totalSize;		// 总共size/bytes
-		I64			maxSize;		// 最大size/bytes
-		I64			amount;			// 数量
-		I64			countTicks;		// ticks 统计次数
-		I64			countSize;		// size 统计次数
-		I64			countAmount;	// amount 统计次数
-		I64			mask;			// the mask of type
-		char*		name;			// alloc/free by hand
+		I64 totalTicks;		// 总共ticks消耗
+		I64 maxTicks;		// 最大ticks消耗
+		I64 totalSize;		// 总共size/bytes
+		I64 maxSize;		// 最大size/bytes
+		I64 amount; // 数量
+		I64 countTicks;		// ticks 统计次数
+		I64 countSize;		// size 统计次数
+		I64 countAmount;	// amount 统计次数
+		I64 mask; // the mask of type
+		char*		name; // alloc/free by hand
 	} Statis_t;
 
 	// 允许最多分析数量

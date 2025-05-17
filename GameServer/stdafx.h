@@ -61,7 +61,7 @@
 using namespace std;
 
 #if !defined( SAFE_DELETE )
-#define SAFE_DELETE( p )			{ if(( p ) != NULL) { delete ( p ); (p)=NULL; } }
+#define SAFE_DELETE( p ) { if(( p ) != NULL) { delete ( p ); (p)=NULL; } }
 #endif
 
 #if !defined( SAFE_DELETE_ARRAY )
@@ -69,11 +69,11 @@ using namespace std;
 #endif
 
 #if !defined( SAFE_RELEASE )
-#define SAFE_RELEASE( p )			{ if(( p ) != NULL) { (p)->Release(); (p)=NULL; } }
+#define SAFE_RELEASE( p ) { if(( p ) != NULL) { (p)->Release(); (p)=NULL; } }
 #endif
 
 #if !defined( SAFE_FREE )
-#define SAFE_FREE( p )				{ if(( p ) != NULL) { free(p); (p)=NULL; } }
+#define SAFE_FREE( p ) 	{ if(( p ) != NULL) { free(p); (p)=NULL; } }
 #endif
 
 // #ifdef _DEBUG

@@ -61,8 +61,8 @@ bool CMaster::Init()
 	{
 		if (!m_Service[i]->Init())
 		{
-			printf("Init DBServer failed!!\n");
-			return false;
+ printf("Init DBServer failed!!\n");
+ return false;
 		}
 	}
 	return true;

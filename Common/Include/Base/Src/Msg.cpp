@@ -34,10 +34,10 @@ namespace sbase
 		CMsg::IsValid(void) const
 	{
 		if (this->GetHeadSize() >= this->GetSize())
-			return false;
+ return false;
 
 		if (_MSG_INVALID == this->GetType())
-			return false;
+ return false;
 
 		return true;
 	}
@@ -49,17 +49,17 @@ namespace sbase
 		CMsg::Create(const void* pszBufMsg, USHORT nsMsgSize)
 	{
 		if (!pszBufMsg)
-			return false;
+ return false;
 
 		MsgHead* pHead = (MsgHead*)pszBufMsg;
 		if ((USHORT)nsMsgSize != pHead->usSize)
-			return false;
+ return false;
 
 		if (_MSG_INVALID == pHead->usType)
-			return false;
+ return false;
 
 		if (nsMsgSize > 2048)
-			ASSERT(nsMsgSize <= 2048);
+ ASSERT(nsMsgSize <= 2048);
 
 		::memcpy(m_bufMsg, pszBufMsg, nsMsgSize);
 

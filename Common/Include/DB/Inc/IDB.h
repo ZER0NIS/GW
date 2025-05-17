@@ -50,28 +50,28 @@ namespace rade_db
 		virtual	unsigned long	Release(void) = 0;
 
 		// conversion function
-		virtual					operator bool() const = 0;
+		virtual 		operator bool() const = 0;
 
-		virtual					operator char() const = 0;
-		virtual					operator unsigned char() const = 0;
+		virtual 		operator char() const = 0;
+		virtual 		operator unsigned char() const = 0;
 
-		virtual					operator short() const = 0;
-		virtual					operator unsigned short() const = 0;
+		virtual 		operator short() const = 0;
+		virtual 		operator unsigned short() const = 0;
 
-		virtual					operator long() const = 0;
-		virtual					operator unsigned long() const = 0;
+		virtual 		operator long() const = 0;
+		virtual 		operator unsigned long() const = 0;
 
-		virtual					operator int() const = 0;
-		virtual					operator unsigned int() const = 0;
+		virtual 		operator int() const = 0;
+		virtual 		operator unsigned int() const = 0;
 
-		virtual					operator __int64() const = 0;
-		virtual					operator unsigned __int64() const = 0;
+		virtual 		operator __int64() const = 0;
+		virtual 		operator unsigned __int64() const = 0;
 
-		virtual					operator float() const = 0;
-		virtual					operator double() const = 0;
+		virtual 		operator float() const = 0;
+		virtual 		operator double() const = 0;
 
-		virtual					operator char* () const = 0;
-		virtual					operator const char* () const = 0;
+		virtual 		operator char* () const = 0;
+		virtual 		operator const char* () const = 0;
 
 		// overload assignment operator
 		virtual IData& operator = (bool bOp) = 0;
@@ -119,12 +119,12 @@ namespace rade_db
 		// 通过 UPDATE 语句来更新 修改过 的数据到数据库，
 		// 缺省使用同步方式，调用者要等待数据库更新完成后返回。
 		// 也可指定异步方式，调用者不需要等待数据库更新完成，直接返回true
-		virtual bool			Update(bool bSync = true) = 0;
-		virtual bool			Delete(bool bArchive = false) = 0;
-		virtual bool			Insert(void) = 0;
+		virtual bool Update(bool bSync = true) = 0;
+		virtual bool Delete(bool bArchive = false) = 0;
+		virtual bool Insert(void) = 0;
 
 		// clear the edit flag of all field in this record, so update operation will ignored.
-		virtual void			ClsEditFlag(void) = 0;
+		virtual void ClsEditFlag(void) = 0;
 	};
 
 	//////////////////////////////////////////////////////////////////////
@@ -142,50 +142,50 @@ namespace rade_db
 		virtual unsigned long	CountRecord(void) const = 0;
 
 		// move to specified record
-		virtual void			Move(unsigned int index) = 0;
+		virtual void Move(unsigned int index) = 0;
 
 		// update this record by "update, delete or insert" sql
 		// bFlag = Sync or Archive
-		virtual bool			Update(bool bFlag = true) = 0;
+		virtual bool Update(bool bFlag = true) = 0;
 
 		// clear the edit flag of all field in this record, so update operation will ignored.
-		virtual void			ClsEditFlag(void) = 0;
+		virtual void ClsEditFlag(void) = 0;
 
 		// make a new default record, it doesn`t exist in rade_db
 		virtual IRecord* MakeDefRecord(void) = 0;
 
-		virtual int					FieldsCount(void) const = 0;
+		virtual int 		FieldsCount(void) const = 0;
 	};
 
 	//Result
 	typedef struct sql_result
 	{
-		UINT   			Account_ID;
-		UINT   			UserID;
-		void   			(*callback)(sql_result*);
+		UINT    Account_ID;
+		UINT    UserID;
+		void    (*callback)(sql_result*);
 		void* pPlayer;
-		bool   			Falg;
+		bool    Falg;
 		IRecordset* pResult;
 		void            Release() { delete this; }
 		~sql_result()
 		{
-			SAFE_RELEASE(pResult);
+ SAFE_RELEASE(pResult);
 		}
 		sql_result& operator = (sql_result* Result)
 		{
-			if (this == Result)
-			{
-				return *this;
-			}
+ if (this == Result)
+ {
+ 	return *this;
+ }
 
-			this->Account_ID = Result->Account_ID;
-			this->UserID = Result->UserID;
-			this->pResult = Result->pResult;
-			this->callback = Result->callback;
-			this->Falg = Result->Falg;
-			this->pResult = Result->pResult;
+ this->Account_ID = Result->Account_ID;
+ this->UserID = Result->UserID;
+ this->pResult = Result->pResult;
+ this->callback = Result->callback;
+ this->Falg = Result->Falg;
+ this->pResult = Result->pResult;
 
-			return *this;
+ return *this;
 		}
 	}*PSQL_RESULT, SQL_RESULT;
 
@@ -208,7 +208,7 @@ namespace rade_db
 		virtual IRecord* MakeDefaultRecord(const char* szTable, unsigned long id = 0) = 0;
 
 		// get statistic info of rade_db running
-		virtual void			GetStatInfo(DB_INFO& infoDB) = 0;
+		virtual void GetStatInfo(DB_INFO& infoDB) = 0;
 
 		//get status of rade_db
 		virtual size_t          GetRequestSize() = 0;
@@ -234,5 +234,5 @@ namespace rade_db
 	//////////////////////////////////////////////////////////////////////
 	DB_API IDatabase* DatabaseCreate(const char* szDBServer, const char* szLoginName, const char* szPassword, const char* szDBName, bool bEnableSQLChk = true);
 	DB_API IDatabase& InstanceGet(void);
-	DB_API void			Destroy(void);
+	DB_API void Destroy(void);
 }

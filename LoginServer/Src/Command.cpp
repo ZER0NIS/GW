@@ -15,7 +15,7 @@ namespace loginserver
 		printf("\n");
 		for (int a = 0; a < AllCmds; a++)
 		{
-			printf("%-16s  %-20s%-25s\n", Commands[a].cmd, "-", Commands[a].Note);
+ printf("%-16s  %-20s%-25s\n", Commands[a].cmd, "-", Commands[a].Note);
 		}
 		pPrintf("\nLoginServer> ");
 	}
@@ -43,51 +43,51 @@ namespace loginserver
 	{
 		if (kbhit())
 		{
-			int key = getch();
-			switch (key)
-			{
-			case 13:			// Enter
-			{
-				if (lKeyCount == 0)
-					break;
+ int key = getch();
+ switch (key)
+ {
+ case 13: // Enter
+ {
+ 	if (lKeyCount == 0)
+ 		break;
 
-				ParseCommand(strKeyBuffer);
-				// reset command
-				lKeyCount = 0;
-				memset(strKeyBuffer, 0, 256);
-			}
-			break;
-			case 8:				// BackSpace
-			{
-				if (lKeyCount > 0)
-				{
-					printf("\b \b");
-					strKeyBuffer[lKeyCount] = 0;
-					lKeyCount--;
-				}
-			}
-			break;
-			case 27:			// ESC
-			{
-				// clear command
-				lKeyCount = 0;
-				memset(strKeyBuffer, 0, 256);
-				printf("   ...[Cancel]\nCommand: ");
-			}
-			break;
-			default:
-			{
-				if (lKeyCount >= 255)
-				{
-					break;
-				}
-				strKeyBuffer[lKeyCount] = (char)key;
-				lKeyCount++;
-				printf("%c", key);
-				//				printf( "%d\n", key );			// test key marker
-			}
-			break;
-			}
+ 	ParseCommand(strKeyBuffer);
+ 	// reset command
+ 	lKeyCount = 0;
+ 	memset(strKeyBuffer, 0, 256);
+ }
+ break;
+ case 8: 	// BackSpace
+ {
+ 	if (lKeyCount > 0)
+ 	{
+ 		printf("\b \b");
+ 		strKeyBuffer[lKeyCount] = 0;
+ 		lKeyCount--;
+ 	}
+ }
+ break;
+ case 27: // ESC
+ {
+ 	// clear command
+ 	lKeyCount = 0;
+ 	memset(strKeyBuffer, 0, 256);
+ 	printf("   ...[Cancel]\nCommand: ");
+ }
+ break;
+ default:
+ {
+ 	if (lKeyCount >= 255)
+ 	{
+ 		break;
+ 	}
+ 	strKeyBuffer[lKeyCount] = (char)key;
+ 	lKeyCount++;
+ 	printf("%c", key);
+ 	// 	printf( "%d\n", key ); // test key marker
+ }
+ break;
+ }
 		}
 
 		return 1;
@@ -99,21 +99,21 @@ namespace loginserver
 		size_t l = strlen(Argcommand);
 		if (l < 2)           //return;//some dirty check
 		{
-			return 0;
+ return 0;
 		}
 
 		for (x = 0; x < AllCmds; x++)
 		{
-			if (!memcmp(Commands[x].cmd, Argcommand, Commands[x].cmdLen))
-			{
-				(this->*Commands[x].pfun)(&Argcommand[Commands[x].cmdLen], &::printf);
-				break;
-			}
+ if (!memcmp(Commands[x].cmd, Argcommand, Commands[x].cmdLen))
+ {
+ 	(this->*Commands[x].pfun)(&Argcommand[Commands[x].cmdLen], &::printf);
+ 	break;
+ }
 		}
 
 		if (x == AllCmds)
 		{
-			sbase::ConsoleWriteColorText(FOREGROUND_RED, "		...Unknown command!\n ");
+ sbase::ConsoleWriteColorText(FOREGROUND_RED, "		...Unknown command!\n ");
 		}
 
 		return 1;
@@ -122,14 +122,14 @@ namespace loginserver
 	bool CommandService::Run()
 	{
 		if (!IsOpen())
-			return false;
+ return false;
 
 		if (m_Timer.IsExpire())
 		{
-			if (Command() == -1)
-				return false;
+ if (Command() == -1)
+ 	return false;
 
-			m_Timer.Update();
+ m_Timer.Update();
 		}
 		return true;
 	}

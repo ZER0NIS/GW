@@ -25,7 +25,7 @@ namespace sbase
 
 		bool	SearchSection(const char* pszSection) const;
 
-		int			GetData(const char* pszSection, const char* pszIndex) const;
+		int GetData(const char* pszSection, const char* pszIndex) const;
 		float       GetFloatData(const char* pszSection, const char* pszIndex)const;
 
 		const char* GetString(const char* pszSection, const char* pszIndex) const;
@@ -38,7 +38,7 @@ namespace sbase
 
 		struct SECTION
 		{
-			std::map<sbase::sstring, sbase::sstring> setInfo;
+ std::map<sbase::sstring, sbase::sstring> setInfo;
 		};
 
 		std::map<sbase::sstring, SECTION> m_setSection;

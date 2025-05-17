@@ -48,7 +48,7 @@ void CMD5::MD5Update(MD5_CTX* context, unsigned char* input, unsigned int inputL
 		MD5Transform(context->state, context->buffer);
 
 		for (i = partLen; i + 63 < inputLen; i += 64)
-			MD5Transform(context->state, &input[i]);
+ MD5Transform(context->state, &input[i]);
 
 		index = 0;
 	}

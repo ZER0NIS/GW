@@ -24,7 +24,7 @@ namespace serve
 	protected:
 		CMsgRouter(int nMaxPort);
 		virtual ~CMsgRouter();
-		bool				Init(/*IAccessContrl* pAccessCtrl*/);
+		bool 	Init(/*IAccessContrl* pAccessCtrl*/);
 
 	public:
 		unsigned long		Release(void);
@@ -34,15 +34,15 @@ namespace serve
 	public:
 
 		sbase::IMessage* TakeMsg(ULONG nPort);
-		bool				DispatchMsg(ULONG nPortDst, /*int nPortDstGroup,*/ ULONG nPortSrc, sbase::IMessage& msg);
+		bool 	DispatchMsg(ULONG nPortDst, /*int nPortDstGroup,*/ ULONG nPortSrc, sbase::IMessage& msg);
 
 		//20070108
 		bool                 DispatchOutMsg(ULONG nPortDst, /*int nPortDstGroup,*/ ULONG nPortSrc, sbase::IMessage& msg);
 		bool                 PushOutMsg(ULONG nPort, sbase::IMessage& msg);
 		// Implementation
 	protected:
-		bool				IsValidPort(ULONG nPort)	const;
-		bool				PushMsg(ULONG nPort, sbase::IMessage& msg);
+		bool 	IsValidPort(ULONG nPort)	const;
+		bool 	PushMsg(ULONG nPort, sbase::IMessage& msg);
 
 		//Ïò¸ÂËÍ
 
@@ -50,6 +50,6 @@ namespace serve
 
 		// port set
 		typedef std::vector<CRouterPort*>		PORT_VEC;
-		PORT_VEC								m_setPort;
+		PORT_VEC  		m_setPort;
 	};
 }

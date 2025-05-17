@@ -53,19 +53,19 @@ void BackupTrade(__int64 DB, Item** item, int money, int bijou, __int64 ID)
 	for (int i = 0; i < MAX_TRADE_ITEMS; i++)
 	{
 		if (!item[i])
-			continue;
+ continue;
 
 		sprintf(Tbuf, "Base%d", c1);
 		element->SetAttribute(Tbuf, item[i]->GetItemBaseAttribute()->ID);
 
 		for (int j = 0; j < MAX_EQUIPAPPEND_COUNT; j++)
 		{
-			if (item[i]->GetItemAppendAttribute(j))
-			{
-				sprintf(Tbuf, "Append%d", c2);
-				c2++;
-				element->SetAttribute(Tbuf, item[i]->GetItemAppendAttribute(j)->ID);
-			}
+ if (item[i]->GetItemAppendAttribute(j))
+ {
+ 	sprintf(Tbuf, "Append%d", c2);
+ 	c2++;
+ 	element->SetAttribute(Tbuf, item[i]->GetItemAppendAttribute(j)->ID);
+ }
 		}
 
 		sprintf(Tbuf, "Level%d", c1);
@@ -135,8 +135,8 @@ void BackupStall(__int64 DB, __int64 DBBuy, Item* item, int money, int bijou, __
 	{
 		if (item->GetItemAppendAttribute(i))
 		{
-			sprintf(Tbuf, "Append%d", c2);
-			element->SetAttribute(Tbuf, item->GetItemAppendAttribute(i)->ID);
+ sprintf(Tbuf, "Append%d", c2);
+ element->SetAttribute(Tbuf, item->GetItemAppendAttribute(i)->ID);
 		}
 	}
 
@@ -205,7 +205,7 @@ void BackupTrade(__int64 DB , Item** item , int money , int bijou , __int64 ID)
 		g_File = fopen(s.c_str() , "at");
 
 		if (!g_File)
-			g_File = fopen(s.c_str() , "wb+");
+ g_File = fopen(s.c_str() , "wb+");
 	}
 
 	if (!g_File)
@@ -240,19 +240,19 @@ void BackupTrade(__int64 DB , Item** item , int money , int bijou , __int64 ID)
 	for (int i = 0 ; i < MAX_TRADE_ITEMS ; i++)
 	{
 		if (!item[i])
-			continue;
+ continue;
 
 		str += "base: "; str += itoa(item[i]->GetItemBaseAttribute()->ID , buffer , 10);
 		str += " ";
 
 		for (int j = 0 ; j < MAX_EQUIPAPPEND_COUNT ; j++)
 		{
-			if (item[i]->GetItemAppendAttribute(j))
-			{
-				str += " append: "; str += itoa(item[i]->GetItemAppendAttribute(j)->ID , buffer , 10);
-				//str += " value: "; str += itoa(item[i]->m_Append[j] , buffer , 10);
-				str += " ";
-			}
+ if (item[i]->GetItemAppendAttribute(j))
+ {
+ 	str += " append: "; str += itoa(item[i]->GetItemAppendAttribute(j)->ID , buffer , 10);
+ 	//str += " value: "; str += itoa(item[i]->m_Append[j] , buffer , 10);
+ 	str += " ";
+ }
 		}
 
 		str += "level: "; str += itoa(item[i]->BaseLevel , buffer , 10);
@@ -295,7 +295,7 @@ void BackupStall(__int64 DB , __int64 DBBuy , Item* item , int money , int bijou
 		g_File = fopen(s.c_str() , "at");
 
 		if (!g_File)
-			g_File = fopen(s.c_str() , "wb+");
+ g_File = fopen(s.c_str() , "wb+");
 	}
 
 	if (!g_File)
@@ -331,9 +331,9 @@ void BackupStall(__int64 DB , __int64 DBBuy , Item* item , int money , int bijou
 	{
 		if (item->GetItemAppendAttribute(i))
 		{
-			str += "append:"; str += itoa(item->GetItemAppendAttribute(i)->ID , buffer , 10);
-			//str += "value:"; str += itoa(item->m_Append[i] , buffer , 10);
-			str += " ";
+ str += "append:"; str += itoa(item->GetItemAppendAttribute(i)->ID , buffer , 10);
+ //str += "value:"; str += itoa(item->m_Append[i] , buffer , 10);
+ str += " ";
 		}
 	}
 

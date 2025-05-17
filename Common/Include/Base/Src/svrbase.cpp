@@ -55,8 +55,8 @@ namespace sbase
 		Lock.Lock();
 		if (!pszName || !fmt)
 		{
-			Lock.Unlock();
-			return;
+ Lock.Unlock();
+ return;
 		}
 
 		//Beep( 750, 10 );
@@ -81,8 +81,8 @@ namespace sbase
 		FILE* fp = ::fopen(szLogFile, "a+");
 		if (!fp)
 		{
-			Lock.Unlock();
-			return;
+ Lock.Unlock();
+ return;
 		}
 
 		// Write log file
@@ -94,10 +94,10 @@ namespace sbase
 		// Log file is too large
 		if (dwLogSize >= _MAX_LOGSIZE)
 		{
-			char szBackupFile[2 * 4096] = "";
-			::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", pszName, pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, TimeGet(TIME_DAYTIME));
+ char szBackupFile[2 * 4096] = "";
+ ::sprintf(szBackupFile, "..\\..\\Log\\%s(%d-%d-%d.%u).log", pszName, pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday, TimeGet(TIME_DAYTIME));
 
-			::rename(szLogFile, szBackupFile);
+ ::rename(szLogFile, szBackupFile);
 		}
 
 		Lock.Unlock();
@@ -151,7 +151,7 @@ namespace sbase
 		sbase::ErrorMsg(const char* fmt, ...)
 	{
 		if (!fmt)
-			return;
+ return;
 
 		char buffer[1024];
 		::vsprintf(buffer, fmt, (char*)((&fmt) + 1));
@@ -165,7 +165,7 @@ namespace sbase
 		sbase::DebugMsg(const char* fmt, ...)
 	{
 		if (!fmt)
-			return;
+ return;
 
 		char buffer[1024];
 		::vsprintf(buffer, fmt, (char*)((&fmt) + 1));
@@ -180,7 +180,7 @@ namespace sbase
 	{
 #ifdef _DEBUG
 		if (!fmt)
-			return;
+ return;
 
 		char buffer[1024] = "";
 		::vsprintf(buffer, fmt, (char*)((&fmt) + 1));
@@ -197,72 +197,72 @@ namespace sbase
 		switch (type)
 		{
 		case TIME_SECOND:
-			dwTime = ::time(NULL);
-			break;
+ dwTime = ::time(NULL);
+ break;
 
 		case TIME_MINUTE:
 		{
-			time_t long_time;
-			time(&long_time);                /* Get time as long integer. */
+ time_t long_time;
+ time(&long_time);                /* Get time as long integer. */
 
-			struct tm* pTime;
-			pTime = ::localtime(&long_time); /* Convert to local time. */
+ struct tm* pTime;
+ pTime = ::localtime(&long_time); /* Convert to local time. */
 
-			dwTime = pTime->tm_year % 100 * 100000000 +
-				(pTime->tm_mon + 1) * 1000000 +
-				pTime->tm_mday * 10000 +
-				pTime->tm_hour * 100 +
-				pTime->tm_min;
+ dwTime = pTime->tm_year % 100 * 100000000 +
+ 	(pTime->tm_mon + 1) * 1000000 +
+ 	pTime->tm_mday * 10000 +
+ 	pTime->tm_hour * 100 +
+ 	pTime->tm_min;
 		}
 		break;
 
 		case TIME_DAY:
 		{
-			time_t long_time;
-			time(&long_time);                /* Get time as long integer. */
+ time_t long_time;
+ time(&long_time);                /* Get time as long integer. */
 
-			struct tm* pTime;
-			pTime = ::localtime(&long_time); /* Convert to local time. */
+ struct tm* pTime;
+ pTime = ::localtime(&long_time); /* Convert to local time. */
 
-			dwTime = pTime->tm_year * 10000 +
-				(pTime->tm_mon + 1) * 100 +
-				pTime->tm_mday;
+ dwTime = pTime->tm_year * 10000 +
+ 	(pTime->tm_mon + 1) * 100 +
+ 	pTime->tm_mday;
 		}
 		break;
 
 		case TIME_DAYTIME:
 		{
-			time_t long_time;
-			time(&long_time);                /* Get time as long integer. */
+ time_t long_time;
+ time(&long_time);                /* Get time as long integer. */
 
-			struct tm* pTime;
-			pTime = ::localtime(&long_time); /* Convert to local time. */
+ struct tm* pTime;
+ pTime = ::localtime(&long_time); /* Convert to local time. */
 
-			dwTime = pTime->tm_hour * 10000 +
-				pTime->tm_min * 100 +
-				pTime->tm_sec;
+ dwTime = pTime->tm_hour * 10000 +
+ 	pTime->tm_min * 100 +
+ 	pTime->tm_sec;
 		}
 		break;
 
 		case TIME_STAMP:
 		{
-			time_t long_time;
-			time(&long_time);                /* Get time as long integer. */
+ time_t long_time;
+ time(&long_time);                /* Get time as long integer. */
 
-			struct tm* pTime;
-			pTime = ::localtime(&long_time); /* Convert to local time. */
+ struct tm* pTime;
+ pTime = ::localtime(&long_time); /* Convert to local time. */
 
-			dwTime = (pTime->tm_mon + 1) * 100000000 +
-				pTime->tm_mday * 1000000 +
-				pTime->tm_hour * 10000 +
-				pTime->tm_min * 100 +
-				pTime->tm_sec;
+ dwTime = (pTime->tm_mon + 1) * 100000000 +
+ 	pTime->tm_mday * 1000000 +
+ 	pTime->tm_hour * 10000 +
+ 	pTime->tm_min * 100 +
+ 	pTime->tm_sec;
 		}
 		break;
 
 		default:
-			dwTime = ::timeGetTime();
-			break;
+ dwTime = ::timeGetTime();
+ break;
 		}
 
 		return dwTime;
@@ -273,10 +273,10 @@ namespace sbase
 		sbase::RandGet(INT nMax, bool bReset)
 	{
 		if (nMax <= 0)
-			nMax = 1;
+ nMax = 1;
 
 		if (bReset)
-			::srand(::timeGetTime());
+ ::srand(::timeGetTime());
 
 		return ::rand() % nMax;
 	}
@@ -291,9 +291,9 @@ namespace sbase
 		double a = ::sin(nRandom * pi / 1000);
 		double b;
 		if (nRandom >= 90)
-			b = (1.0 + dRange) - ::sqrt(::sqrt(a)) * dRange;
+ b = (1.0 + dRange) - ::sqrt(::sqrt(a)) * dRange;
 		else
-			b = (1.0 - dRange) + ::sqrt(::sqrt(a)) * dRange;
+ b = (1.0 - dRange) + ::sqrt(::sqrt(a)) * dRange;
 
 		return b;
 	}
@@ -303,15 +303,15 @@ namespace sbase
 		sbase::StrCopy(char* pszTarget, const char* pszSource, UINT unBufSize)
 	{
 		if (!pszTarget || !pszSource || unBufSize <= 0)
-			return false;
+ return false;
 
 		if (::strlen(pszSource) > unBufSize)
 		{
-			::strncpy(pszTarget, pszSource, unBufSize);
-			pszTarget[unBufSize] = 0;
+ ::strncpy(pszTarget, pszSource, unBufSize);
+ pszTarget[unBufSize] = 0;
 		}
 		else
-			::strcpy(pszTarget, pszSource);
+ ::strcpy(pszTarget, pszSource);
 
 		return true;
 	}
@@ -321,28 +321,28 @@ namespace sbase
 		sbase::StrCheck(const char* pszString)
 	{
 		if (!pszString)
-			return false;
+ return false;
 
 		int nLen = (int)::strlen(pszString);
 		for (int i = 0; i < nLen; i++)
 		{
-			unsigned char c = (unsigned char)pszString[i];
-			if (c >= 0x81 && c <= 0xfe)
-			{
-				if (i + 1 >= nLen)
-					return false;
+ unsigned char c = (unsigned char)pszString[i];
+ if (c >= 0x81 && c <= 0xfe)
+ {
+ 	if (i + 1 >= nLen)
+ 		return false;
 
-				unsigned char c2 = (unsigned char)pszString[i + 1];
-				if (c2 < 0x40 && c2 > 0x7e && c2 < 0x80 && c2 > 0xfe)
-					return false;
-				else
-					i++;
-			}
-			else
-			{
-				if (c == 0x80 || c < ' ')
-					return false;
-			}
+ 	unsigned char c2 = (unsigned char)pszString[i + 1];
+ 	if (c2 < 0x40 && c2 > 0x7e && c2 < 0x80 && c2 > 0xfe)
+ 		return false;
+ 	else
+ 		i++;
+ }
+ else
+ {
+ 	if (c == 0x80 || c < ' ')
+ 		return false;
+ }
 		}
 
 		return true;
@@ -353,26 +353,26 @@ namespace sbase
 		sbase::LegalStrCheck(const char* pszString)
 	{
 		if (!pszString)
-			return false;
+ return false;
 
 		int nLen = (int)::strlen(pszString);
 		for (int i = 0; i < nLen; i++)
 		{
-			unsigned char c = pszString[i];
-			switch (c)
-			{
-			case ' ':
-			case ';':
-			case ',':
-			case '/':
-			case '\\':
-			case '=':
-			case '%':
-			case '@':
-			case '\'':
-			case '#':
-				return false;
-			}
+ unsigned char c = pszString[i];
+ switch (c)
+ {
+ case ' ':
+ case ';':
+ case ',':
+ case '/':
+ case '\\':
+ case '=':
+ case '%':
+ case '@':
+ case '\'':
+ case '#':
+ 	return false;
+ }
 		}
 
 		//if (rade_sbase::BlackList::IsMember(pszString))
@@ -405,11 +405,11 @@ namespace sbase
 		// Write a blank string first
 // 		for( int i=rcWindow.Top; i<rcWindow.Bottom; i++ )
 // 		{
-// 			coord.Y = (WORD)i;
-// 			::SetConsoleCursorPosition( g_hStdOut, coord );
+//  coord.Y = (WORD)i;
+//  ::SetConsoleCursorPosition( g_hStdOut, coord );
 //
-// 			TCHAR strEmpty[255] = TEXT("                                                                                                                                                                                                                                                              ");
-// 			::WriteConsole( g_hStdOut, strEmpty, rcWindow.Right + 1, &dwWritten, NULL );
+//  TCHAR strEmpty[255] = TEXT("                                                                                                                                                                                                                                                              ");
+//  ::WriteConsole( g_hStdOut, strEmpty, rcWindow.Right + 1, &dwWritten, NULL );
 // 		}
 	}
 
@@ -422,11 +422,11 @@ namespace sbase
 
 		int nLen = (int)__max(1, ::strlen(buf));
 		if (nLen > s_wConsoleWidth)
-			buf[s_wConsoleWidth] = 0;
+ buf[s_wConsoleWidth] = 0;
 		else
 		{
-			for (int i = nLen; i < s_wConsoleWidth; i++)
-				buf[i] = ' ';
+ for (int i = nLen; i < s_wConsoleWidth; i++)
+ 	buf[i] = ' ';
 		}
 
 		// Write strBuffer at (0,nCoordY)
@@ -473,30 +473,30 @@ namespace sbase
 	static int GetLine(FILE* fp, char* pszLine, int nBufSize)
 	{
 		IF_NOT(fp && pszLine && nBufSize > 0)
-			return -2;
+ return -2;
 
 		memset(pszLine, 0L, nBufSize);
 
 		int pt = 0;
 		for (;;)
 		{
-			int c = fgetc(fp);
-			if (c == EOF)
-			{
-				if (pt <= 0)
-					return EOF;
-				else
-					return 0;
-			}
+ int c = fgetc(fp);
+ if (c == EOF)
+ {
+ 	if (pt <= 0)
+ 		return EOF;
+ 	else
+ 		return 0;
+ }
 
-			if (c == '\n')
-			{
-				return 0;
-			}
+ if (c == '\n')
+ {
+ 	return 0;
+ }
 
-			pszLine[pt++] = (char)c;
-			IF_NOT(pt < nBufSize)
-				return -3;
+ pszLine[pt++] = (char)c;
+ IF_NOT(pt < nBufSize)
+ 	return -3;
 		}
 	}
 
@@ -504,32 +504,32 @@ namespace sbase
 	static DWORD GetStrID(const char* pszLine)
 	{
 		IF_NOT(pszLine)
-			return 0;
+ return 0;
 
 		DWORD dwKey = 0;
 		if (1 == sscanf(pszLine, "#define IDS_%u", &dwKey))
-			return dwKey;
+ return dwKey;
 		else
-			return 0;
+ return 0;
 	}
 
 	//////////////////////////////////////////////////////////////////////
 	static bool TakeOutMsg(const char* pszLine, char* pszMsgOut)
 	{
 		IF_NOT(pszLine && pszMsgOut)
-			return false;
+ return false;
 
 		// search the first "
 		const char* pszMsg = strstr(pszLine, "\"");
 		IF_NOT(pszMsg && strlen(pszMsg) > 0)
-			return false;
+ return false;
 
 		pszMsg++;
 		strcpy(pszMsgOut, pszMsg);
 
 		int nLen = (int)strlen(pszMsgOut);
 		if (nLen > 0)	// not empty line
-			pszMsgOut[nLen - 1] = 0;	// delete the last "
+ pszMsgOut[nLen - 1] = 0;	// delete the last "
 
 		return true;
 	}
@@ -544,43 +544,43 @@ namespace sbase
 		FILE* fp = fopen(szIniFile, "r");
 		if (!fp)
 		{
-			ErrorMsg("Error: ini file %s not found.", szIniFile);
-			return false;
+ ErrorMsg("Error: ini file %s not found.", szIniFile);
+ return false;
 		}
 
 		for (;;)
 		{
-			char szLine[1024] = "";
-			int rval = GetLine(fp, szLine, sizeof(szLine));
-			if (0 != rval)
-			{
-				if (EOF != rval)
-					ErrorMsg("error in get line of %s", szIniFile);
-				break;
-			}
+ char szLine[1024] = "";
+ int rval = GetLine(fp, szLine, sizeof(szLine));
+ if (0 != rval)
+ {
+ 	if (EOF != rval)
+ 		ErrorMsg("error in get line of %s", szIniFile);
+ 	break;
+ }
 
-			DWORD dwKey = GetStrID(szLine);
-			if (0 == dwKey)
-			{
-				ErrorMsg("error in get key of line (%s) in %s", szLine, szIniFile);
-				break;
-			}
+ DWORD dwKey = GetStrID(szLine);
+ if (0 == dwKey)
+ {
+ 	ErrorMsg("error in get key of line (%s) in %s", szLine, szIniFile);
+ 	break;
+ }
 
-			char szMsg[1024] = "";
-			if (!TakeOutMsg(szLine, szMsg))
-			{
-				ErrorMsg("error in take out msg of line (%s) in %s", szLine, szIniFile);
-				break;
-			}
+ char szMsg[1024] = "";
+ if (!TakeOutMsg(szLine, szMsg))
+ {
+ 	ErrorMsg("error in take out msg of line (%s) in %s", szLine, szIniFile);
+ 	break;
+ }
 
-			setCnStr[dwKey] = szMsg;
+ setCnStr[dwKey] = szMsg;
 		}
 
 		fclose(fp);
 
 		// 保证最后一条IDS_101707正常，无遗漏.
 		if (!CnStrGet("IDS_101713"))
-			return false;
+ return false;
 
 		return true;
 	}
@@ -597,15 +597,15 @@ namespace sbase
 		sbase::CnStrGet(char* pszStrIndex)
 	{
 		IF_NOT(pszStrIndex)
-			return NULL;
+ return NULL;
 
 		DWORD dwKey = 0;
 		if (1 != ::sscanf(pszStrIndex, "IDS_%u", &dwKey))
-			return NULL;
+ return NULL;
 
 		map<DWORD, string>::const_iterator iter = setCnStr.find(dwKey);
 		if (iter == setCnStr.end())
-			return NULL;
+ return NULL;
 
 		return const_cast<char*>((*iter).second.c_str());
 	}

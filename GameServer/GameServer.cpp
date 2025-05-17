@@ -24,18 +24,41 @@
 
 int _tmain(int, _TCHAR*)
 {
-	GSMaster GameServer;
+	try {
+		GSMaster GameServer;
 
-	if (!GameServer.Init())
-		return -1;
+		if (!GameServer.Init())
+			return -1;
 
-	while (!CWorld::m_stopEvent)
-	{
-		GameServer.Run();
+		// Control de tiempo para limitar uso de CPU
+		DWORD lastFrameTime = timeGetTime();
+		DWORD frameTime;
+		const DWORD TARGET_FRAME_TIME = 20; // 50 FPS m醲imo (20ms)
+
+		while (!CWorld::m_stopEvent)
+		{
+			GameServer.Run();
+
+			// Limitar el uso de CPU dando tiempo a otros procesos
+			frameTime = timeGetTime() - lastFrameTime;
+			if (frameTime < TARGET_FRAME_TIME)
+			{
+				Sleep(TARGET_FRAME_TIME - frameTime);
+			}
+			lastFrameTime = timeGetTime();
+		}
+
+		// 释放资源
+		GameServer.Release();
+	}
+	catch (const std::exception& ex) {
+		std::cerr << "[EXCEPCI覰 C++] " << ex.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+	catch (...) {
+		std::cerr << "[EXCEPCI覰 DESCONOCIDA]" << std::endl;
+		return EXIT_FAILURE;
 	}
 
-	// 释放资源
-	GameServer.Release();
-
-	return 0;
+	return EXIT_SUCCESS;
 }

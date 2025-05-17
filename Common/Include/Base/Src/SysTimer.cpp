@@ -26,20 +26,20 @@ namespace sbase
 		// Detect the hardware is support high-resolution perfermance
 		if (bUseHighResolute && QueryPerformanceFrequency(&hi_res_ticks_per_second) == TRUE)
 		{
-			hi_res_timer_available = true;
-			QueryPerformanceCounter(&hi_res_start_ticks);
-			FILE* fp = fopen("syslog\\system.txt", "w");
-			if (fp)
-			{
-				fprintf(fp, "CPU frequency:%u", hi_res_ticks_per_second.QuadPart);
-				fclose(fp);
-			}
+ hi_res_timer_available = true;
+ QueryPerformanceCounter(&hi_res_start_ticks);
+ FILE* fp = fopen("syslog\\system.txt", "w");
+ if (fp)
+ {
+ 	fprintf(fp, "CPU frequency:%u", hi_res_ticks_per_second.QuadPart);
+ 	fclose(fp);
+ }
 		}
 		else
 		{
-			hi_res_timer_available = false;
-			ticks_start = timeGetTime();
-			return false;
+ hi_res_timer_available = false;
+ ticks_start = timeGetTime();
+ return false;
 		}
 		return true;
 	}
@@ -48,14 +48,14 @@ namespace sbase
 	{
 		I64 ticks = 0;
 		if (hi_res_timer_available) {
-			LARGE_INTEGER hi_res_now;
-			QueryPerformanceCounter(&hi_res_now);
-			hi_res_now.QuadPart -= hi_res_start_ticks.QuadPart;
-			ticks = (I64)(hi_res_now.QuadPart);
+ LARGE_INTEGER hi_res_now;
+ QueryPerformanceCounter(&hi_res_now);
+ hi_res_now.QuadPart -= hi_res_start_ticks.QuadPart;
+ ticks = (I64)(hi_res_now.QuadPart);
 		}
 		else {
-			I64 now = timeGetTime();
-			ticks = now - ticks_start;
+ I64 now = timeGetTime();
+ ticks = now - ticks_start;
 		}
 
 		return ticks;
@@ -65,11 +65,11 @@ namespace sbase
 	{
 		// Hi-resolution
 		if (hi_res_timer_available) {
-			LARGE_INTEGER largeTicks;
-			largeTicks.QuadPart = ticks;
-			largeTicks.QuadPart *= 1000;
-			largeTicks.QuadPart /= hi_res_ticks_per_second.QuadPart;
-			return (I64)largeTicks.QuadPart;
+ LARGE_INTEGER largeTicks;
+ largeTicks.QuadPart = ticks;
+ largeTicks.QuadPart *= 1000;
+ largeTicks.QuadPart /= hi_res_ticks_per_second.QuadPart;
+ return (I64)largeTicks.QuadPart;
 		}
 
 		// Low resolution is ms already.
@@ -80,7 +80,7 @@ namespace sbase
 	{
 		if (hi_res_timer_available)
 		{
-			return Sys_TicksToMS(Sys_GetTicks());
+ return Sys_TicksToMS(Sys_GetTicks());
 		}
 
 		return Sys_GetTicks();

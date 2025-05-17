@@ -34,9 +34,9 @@ public:
 protected:
 private:
 
-	sbase::CTimer			m_Timer;
+	sbase::CTimer m_Timer;
 
-	long					m_TimeZone;	//GMTÆ«²î
+	long 		m_TimeZone;	//GMTÆ«²î
 
 	vector<QuestInfo*>		m_TimeQuests;
 

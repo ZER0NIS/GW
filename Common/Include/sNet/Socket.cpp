@@ -10,8 +10,8 @@ namespace snet
 	CSocket::CSocket(CIOCP* pIOCP) :m_iBuffer(pIOCP->m_RecvBufferSize), m_oBuffer(pIOCP->m_SendBufferSize), m_pIOCP(pIOCP),
 		m_bEncrypt(false)
 	{
-#define ENCRYPT_KEY1				0xa61fce5e
-#define ENCRYPT_KEY2				0x443ffc04
+#define ENCRYPT_KEY1 	0xa61fce5e
+#define ENCRYPT_KEY2 	0x443ffc04
 		typedef	TEncryptServer <ENCRYPT_KEY1, ENCRYPT_KEY2>	CEncryptor;
 		m_Encryptor = new CEncryptor;
 	}

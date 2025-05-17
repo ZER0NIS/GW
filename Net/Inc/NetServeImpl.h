@@ -22,11 +22,11 @@ namespace ns
 		CNetworkServeImpl(serve::IPort* pPort, USHORT usServeInterval, TYPE netType = RECEIVE);
 		virtual ~CNetworkServeImpl();
 
-		bool			Init(int nServePort, char* cIP);
+		bool Init(int nServePort, char* cIP);
 	private:
 		TYPE            m_Type;
 		serve::IPort* m_pPort;
-		USHORT			m_usServeInterval;
+		USHORT m_usServeInterval;
 
 		typedef std::map<SOCKET, serve::PORT>	PORT_MAP;
 		PORT_MAP		m_setPort;
@@ -61,12 +61,12 @@ namespace ns
 
 		// Implementation
 	public:
-		void			UpdateStatInfo(void);
+		void UpdateStatInfo(void);
 	private:
 		MSG_SCK_INFO		m_infoSck;
 		sbase::CTimer		m_tm;
 
-		STATUS				m_status;
+		STATUS 	m_status;
 	};
 
 	serve::IServe* ServeCreate(serve::IRouter* pRouter, USHORT usInterval, TYPE netType = RECEIVE);

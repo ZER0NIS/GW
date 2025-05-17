@@ -38,9 +38,9 @@ void ChatHandler::Init()
 	while (pcc)
 	{
 		if (pcc->Name)
-			m_CommandsMap[pcc->Name] = pcc;
+ m_CommandsMap[pcc->Name] = pcc;
 		else
-			return;
+ return;
 
 		pcc++;
 	}
@@ -51,15 +51,15 @@ ChatCommand* ChatHandler::GetCommandTable()
 	static ChatCommand commandTable[] =
 	{
 		{"addmoney" ,		OBJECTTYPE_PLAYER ,	&ChatHandler::AddMoney ,	NULL , NULL},
-		{"move" ,			OBJECTTYPE_PLAYER ,	&ChatHandler::Move ,		NULL , NULL},
-		{ "fly" ,			OBJECTTYPE_PLAYER ,	&ChatHandler::Fly ,			NULL , NULL},
+		{"move" , OBJECTTYPE_PLAYER ,	&ChatHandler::Move ,		NULL , NULL},
+		{ "fly" , OBJECTTYPE_PLAYER ,	&ChatHandler::Fly , NULL , NULL},
 		{ "levelup" ,		OBJECTTYPE_PLAYER ,	&ChatHandler::LevelUp ,		NULL , NULL},
-		{ "kick" ,			OBJECTTYPE_PLAYER ,	&ChatHandler::Kick ,		NULL , NULL},
+		{ "kick" , OBJECTTYPE_PLAYER ,	&ChatHandler::Kick ,		NULL , NULL},
 		{ "ban",            OBJECTTYPE_PLAYER,  &ChatHandler::Ban ,	     	NULL , NULL},
 		{ "ping",           OBJECTTYPE_PLAYER,  &ChatHandler::Ping ,	    NULL , NULL},
 		{ "placard",        OBJECTTYPE_PLAYER,  &ChatHandler::Placard,    	NULL , NULL},
 		{ "online",         OBJECTTYPE_PLAYER,  &ChatHandler::Online ,    	NULL , NULL},
-		{ NULL ,			OBJECTTYPE_PLAYER ,	NULL ,						NULL , NULL}
+		{ NULL , OBJECTTYPE_PLAYER ,	NULL ,  NULL , NULL}
 	};
 
 	return commandTable;
@@ -73,14 +73,14 @@ bool ChatHandler::ParseCommands(CPlayer* player, const char* args)
 	{
 		if (*args == '/')
 		{
-			args++;
+ args++;
 
-			ExecuteCommandInTable(player, (char*)args);
+ ExecuteCommandInTable(player, (char*)args);
 
-			return true;
+ return true;
 		}
 		else
-			args++;
+ args++;
 	}
 
 	return false;
@@ -103,14 +103,14 @@ bool ChatHandler::ExecuteCommandInTable(CPlayer* player, char* text)
 	if (m_CommandsMap.find(text) != m_CommandsMap.end())
 	{
 		if (player->GetType() < m_CommandsMap[text]->Type)
-			return false;
+ return false;
 
 		string command = text;
 		text[pos] = text_bak;
 
 		if (m_CommandsMap[command]->Handler && player->IsGM())
 		{
-			(this->*(m_CommandsMap[command]->Handler))(player, text + pos);
+ (this->*(m_CommandsMap[command]->Handler))(player, text + pos);
 		}
 	}
 

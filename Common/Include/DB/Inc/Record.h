@@ -18,7 +18,7 @@ namespace rade_db
 	public:
 		MYHEAP_DECLARATION(s_heap)
 
-			// Constructor & Destructor
+ // Constructor & Destructor
 	protected:
 		CRecord(CRecordset& res, UINT unAmountField);
 		CRecord(CRecordset& res, MYSQL_ROW row, unsigned int& unNumFields);

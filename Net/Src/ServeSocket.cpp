@@ -19,10 +19,10 @@ namespace net
 		: m_eventSocket(eventSocket), m_bRefuseConnect(false), m_pEncryptorSnd(NULL), m_pEncryptorRcv(NULL)
 	{
 		if (pEncryptorSnd)
-			m_pEncryptorSnd = pEncryptorSnd;
+ m_pEncryptorSnd = pEncryptorSnd;
 
 		if (pEncryptorRcv)
-			m_pEncryptorRcv = pEncryptorRcv;
+ m_pEncryptorRcv = pEncryptorRcv;
 
 		m_setSocket.clear();
 	}
@@ -40,10 +40,10 @@ namespace net
 		CServeSocket::Init(int nServePort, char* IP)
 	{
 		if (!CSocket::SocketInit())
-			return false;
+ return false;
 
 		if (!m_objListen.Listen(nServePort, IP, SOCKET_SENDBUFSIZE, SOCKET_RECVBUFSIZE))
-			return false;
+ return false;
 
 		return true;
 	}
@@ -54,7 +54,7 @@ namespace net
 	{
 		CSocket* pSocket = this->GetSocket(socket);
 		if (!pSocket)
-			return false;
+ return false;
 
 		pSocket->Close();
 		return true;
@@ -67,12 +67,12 @@ namespace net
 		SOCKET_MAP::iterator itor;
 		for (itor = m_setSocket.begin(); itor != m_setSocket.end(); itor++)
 		{
-			CSocket* pSocket = (*itor).second;
-			if (!pSocket)
-				continue;
+ CSocket* pSocket = (*itor).second;
+ if (!pSocket)
+ 	continue;
 
-			pSocket->Close();
-			SAFE_DELETE(pSocket);
+ pSocket->Close();
+ SAFE_DELETE(pSocket);
 		}
 
 		m_setSocket.clear();
@@ -86,7 +86,7 @@ namespace net
 		//        cout<<"Socket："<<socket<<endl;
 		//		cout<<"连接数量："<<m_setSocket.size()<<endl;
 		if (itor == m_setSocket.end())
-			return NULL;
+ return NULL;
 
 		return (*itor).second;
 	}
@@ -97,7 +97,7 @@ namespace net
 	{
 		CSocket* pSocket = this->GetSocket(socket);
 		if (!pSocket)
-			return NULL;
+ return NULL;
 
 		return pSocket->GetPeerIP();
 	}
@@ -110,32 +110,32 @@ namespace net
 
 		IF_NOT(pBuf && nSize > 0)
 		{
-			cout << "IF_NOT (pBuf && nSize > 0)." << endl;
-			return false;
+ cout << "IF_NOT (pBuf && nSize > 0)." << endl;
+ return false;
 		}
 		///////////////////////////////////////////
 		if (0 == socket)
 		{
-			SOCKET_MAP::iterator itor = m_setSocket.begin();
-			for (; itor != m_setSocket.end(); itor++)
-			{
-				CSocket* ptempSocket = (*itor).second;
-				IF_OK(ptempSocket)
-					ptempSocket->Send(pBuf, nSize);
-			}
-			int a = m_setSocket.size();
-			char buffer[128] = "";
-			sprintf_s(buffer, "完成发送%d条消息！", a);
-			// ::OutputDebugStr(buffer);
-			return true;
+ SOCKET_MAP::iterator itor = m_setSocket.begin();
+ for (; itor != m_setSocket.end(); itor++)
+ {
+ 	CSocket* ptempSocket = (*itor).second;
+ 	IF_OK(ptempSocket)
+ 		ptempSocket->Send(pBuf, nSize);
+ }
+ int a = m_setSocket.size();
+ char buffer[128] = "";
+ sprintf_s(buffer, "完成发送%d条消息！", a);
+ // ::OutputDebugStr(buffer);
+ return true;
 		}
 		/////////////////////////////////////////
 
 		CSocket* pSocket = this->GetSocket(socket);
 		if (!pSocket)
 		{
-			cout << "this->GetSocket(socket)" << endl;
-			return false;
+ cout << "this->GetSocket(socket)" << endl;
+ return false;
 		}
 
 		return pSocket->Send(pBuf, nSize);
@@ -148,31 +148,31 @@ namespace net
 		// process listen socket
 		if (!m_bRefuseConnect && m_setSocket.size() < MAX_SERVICE)
 		{
-			SOCKET sockNew = m_objListen.Accept();
-			if (INVALID_SOCKET != sockNew)
-			{
-				if (m_eventSocket.OnAcceptSck(sockNew))
-				{
-					CSocket* pSocket = new CSocket(sockNew, m_pEncryptorSnd, m_pEncryptorRcv);
-					IF_NOT(pSocket)
-					{
-						::closesocket(sockNew);
-						cout << "new CSocket failed!" << endl;
-					}
-				else
-				{
-					m_setSocket[sockNew] = pSocket;
-					///////////////////////////////
-					const char* IP = GetSocketIP(sockNew);
-					///////////////////////////////
-					cout << "Accept connect ,IP:" << IP << ",Connection count:" << m_setSocket.size() << ";" << endl;
-					//  ::OutputDebugStr(_T("接受连接请求..."));
-					m_eventSocket.OnEstablishSck(sockNew);
-				}
-				}
-				else
-					::closesocket(sockNew);
-			}
+ SOCKET sockNew = m_objListen.Accept();
+ if (INVALID_SOCKET != sockNew)
+ {
+ 	if (m_eventSocket.OnAcceptSck(sockNew))
+ 	{
+ 		CSocket* pSocket = new CSocket(sockNew, m_pEncryptorSnd, m_pEncryptorRcv);
+ 		IF_NOT(pSocket)
+ 		{
+  ::closesocket(sockNew);
+  cout << "new CSocket failed!" << endl;
+ 		}
+ 	else
+ 	{
+ 		m_setSocket[sockNew] = pSocket;
+ 		///////////////////////////////
+ 		const char* IP = GetSocketIP(sockNew);
+ 		///////////////////////////////
+ 		cout << "Accept connect ,IP:" << IP << ",Connection count:" << m_setSocket.size() << ";" << endl;
+ 		//  ::OutputDebugStr(_T("接受连接请求..."));
+ 		m_eventSocket.OnEstablishSck(sockNew);
+ 	}
+ 	}
+ 	else
+ 		::closesocket(sockNew);
+ }
 		}
 
 		// add socket info to fd_set
@@ -182,9 +182,9 @@ namespace net
 		SOCKET_MAP::iterator itor;
 		for (itor = m_setSocket.begin(); itor != m_setSocket.end(); itor++)
 		{
-			CSocket* pSocket = (*itor).second;
-			if (pSocket && pSocket->IsOpen())
-				FD_SET(pSocket->Socket(), &readmask);
+ CSocket* pSocket = (*itor).second;
+ if (pSocket && pSocket->IsOpen())
+ 	FD_SET(pSocket->Socket(), &readmask);
 		}
 
 		// get status of all socket
@@ -195,51 +195,51 @@ namespace net
 		SOCKET_MAP::reverse_iterator ritor;
 		for (ritor = m_setSocket.rbegin(); ritor != m_setSocket.rend(); ritor++)
 		{
-			CSocket* pSocket = (*ritor).second;
-			IF_NOT(pSocket)
-			{
-				CleanUp(ritor->first);
-				// size of map can't be zero here
-				if (m_setSocket.size() == 0)
-					break;
+ CSocket* pSocket = (*ritor).second;
+ IF_NOT(pSocket)
+ {
+ 	CleanUp(ritor->first);
+ 	// size of map can't be zero here
+ 	if (m_setSocket.size() == 0)
+ 		break;
 
-				continue;
-			}
+ 	continue;
+ }
 
-			// socket got data
-			if (pSocket->IsOpen()
-				&& (pSocket->HaveData() || FD_ISSET(pSocket->Socket(), &readmask)))
-			{
-				// process data
-				int	nBufLen = 0;
-				const char* pBuf = pSocket->Recv(nBufLen);
-				if (pBuf && nBufLen > 0)
-				{
-					int nLen = m_eventSocket.OnRcvMsg(pSocket->Socket(), pBuf, nBufLen);
-					if (nLen < 0)
-						pSocket->Close();
-					else
-						pSocket->ClrPacket(nLen);
-				}
-				else if (!pBuf)	//socket break;
-				{
-					m_eventSocket.OnCloseSck(pSocket->Socket());
-					pSocket->Close();
-				}
-			}
+ // socket got data
+ if (pSocket->IsOpen()
+ 	&& (pSocket->HaveData() || FD_ISSET(pSocket->Socket(), &readmask)))
+ {
+ 	// process data
+ 	int	nBufLen = 0;
+ 	const char* pBuf = pSocket->Recv(nBufLen);
+ 	if (pBuf && nBufLen > 0)
+ 	{
+ 		int nLen = m_eventSocket.OnRcvMsg(pSocket->Socket(), pBuf, nBufLen);
+ 		if (nLen < 0)
+  pSocket->Close();
+ 		else
+  pSocket->ClrPacket(nLen);
+ 	}
+ 	else if (!pBuf)	//socket break;
+ 	{
+ 		m_eventSocket.OnCloseSck(pSocket->Socket());
+ 		pSocket->Close();
+ 	}
+ }
 
-			// socket still open?
-			if (!pSocket->IsOpen())
-			{
-				m_eventSocket.OnCloseSck(ritor->first);
+ // socket still open?
+ if (!pSocket->IsOpen())
+ {
+ 	m_eventSocket.OnCloseSck(ritor->first);
 
-				CleanUp(ritor->first);
-				SAFE_DELETE(pSocket);
+ 	CleanUp(ritor->first);
+ 	SAFE_DELETE(pSocket);
 
-				// size of map can't be zero here
-				if (m_setSocket.size() == 0)
-					break;
-			}
+ 	// size of map can't be zero here
+ 	if (m_setSocket.size() == 0)
+ 		break;
+ }
 		}
 	}
 
@@ -249,7 +249,7 @@ namespace net
 	{
 		CSocket* pSocket = this->GetSocket(socket);
 		if (!pSocket)
-			return NULL;
+ return NULL;
 
 		return pSocket->QueryEncryptor(eType);
 	}
@@ -259,11 +259,11 @@ namespace net
 		CServeSocket::ChgEncryptor(SOCKET socket, ENCRYPTOR_TYPE eType, IEncryptor* pEncryptor)
 	{
 		IF_NOT(pEncryptor)
-			return;
+ return;
 
 		CSocket* pSocket = this->GetSocket(socket);
 		if (!pSocket)
-			return;
+ return;
 
 		pSocket->ChgEncryptor(eType, pEncryptor);
 	}
@@ -275,15 +275,15 @@ namespace net
 		CServeSocket* pSocket = new CServeSocket(iSocketEvent, pEncryptorSnd, pEncryptorRcv);
 		IF_NOT(pSocket)
 		{
-			SAFE_RELEASE(pEncryptorSnd);
-			SAFE_RELEASE(pEncryptorRcv);
-			return NULL;
+ SAFE_RELEASE(pEncryptorSnd);
+ SAFE_RELEASE(pEncryptorRcv);
+ return NULL;
 		}
 
 		IF_NOT(pSocket->Init(nServePort, IP))
 		{
-			SAFE_DELETE(pSocket);
-			return NULL;
+ SAFE_DELETE(pSocket);
+ return NULL;
 		}
 
 		return pSocket;

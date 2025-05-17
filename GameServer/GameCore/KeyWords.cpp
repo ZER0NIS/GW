@@ -91,47 +91,47 @@ bool CKeyWords::FindKeyWord(char* pchr)
 		isfind = 0;
 		for (index = 0; index < this->KeyWordsNum; index++)
 		{
-			if (isfind == -1) { break; }
-			if (temp[i] == this->sshort[index])//索引匹配
-			{
-				isfind = 1;
-				str = this->vKeyWordsList[index];
-				keylen = (int)str.length();
-				if ((i + keylen) <= ilen)//不超长
-				{
-					memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
-					wcsncpy(pwchr_temp, temp + i, keylen);
-					if (wcscmp(pwchr_temp, str.c_str()) == 0)
-					{
-						{ delete[] pwchr_temp; return true; }
-					}
-					//屏蔽通配符类关键字 法%功
-					wildcard = (int)str.find(L"%", 0);
-					if (wildcard != str.npos)
-					{
-						//分别获取两个子串
-						str1 = str;
-						str1.erase(wildcard, str.length() - wildcard);
-						str2 = str;
-						str2.erase(0, wildcard + 1);
+ if (isfind == -1) { break; }
+ if (temp[i] == this->sshort[index])//索引匹配
+ {
+ 	isfind = 1;
+ 	str = this->vKeyWordsList[index];
+ 	keylen = (int)str.length();
+ 	if ((i + keylen) <= ilen)//不超长
+ 	{
+ 		memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
+ 		wcsncpy(pwchr_temp, temp + i, keylen);
+ 		if (wcscmp(pwchr_temp, str.c_str()) == 0)
+ 		{
+  { delete[] pwchr_temp; return true; }
+ 		}
+ 		//屏蔽通配符类关键字 法%功
+ 		wildcard = (int)str.find(L"%", 0);
+ 		if (wildcard != str.npos)
+ 		{
+  //分别获取两个子串
+  str1 = str;
+  str1.erase(wildcard, str.length() - wildcard);
+  str2 = str;
+  str2.erase(0, wildcard + 1);
 
-						memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
-						wcsncpy(pwchr_temp, temp + i, str1.length());
-						if (wcscmp(pwchr_temp, str1.c_str()) == 0)
-						{
-							wcscpy(pwchr_temp, str2.c_str());
-							if (wcsstr(temp + i + wildcard, pwchr_temp))
-							{
-								delete[] pwchr_temp; return true;
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				if (isfind == 1) { isfind = -1; }
-			}
+  memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
+  wcsncpy(pwchr_temp, temp + i, str1.length());
+  if (wcscmp(pwchr_temp, str1.c_str()) == 0)
+  {
+  	wcscpy(pwchr_temp, str2.c_str());
+  	if (wcsstr(temp + i + wildcard, pwchr_temp))
+  	{
+  		delete[] pwchr_temp; return true;
+  	}
+  }
+ 		}
+ 	}
+ }
+ else
+ {
+ 	if (isfind == 1) { isfind = -1; }
+ }
 		}
 	}
 	delete[] pwchr_temp;

@@ -34,18 +34,18 @@ bool CDropItemMgr::Init(char* DropFileIndex)
 		Elem.m_AppendCount = 0;
 		while (ValuesIndex > 0)
 		{
-			std::string ValuesTempstr;
-			ValuesTempstr.assign(Append, 0, ValuesIndex);
-			Elem.arrAppend[Elem.m_AppendCount] = atoi(ValuesTempstr.c_str());
-			Append.erase(0, ValuesIndex + 1);
-			ValuesIndex = (int)Append.find_first_of(',');
-			Elem.m_AppendCount++;
+ std::string ValuesTempstr;
+ ValuesTempstr.assign(Append, 0, ValuesIndex);
+ Elem.arrAppend[Elem.m_AppendCount] = atoi(ValuesTempstr.c_str());
+ Append.erase(0, ValuesIndex + 1);
+ ValuesIndex = (int)Append.find_first_of(',');
+ Elem.m_AppendCount++;
 		}
 
 		if (Append.c_str() != "")
 		{
-			Elem.arrAppend[Elem.m_AppendCount] = atoi(Append.c_str());
-			Elem.m_AppendCount++;
+ Elem.arrAppend[Elem.m_AppendCount] = atoi(Append.c_str());
+ Elem.m_AppendCount++;
 		}
 		Elem.AppLV = DropIni.GetData(base, "AppLV");
 
@@ -61,7 +61,7 @@ UINT CDropItemMgr::FindThisProbability(int Persent)
 	for (; itor != End(); itor++)
 	{
 		if ((*itor).iProbability >= 100 - Persent)
-			return (*itor).iBaseID;
+ return (*itor).iBaseID;
 	}
 
 	return 0;
@@ -74,7 +74,7 @@ int CDropItemMgr::GetAppendValues(UINT BaseID, int AppIndex)
 	for (; itor != End(); itor++)
 	{
 		if ((*itor).iBaseID == BaseID)
-			return (*itor).arrAppend[AppIndex];
+ return (*itor).arrAppend[AppIndex];
 	}
 
 	return 0;
@@ -87,7 +87,7 @@ int CDropItemMgr::GetAppendLV(UINT BaseID)
 	for (; itor != End(); itor++)
 	{
 		if ((*itor).iBaseID == BaseID)
-			return (*itor).AppLV;
+ return (*itor).AppLV;
 	}
 
 	return 0;
@@ -100,7 +100,7 @@ int CDropItemMgr::GetBaseLV(UINT BaseID)
 	for (; itor != End(); itor++)
 	{
 		if ((*itor).iBaseID == BaseID)
-			return (*itor).BaseLV;
+ return (*itor).BaseLV;
 	}
 
 	return 0;
@@ -112,7 +112,7 @@ int CDropItemMgr::GetAppCount(UINT BaseID)
 
 	for (; itor != End(); itor++)
 		if ((*itor).iBaseID == BaseID)
-			return (int)(*itor).m_AppendCount;
+ return (int)(*itor).m_AppendCount;
 
 	return 0;
 }

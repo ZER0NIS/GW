@@ -48,12 +48,12 @@ enum
 	_MSG_CREATE_ROLE,                   //创建角色
 	_MSG_DELETE_ROLE,                   //删除角色
 	_MSG_GAMESERVER_READY,                   //游戏服务器就绪
-	_MSG_ENTER_GAME,					 //客户端就绪,准备进入游戏
+	_MSG_ENTER_GAME, 		 //客户端就绪,准备进入游戏
 	_MSG_CLIENT_READY,                   //客户端初始化完毕
 	_MSG_GAMESERVER_INFO,
 
 	// 信息功能消息
-	_MSG_SELFINFO,				     //自己的信息
+	_MSG_SELFINFO, 	     //自己的信息
 	_MSG_OBJECTINFO,
 	_MSG_LEAVE,
 	_MSG_COLONY_LEAVE,                   //群体消亡
@@ -78,7 +78,7 @@ enum
 	// 交互功能消息
 	_MSG_TALK,
 	_MSG_TALKCHANNEL,
-	//_MSG_TRADE					 ,
+	//_MSG_TRADE 		 ,
 
 	// 服务端参数，系数
 	_MSG_PARAMATER,
@@ -96,44 +96,44 @@ enum
 	_MSG_LEARN,                   //学习技能
 	_MSG_SKILL_UPGRADE,                   //技能升级
 
-	_MSG_PICKUPDROPS,					 //拾取
-	_MSG_USEOREQUIP,					 //使用或装备
-	_MSG_MOVEITEM,					 //移动物品
-	_MSG_BREAK_ITEM,					 //拆分物品
-	_MSG_STORAGEITEM,					 //存储物品
-	_MSG_SELL,					 //卖物品
+	_MSG_PICKUPDROPS, 		 //拾取
+	_MSG_USEOREQUIP, 		 //使用或装备
+	_MSG_MOVEITEM, 		 //移动物品
+	_MSG_BREAK_ITEM, 		 //拆分物品
+	_MSG_STORAGEITEM, 		 //存储物品
+	_MSG_SELL, 		 //卖物品
 
-	_MSG_STALL,					 //摆摊
-	_MSG_STALLADDITEM,					 //添加物品
-	_MSG_STALLDELITEM,					 //刪除物品
-	_MSG_STALLITEM,					 //摆摊物品
-	_MSG_STALLBUYITEM,					 //买
+	_MSG_STALL, 		 //摆摊
+	_MSG_STALLADDITEM, 		 //添加物品
+	_MSG_STALLDELITEM, 		 //刪除物品
+	_MSG_STALLITEM, 		 //摆摊物品
+	_MSG_STALLBUYITEM, 		 //买
 
-	_MSG_TALKNPC,					 //NPC对话
-	_MSG_NPCDATA,					 //NPC数据
+	_MSG_TALKNPC, 		 //NPC对话
+	_MSG_NPCDATA, 		 //NPC数据
 	_MSG_SYS_NPC_DATA,	    		     //系统NPC数据
 	_MSG_SYS_FUN_USE,                   //系统功能使用
-	_MSG_NPCITEMDATA,					 //NPC贩卖数据
-	_MSG_NPCSTORAGEDATA,					 //NPC仓库数据
-	_MSG_NPCSELL,					 //NPC贩卖
+	_MSG_NPCITEMDATA, 		 //NPC贩卖数据
+	_MSG_NPCSTORAGEDATA, 		 //NPC仓库数据
+	_MSG_NPCSELL, 		 //NPC贩卖
 
 	//任务
-	_MSG_NPCQUEST,					 //任务
-	_MSG_NPCNEXTQUEST,					 //后续任务
-	_MSG_NPCQUESTS,					 //任务列表
-	_MSG_NPCQUESTSAVAILABLE,					 //任务刷新，可接
-	_MSG_NPCQUESTSUNAVAILABLE,					 //任务刷新，不可接
-	_MSG_NPCQUESTREWARD,					 //任务报酬
-	_MSG_NPCQUESTVIEW,					 //查看任务信息
-	_MSG_NPCACCEPTQUEST,					 //接受任务
-	_MSG_NPCCANCELQUEST,					 //取消任务
-	_MSG_NPCCOMPLETEQUEST,					 //完成任务
-	_MSG_NPCQUESTFAILD,					 //任务失败
-	_MSG_NPCREWARDQUEST,					 //完成任务报酬
-	_MSG_NPCQUESTKILLORCAST,					 //同步杀怪收集
-	_MSG_PLAYER_ACCEPTQUESTS,					 //同步接受任务
-	_MSG_FINDQUEST,					 //查找任务
-	_MSG_FINDQUESTRESULT,					 //查找任务结果
+	_MSG_NPCQUEST, 		 //任务
+	_MSG_NPCNEXTQUEST, 		 //后续任务
+	_MSG_NPCQUESTS, 		 //任务列表
+	_MSG_NPCQUESTSAVAILABLE, 		 //任务刷新，可接
+	_MSG_NPCQUESTSUNAVAILABLE, 		 //任务刷新，不可接
+	_MSG_NPCQUESTREWARD, 		 //任务报酬
+	_MSG_NPCQUESTVIEW, 		 //查看任务信息
+	_MSG_NPCACCEPTQUEST, 		 //接受任务
+	_MSG_NPCCANCELQUEST, 		 //取消任务
+	_MSG_NPCCOMPLETEQUEST, 		 //完成任务
+	_MSG_NPCQUESTFAILD, 		 //任务失败
+	_MSG_NPCREWARDQUEST, 		 //完成任务报酬
+	_MSG_NPCQUESTKILLORCAST, 		 //同步杀怪收集
+	_MSG_PLAYER_ACCEPTQUESTS, 		 //同步接受任务
+	_MSG_FINDQUEST, 		 //查找任务
+	_MSG_FINDQUESTRESULT, 		 //查找任务结果
 
 	//HP,MP回复
 	_MSG_RESUNE,
@@ -162,7 +162,7 @@ enum
 	//宝箱转盘 by lion
 	_MSG_GOLD_BOX,
 
-	_MSG_EXPLORER_QUEST,					//探索任务验证
+	_MSG_EXPLORER_QUEST, 		//探索任务验证
 
 	_MSG_GOLD_BOX_RETURN,
 
@@ -226,20 +226,20 @@ enum
 	_MSG_ALTAR_LVUP,		                          //祭坛升级
 	_MSG_ALTAR_OBLATION,	                          //祭坛供奉
 
-	_MSG_MALLITEMDATA,				//GameServer <---> client  返回游戏商城物品列表
+	_MSG_MALLITEMDATA, 	//GameServer <---> client  返回游戏商城物品列表
 	_MSG_ASSOCIATIONITEMDATA,       //GameServer <---> client  返回工会商城物品列表
-	_MSG_MALLSELL,					//GameServer <---> client  游戏商城贩卖
-	_MSG_ASSOCIATIONSELL,			//GameServer <---> client  工会商城贩卖
+	_MSG_MALLSELL, 		//GameServer <---> client  游戏商城贩卖
+	_MSG_ASSOCIATIONSELL, //GameServer <---> client  工会商城贩卖
 	_MSG_ASSOCIATIONDISCOUNT,		//GameServer ----> client  服务器发给客户端的商城折扣表(为动态改变折扣)
 	//声望
 	_MSG_CRETIT_EXCHANGE,                   //声望兑换
-	_MSG_QUESTEXPLORERRESULT,					 //
+	_MSG_QUESTEXPLORERRESULT, 		 //
 	//增加一个物品
-	_MSG_SYS_ADD_ITEM,					 //增加物品
-	_MSG_SYS_DEL_ITEM,					//减少物品
+	_MSG_SYS_ADD_ITEM, 		 //增加物品
+	_MSG_SYS_DEL_ITEM, 		//减少物品
 	_MSG_COUNT,
 	_MSG_TARGETINFO,
-	_MSG_DELAY_EXIT,								//倒计时退出
+	_MSG_DELAY_EXIT,  		//倒计时退出
 
 	_MSG_WALK,
 };
@@ -269,15 +269,15 @@ enum {
 #define MAX_CONSORTIA_MEMBER_COUNT 200        //公会最大成员个数
 
 //聊天消息类型
-#define					defWHISPER				1
-#define					defTEAM					2
-#define					defGUILD				4
-#define					defCAMP					8
-#define					defLOCAL				16
-#define					defMESSAGE				32
+#define 		defWHISPER 	1
+#define 		defTEAM 		2
+#define 		defGUILD 	4
+#define 		defCAMP 		8
+#define 		defLOCAL 	16
+#define 		defMESSAGE 	32
 
-#define					defSYSTEM				129
-#define					defWORLD				130
-#define					defWHISPER_SELF				131
-#define					defGM					132
-#define					DIALITEMCOUNT				16				//转盘物品数量
+#define 		defSYSTEM 	129
+#define 		defWORLD 	130
+#define 		defWHISPER_SELF 	131
+#define 		defGM 		132
+#define 		DIALITEMCOUNT 	16 	//转盘物品数量

@@ -1,3 +1,4 @@
+/GameServer/Release
 /.vs
 /sdk
 /run
@@ -6,9 +7,8 @@
 *.lib
 *.map
 *.pdb
-*ilk
-*.obj
-
+*.ilk
 *.ncb
-*sou
+*.sou
 *.ipdb
+*.obj

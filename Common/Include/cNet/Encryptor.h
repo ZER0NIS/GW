@@ -14,17 +14,17 @@ namespace cnet
 		virtual unsigned long	Release(void) = 0;
 
 		// 按指定长度加密数据
-		virtual void			Encrypt(unsigned char* buf, int nLen) = 0;
+		virtual void Encrypt(unsigned char* buf, int nLen) = 0;
 
 		// 按指定长度解密数据
-		virtual void			Decrypt(unsigned char* buf, int nLen) = 0;
+		virtual void Decrypt(unsigned char* buf, int nLen) = 0;
 
 		// 此方法可以把指定长度的解密数据重新加密，恢复到解密前的状态
-		virtual void			Rencrypt(unsigned char* buf, int nLen) = 0;
+		virtual void Rencrypt(unsigned char* buf, int nLen) = 0;
 
 		// 改变加密器编码
-		virtual void			ChangeCode(unsigned long ulCode) = 0;
-		virtual void			ChangeCode(const char* pszKey) = 0;
+		virtual void ChangeCode(unsigned long ulCode) = 0;
+		virtual void ChangeCode(const char* pszKey) = 0;
 
 		virtual void            Refresh() = 0;
 		// 产生一个新的加密器接口
@@ -47,21 +47,21 @@ namespace cnet
 
 		// Interface
 	public:
-		virtual void			ChangeCode(DWORD dwData);
-		virtual void			ChangeCode(const char* pszKey);
+		virtual void ChangeCode(DWORD dwData);
+		virtual void ChangeCode(const char* pszKey);
 
-		virtual void			Encrypt(unsigned char* bufMsg, int nLen);
-		virtual void			Decrypt(unsigned char* buf, int nLen);
-		virtual void			Rencrypt(unsigned char*, int) { return; }
+		virtual void Encrypt(unsigned char* bufMsg, int nLen);
+		virtual void Decrypt(unsigned char* buf, int nLen);
+		virtual void Rencrypt(unsigned char*, int) { return; }
 
 		virtual IEncryptor* Duplicate(void) { return new TEncryptClient; }
 		virtual void            Refresh(void) { m_nPos1 = m_nPos2 = m_nPos3 = m_nPos4 = 0; }
 		virtual unsigned long	Release(void) { delete this; return 0; }
 
 	protected:
-		void			Init(void);
-		int				m_nPos1;
-		int				m_nPos2;
+		void Init(void);
+		int 	m_nPos1;
+		int 	m_nPos2;
 
 		int             m_nPos3;
 		int             m_nPos4;
@@ -83,7 +83,7 @@ namespace cnet
 	//	rade_cnet::CHeap TEncryptClient<a1, b1, c1, fst1, a2, b2, c2, fst2>::s_heap;
 
 	//template <unsigned char a1, unsigned char b1, unsigned char c1, unsigned char fst1,
-	//			unsigned char a2, unsigned char b2, unsigned char c2, unsigned char fst2>
+	// unsigned char a2, unsigned char b2, unsigned char c2, unsigned char fst2>
 	//TEncryptClient<a1, b1, c1, fst1, a2, b2, c2, fst2>::CEncryptCode	TEncryptClient<a1, b1, c1, fst1, a2, b2, c2, fst2>::m_cGlobalEncrypt;
 
 	// Init
@@ -97,27 +97,27 @@ namespace cnet
 		m_nPos3 = m_nPos4 = 0;
 
 		try {
-			unsigned char	nCode = fst1;
-			for (int i = 0; i < 256; i++)
-			{
-				m_bufEncrypt1[i] = nCode;
-				//printf("%02X ", nCode);
-				nCode = (a1 * nCode * nCode + b1 * nCode + c1) % 256;
-			}
-			//printf("[%02X]\n", nCode);
-			assert(nCode == fst1);
+ unsigned char	nCode = fst1;
+ for (int i = 0; i < 256; i++)
+ {
+ 	m_bufEncrypt1[i] = nCode;
+ 	//printf("%02X ", nCode);
+ 	nCode = (a1 * nCode * nCode + b1 * nCode + c1) % 256;
+ }
+ //printf("[%02X]\n", nCode);
+ assert(nCode == fst1);
 
-			nCode = fst2;
-			for (int i = 0; i < 256; i++)
-			{
-				m_bufEncrypt2[i] = nCode;
-				nCode = (a2 * nCode * nCode + b2 * nCode + c2) % 256;
-			}
-			assert(nCode == fst2);
+ nCode = fst2;
+ for (int i = 0; i < 256; i++)
+ {
+ 	m_bufEncrypt2[i] = nCode;
+ 	nCode = (a2 * nCode * nCode + b2 * nCode + c2) % 256;
+ }
+ assert(nCode == fst2);
 		}
 		catch (...)
 		{
-			printf("Encryptor Init fail.");
+ printf("Encryptor Init fail.");
 		};
 	}
 
@@ -130,29 +130,29 @@ namespace cnet
 	{
 		bool bMove = true;
 		try {
-			int		nOldPos1 = m_nPos1;
-			int		nOldPos2 = m_nPos2;
-			for (int i = 0; i < nLen; i++)
-			{
-				bufMsg[i] ^= m_bufEncrypt1[m_nPos1];
-				bufMsg[i] ^= m_bufEncrypt2[m_nPos2];
+ int		nOldPos1 = m_nPos1;
+ int		nOldPos2 = m_nPos2;
+ for (int i = 0; i < nLen; i++)
+ {
+ 	bufMsg[i] ^= m_bufEncrypt1[m_nPos1];
+ 	bufMsg[i] ^= m_bufEncrypt2[m_nPos2];
 
-				if (++m_nPos1 >= 256)
-					m_nPos1 = 0;
+ 	if (++m_nPos1 >= 256)
+ 		m_nPos1 = 0;
 
-				if (++m_nPos2 >= 256)
-					m_nPos2 = 0;
+ 	if (++m_nPos2 >= 256)
+ 		m_nPos2 = 0;
 
-				assert(m_nPos1 >= 0 && m_nPos1 < 256);
-				assert(m_nPos2 >= 0 && m_nPos2 < 256);
-			}
+ 	assert(m_nPos1 >= 0 && m_nPos1 < 256);
+ 	assert(m_nPos2 >= 0 && m_nPos2 < 256);
+ }
 
-			if (!bMove)
-			{
-				// 恢复指针
-				m_nPos1 = nOldPos1;
-				m_nPos2 = nOldPos2;
-			}
+ if (!bMove)
+ {
+ 	// 恢复指针
+ 	m_nPos1 = nOldPos1;
+ 	m_nPos2 = nOldPos2;
+ }
 		}
 		catch (...) { printf("Encryptor Encrypt fail."); }
 	}
@@ -166,28 +166,28 @@ namespace cnet
 	{
 		bool bMove = true;
 		try {
-			int		nOldPos1 = m_nPos3;
-			int		nOldPos2 = m_nPos4;
-			for (int i = 0; i < nLen; i++)
-			{
-				bufMsg[i] ^= m_bufEncrypt1[m_nPos3];
-				bufMsg[i] ^= m_bufEncrypt2[m_nPos4];
-				if (++m_nPos3 >= 256)
-					m_nPos3 = 0;
+ int		nOldPos1 = m_nPos3;
+ int		nOldPos2 = m_nPos4;
+ for (int i = 0; i < nLen; i++)
+ {
+ 	bufMsg[i] ^= m_bufEncrypt1[m_nPos3];
+ 	bufMsg[i] ^= m_bufEncrypt2[m_nPos4];
+ 	if (++m_nPos3 >= 256)
+ 		m_nPos3 = 0;
 
-				if (++m_nPos4 >= 256)
-					m_nPos4 = 0;
+ 	if (++m_nPos4 >= 256)
+ 		m_nPos4 = 0;
 
-				assert(m_nPos3 >= 0 && m_nPos4 < 256);
-				assert(m_nPos3 >= 0 && m_nPos4 < 256);
-			}
+ 	assert(m_nPos3 >= 0 && m_nPos4 < 256);
+ 	assert(m_nPos3 >= 0 && m_nPos4 < 256);
+ }
 
-			if (!bMove)
-			{
-				// 恢复指针
-				m_nPos3 = nOldPos1;
-				m_nPos4 = nOldPos2;
-			}
+ if (!bMove)
+ {
+ 	// 恢复指针
+ 	m_nPos3 = nOldPos1;
+ 	m_nPos4 = nOldPos2;
+ }
 		}
 		catch (...) { printf("Encryptor Encrypt fail."); }
 	}
@@ -200,12 +200,12 @@ namespace cnet
 		TEncryptClient<a1, b1, c1, fst1, a2, b2, c2, fst2>::ChangeCode(DWORD dwData)
 	{
 		try {
-			DWORD	dwData2 = dwData * dwData;
-			for (int i = 0; i < 256; i += 4)
-			{
-				*(DWORD*)(&m_bufEncrypt1[i]) ^= dwData;
-				*(DWORD*)(&m_bufEncrypt2[i]) ^= dwData2;
-			}
+ DWORD	dwData2 = dwData * dwData;
+ for (int i = 0; i < 256; i += 4)
+ {
+ 	*(DWORD*)(&m_bufEncrypt1[i]) ^= dwData;
+ 	*(DWORD*)(&m_bufEncrypt2[i]) ^= dwData2;
+ }
 		}
 		catch (...) { printf("Encryptor ChangeCode fail."); }
 	}
@@ -218,17 +218,17 @@ namespace cnet
 		TEncryptClient<a1, b1, c1, fst1, a2, b2, c2, fst2>::ChangeCode(const char* pszKey)
 	{
 		if (!pszKey)
-			return;
+ return;
 
 		try {
-			DWORD dwData = (DWORD)atoi(pszKey);
+ DWORD dwData = (DWORD)atoi(pszKey);
 
-			DWORD	dwData2 = dwData * dwData;
-			for (int i = 0; i < 256; i += 4)
-			{
-				*(DWORD*)(&m_bufEncrypt1[i]) ^= dwData;
-				*(DWORD*)(&m_bufEncrypt2[i]) ^= dwData2;
-			}
+ DWORD	dwData2 = dwData * dwData;
+ for (int i = 0; i < 256; i += 4)
+ {
+ 	*(DWORD*)(&m_bufEncrypt1[i]) ^= dwData;
+ 	*(DWORD*)(&m_bufEncrypt2[i]) ^= dwData2;
+ }
 		}
 		catch (...) { printf("Encryptor ChangeCode fail."); }
 	}

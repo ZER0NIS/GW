@@ -21,11 +21,8 @@ bool InitGameScript();
 
 std::string g_OutPut = "";
 
-//sbase::CTimer timerLogin;		// 帐号服务器超时
-//sbase::CTimer timerDB;			// 数据库服务器超时
-
-sbase::CTimer timerCommand;       // 读取网络数据超时
-sbase::CTimer timerOutNet;       // 读取网络数据超时
+sbase::CTimer timerCommand;
+sbase::CTimer timerOutNet;
 
 extern "C" WINBASEAPI HWND WINAPI GetConsoleWindow();
 
@@ -139,7 +136,6 @@ bool GSMaster::Init()
 	sbase::ConsoleSetup();
 	sbase::SetConsoleTitle("GodsWar GameServer");
 	sbase::SetConsoleFontColor();
-	//屏蔽关闭按钮（ 禁止非法退出 ）
 	HWND  hWnd = GetConsoleWindow();
 	if (hWnd)
 	{
@@ -157,16 +153,6 @@ bool GSMaster::Init()
 	cout << "               ★                                              ★" << endl;
 	cout << "               ★★★★★★★★★★★★★★★★★★★★★★★★★\n" << endl;
 	cout << "\n★★★Initialize★★★" << endl << endl;
-
-	// 		 cout<<"                 GGGGG 	  GG   GG    GGGG 	   "<<endl;
-	// 		 cout<<"                GGG GGG	  GG   GG   GG  GG	  "<<endl;
-	// 		 cout<<"                GGG GGG	  GG G GG   GG  GG	  "<<endl;
-	// 		 cout<<"                GGG    	  GG G GG   GG  GG	  "<<endl;
-	// 		 cout<<"                GGG       GG G GG   GG  GG	  "<<endl;
-	// 		 cout<<"                GGGGGGG	  GG G GG   GG  GG	  "<<endl;
-	// 		 cout<<"                GG  GGG	  GGG GGG   GG  GG	  "<<endl;
-	// 		 cout<<"                GGG GGG	  GGG GGG   GG  GG	   http://www.9458.com"<<endl;
-	// 		 cout<<"                 GGGGGG	  GGG GGG    GGGG 	  GodsWar Game Server "<<endl;
 
 	srand((unsigned)time(NULL));
 
@@ -188,14 +174,7 @@ bool GSMaster::Init()
 		return false;
 	}
 
-	// 	m_pNetClient = new	cnet::CIOCP();
-	// 	if ( !m_pNetClient )
-	// 	{
-	// 		return false;
-	// 	}
-
 	m_Service[SERVICE_DB] = new  DBService(m_pWorld);
-	//m_Service[SERVICE_PIPE]     =  new  PipeService(m_pWorld);
 	m_Service[SRVICE_COMMAND] = new  CommandService(m_pWorld);
 	m_Service[SERVICE_REGISTER] = new  RegisterService(m_pWorld, NULL);
 	m_Service[SERVICE_QUEUE] = new  QueueService(m_pWorld);
@@ -218,7 +197,6 @@ bool GSMaster::Init()
 	{
 		::MessageBox(NULL, "Create NetWorker thread fail.", "Error", MB_OK | MB_ICONERROR);
 	}
-	//m_pThread->SetThreadAMask(12);
 	cout << "\n★★★Initialize successfully!★★★" << endl;
 	sbase::SetConsoleFontColor();
 
@@ -250,10 +228,18 @@ void GSMaster::Run()
 
 int	GSMaster::OnThreadProcess(void)
 {
-	for (int i = 0; i < SERVICE_COUNT; i++)
-	{
-		if (m_Service[i] != NULL)
-			m_Service[i]->Run();
+	try {
+		for (int i = 0; i < SERVICE_COUNT; i++)
+		{
+			if (m_Service[i] != NULL)
+				m_Service[i]->Run();
+		}
+	}
+	catch (const std::exception& ex) {
+		std::cerr << "[Thread Exception] " << ex.what() << std::endl;
+	}
+	catch (...) {
+		std::cerr << "[Thread Exception] Unknown error." << std::endl;
 	}
 
 	Sleep(1);

@@ -21,7 +21,7 @@ namespace sbase
 		usMsgType = (WORD)type;
 
 		if (buf)
-			memcpy(bufMsg + 2 * sizeof(WORD), buf, size - 2 * sizeof(WORD));
+ memcpy(bufMsg + 2 * sizeof(WORD), buf, size - 2 * sizeof(WORD));
 	}
 
 	IMessage::IMessage(const IMessage& rhs)

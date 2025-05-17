@@ -49,8 +49,8 @@ public:
 	bool                GetGSCheckFlag() { return m_bGS; };
 
 	//add by czq
-	void				AccountCheckFlag() { m_bDelAccout = true; }
-	bool				GetAccountFlag() { return m_bDelAccout; }
+	void 	AccountCheckFlag() { m_bDelAccout = true; }
+	bool 	GetAccountFlag() { return m_bDelAccout; }
 public:
 	//µÇÂ¼´¦Àí
 	static   void       OnDBResponse(rade_db::PSQL_RESULT result);
@@ -61,7 +61,7 @@ private:
 	char                m_PassWord[32];
 	void* m_Socket;
 	login::CLogin& m_Logion;
-	bool				m_bDelAccout;
+	bool 	m_bDelAccout;
 
 	CMD5 m_MD5;
 	DECLARE_FIXEDSIZE_ALLOCATOR(CSession);

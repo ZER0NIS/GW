@@ -28,8 +28,8 @@ namespace loginserver
 	{
 		enum eServiceStatus
 		{
-			SERVICE_CLOSE,
-			SERVICE_OPEN
+ SERVICE_CLOSE,
+ SERVICE_OPEN
 		};
 	public:
 		IService():m_Status(SERVICE_CLOSE){}
@@ -93,10 +93,10 @@ public:
 #define CMD_FORMAT(a) a,(sizeof(a)-1)
 static KeyCommand Commands[]=
 {
-	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",             			0},
-	{CMD_FORMAT("exit"),          &CommandService::Key_Exit,         	"Shutdown immediately ",         			1},
-	{CMD_FORMAT("quit"),          &CommandService::Key_Quit,         	"Shutdown several minutes later",			2},
-	{CMD_FORMAT("list"),          &CommandService::Key_List,         	"Display the GS information",				3},
+	{CMD_FORMAT("help"),          &CommandService::Key_Help,            "Display this help",              0},
+	{CMD_FORMAT("exit"),          &CommandService::Key_Exit,         	"Shutdown immediately ",          1},
+	{CMD_FORMAT("quit"),          &CommandService::Key_Quit,         	"Shutdown several minutes later", 2},
+	{CMD_FORMAT("list"),          &CommandService::Key_List,         	"Display the GS information", 	3},
 
 }; 
 

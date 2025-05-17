@@ -2,8 +2,10 @@
 #include "Dial.h"
 #include "..\Common\MsgTypes.h"
 #include "./GameCore/ItemManager.h"
+
 extern MSG_USEOREQUIP_ITEM msg_useorequip_item;
 CDial* CDial::m_This = NULL;
+
 CDial::CDial()
 {
 	pLocalPlayer = NULL;
@@ -19,25 +21,22 @@ void CDial::Init()
 	char buf[256] = {};
 	DialItemData temp_dial_item_data;
 	DialDefaultItemData temp_default_item_data;
-	//	std::map<UINT,DialItemData> temp_dial_map;
-	//	std::map<UINT,DialItemData> temp_nonsuch_dial_map;
 	UINT SumRand;
 
-	sprintf(path_dial, "./Drop/dial.ini");
+	_snprintf_s(path_dial, 256, _TRUNCATE, "./Drop/dial.ini");
 	sbase::CIni iniDial(path_dial, false);
 
 	int FileCount = iniDial.GetData("FileCount", "Count");
 	for (int i = 0; i < FileCount; i++)
 	{
-		sprintf(buf, "ID%d", i);
+		_snprintf_s(buf, 25, _TRUNCATE, "ID%d", i);
 		int base_id = iniDial.GetData("ID", buf);
 
-		sprintf(path_dial, "./Drop/dial%d.ini", base_id);
+		_snprintf_s(path_dial, 256, _TRUNCATE, "./Drop/dial%d.ini", base_id);
 		sbase::CIni iniTempDial(path_dial, false);
 
 		int BoxID = iniTempDial.GetData("ItemCount", "BoxID");
 
-		//初始化DefaultItemDataMap
 		temp_default_item_data.DialID = BoxID;
 		temp_default_item_data.AppendLV = iniTempDial.GetData("DefaultItem", "AppLV");
 		temp_default_item_data.BaseLV = iniTempDial.GetData("DefaultItem", "BaseLV");
@@ -45,6 +44,15 @@ void CDial::Init()
 		temp_default_item_data.Base = iniTempDial.GetData("DefaultItem", "BaseID");
 		temp_default_item_data.Binding = iniTempDial.GetData("DefaultItem", "Binding");
 		temp_default_item_data.ItemID = iniTempDial.GetData("DefaultItem", "ItemID");
+
+		if (temp_default_item_data.BaseLV < 1)
+		{
+			temp_default_item_data.BaseLV = 1;
+		}
+		if (temp_default_item_data.AppendLV < 1)
+		{
+			temp_default_item_data.AppendLV = 1;
+		}
 
 		const char* temp_str = iniTempDial.GetString("DefaultItem", "Append");
 		if (temp_str)
@@ -64,29 +72,22 @@ void CDial::Init()
 					m_AppendCount++;
 				}
 
-				//del warning
 				if (Append.length() != 0)
 				{
 					temp_default_item_data.Append[m_AppendCount] = atoi(Append.c_str());
 				}
-				// 				if ( Append.c_str() != "" )
-				// 				{
-				// 					temp_default_item_data.Append[m_AppendCount] = atoi( Append.c_str() );
-				// 				}
 			}
 		}
 
 		this->Instance()->m_DefaultItemDataMap[base_id] = temp_default_item_data;
 
-		//初始化ItemDataMap NonsuchItemDataMap
 		int count = iniTempDial.GetData("ItemCount", "Count");
 		for (int i = 0; i < count; i++)
 		{
 			memset(&temp_dial_item_data, 0, sizeof(DialItemData));
 			memset(temp_dial_item_data.item_data.Append, -1, sizeof(temp_dial_item_data.item_data.Append));
-			sprintf(buf, "DialItem%d", i);
+			_snprintf_s(buf, 25, _TRUNCATE, "DialItem%d", i);
 
-			//		const char* pObjectName = iniMonster.GetString(buf,"Object");
 			temp_dial_item_data.DialID = BoxID;
 			temp_dial_item_data.ItemID = iniTempDial.GetData(buf, "ItemID");
 			temp_dial_item_data.Nonsuch = iniTempDial.GetData(buf, "Nonsuch");
@@ -98,6 +99,15 @@ void CDial::Init()
 			temp_dial_item_data.item_data.BaseLV = iniTempDial.GetData(buf, "BaseLV");
 			temp_dial_item_data.item_data.Overlap = iniTempDial.GetData(buf, "OverLap");
 			temp_dial_item_data.LV = -1;
+
+			if (temp_dial_item_data.item_data.BaseLV < 1)
+			{
+				temp_dial_item_data.item_data.BaseLV = 1;
+			}
+			if (temp_dial_item_data.item_data.AppendLV < 1)
+			{
+				temp_dial_item_data.item_data.AppendLV = 1;
+			}
 
 			const char* temp_str = iniTempDial.GetString(buf, "Append");
 			if (temp_str)
@@ -117,20 +127,14 @@ void CDial::Init()
 						m_AppendCount++;
 					}
 
-					//del warning
 					if (Append.length() != 0)
 					{
 						temp_dial_item_data.item_data.Append[m_AppendCount] = atoi(Append.c_str());
 					}
-
-					// 					if ( Append.c_str() != "" )
-					// 					{
-					// 						temp_dial_item_data.item_data.Append[m_AppendCount] = atoi( Append.c_str() );
-					// 					}
 				}
 			}
 
-			if (temp_dial_item_data.Nonsuch)//极品么？
+			if (temp_dial_item_data.Nonsuch)
 			{
 				m_NonsuchItemDataMap[base_id][temp_dial_item_data.ItemID] = temp_dial_item_data;
 			}
@@ -141,7 +145,6 @@ void CDial::Init()
 		}
 	}
 
-	//初始化SumOfRandInDial
 	std::map<UINT, std::map<UINT, DialItemData>>::iterator itor, itor_end;
 	itor_end = this->Instance()->m_ItemDataMap.end();
 	for (itor = this->Instance()->m_ItemDataMap.begin(); itor != itor_end; itor++)
@@ -156,7 +159,6 @@ void CDial::Init()
 		this->Instance()->m_SumOfRandInDial[(*itor).first] = sum_rand;
 	}
 
-	//初始化SumOfNonsuchInDial
 	itor_end = this->Instance()->m_NonsuchItemDataMap.end();
 	for (itor = this->Instance()->m_NonsuchItemDataMap.begin(); itor != itor_end; itor++)
 	{
@@ -178,11 +180,10 @@ CDial* CDial::Instance()
 	return m_This;
 }
 
-void CDial::RandomItemInDial(UINT base_id)			//生成入围道具
+void CDial::RandomItemInDial(UINT base_id)
 {
-	//	CPlayer* pPlayer = GetPlayerFromSocket( pPortMsg->GetTo() );
 	int sum_rand(0), temp_lv = pLocalPlayer->GetRank();
-	bool is_continue(false);			//等级判定不通过就重来
+	bool is_continue(false);
 	DialItemData dial_item_data[DIALITEMCOUNT] = {};
 	for (int i = 0; i < DIALITEMCOUNT; i++)
 	{
@@ -222,37 +223,33 @@ void CDial::RandomItemInDial(UINT base_id)			//生成入围道具
 				break;
 			}
 		}
-		if (is_continue)		//等级不匹配 重选
+		if (is_continue)
 		{
 			i--;
 			continue;
 		}
-		//		assert(&(m_DialItemData[i]));
-		sum_rand += m_DialItemData[i].Probability;				//获取入围物品总随机数
-		//		m_InDialItemID[i] = m_DialItemData[i].ItemID;
+		sum_rand += m_DialItemData[i].Probability;
 		pLocalPlayer->SetInDialItemID(i, m_DialItemData[i].ItemID);
 	}
 	pLocalPlayer->SetSumRand(sum_rand);
 }
 
-CDial::DialDefaultItemData& CDial::GetDefaultItemData(UINT base_id)			//获取默认道具ID
+CDial::DialDefaultItemData& CDial::GetDefaultItemData(UINT base_id)
 {
 	return CDial::Instance()->m_DefaultItemDataMap[base_id];
 }
 
-UINT* CDial::GetInDialItemID()								//获取入围道具ID
+UINT* CDial::GetInDialItemID()
 {
 	return pLocalPlayer->GetInDialItemID();
 }
 
-int CDial::RandomItem(UINT base_id)							//生成随机到的物品
+int CDial::RandomItem(UINT base_id)
 {
 	int rand = sbase::RandGet(pLocalPlayer->GetSumRand());
 	UINT* temp_item_id = pLocalPlayer->GetInDialItemID();
 
 	UINT key_id = m_DefaultItemDataMap[base_id].DialID;
-	//	if(!pLocalPlayer->ExpendGoldBoxId(base_id,key_id)){return -1;}			//消耗钥匙和宝箱
-
 	int temp_rand(0);
 	for (int i = 0; i < DIALITEMCOUNT; i++)
 	{
@@ -277,15 +274,13 @@ int CDial::RandomItem(UINT base_id)							//生成随机到的物品
 			}
 
 			pLocalPlayer->SetCurBoxItem(item);
-			//临时			return i;
 			return m_DialItemData[i].ItemID;
-			//			if(pLocalPlayer->AddItem(&item)){return i;}
 		}
 	}
 	return -1;
 }
 
-UINT CDial::DefaultItem(UINT base_id)							//生成默认物品
+UINT CDial::DefaultItem(UINT base_id)
 {
 	UINT* temp_item_id = pLocalPlayer->GetInDialItemID();
 	UINT key_id = m_DefaultItemDataMap[base_id].DialID;
@@ -293,7 +288,6 @@ UINT CDial::DefaultItem(UINT base_id)							//生成默认物品
 
 	if (!free)
 		return 0;
-	//	if(!pLocalPlayer->ExpendGoldBoxId(base_id,key_id)){return 0;}			//消耗钥匙和宝箱
 	Item item;
 	ItemManager::Instance()->CreateItem(&(m_DefaultItemDataMap[base_id]), &item);
 	if (pLocalPlayer->AddItem(&item))
@@ -303,9 +297,9 @@ UINT CDial::DefaultItem(UINT base_id)							//生成默认物品
 
 	return 0;
 }
-UINT CDial::SecondItem(UINT base_id)					//获得额外的物品
+UINT CDial::SecondItem(UINT base_id)
 {
-	int rand(0), sum(0);//sbase::RandGet(pLocalPlayer->GetNonsuchSumRand());
+	int rand(0), sum(0);
 	std::map<UINT, DialItemData>::iterator iter = m_NonsuchItemDataMap[base_id].begin(), iter_end = m_NonsuchItemDataMap[base_id].end();
 	for (; iter != iter_end; iter++)
 	{
@@ -318,7 +312,6 @@ UINT CDial::SecondItem(UINT base_id)					//获得额外的物品
 	for (iter = m_NonsuchItemDataMap[base_id].begin(); iter != iter_end; iter++)
 	{
 		temp_rand += (*iter).second.Probability;
-		//		m_NonsuchItemDataMap[GoldBoxID][temp_item_id[i]].Probability;
 		if (temp_rand >= rand)
 		{
 			ItemManager::Instance()->CreateItem(&((*iter).second.item_data), &item);
@@ -329,7 +322,7 @@ UINT CDial::SecondItem(UINT base_id)					//获得额外的物品
 	}
 	return 0;
 }
-eError CDial::isGoldBoxIDExist(BYTE Iter, UINT base_id)					//是否存在该宝箱
+eError CDial::isGoldBoxIDExist(BYTE Iter, UINT base_id)
 {
 	if (m_NonsuchItemDataMap.find(base_id) == m_NonsuchItemDataMap.end() ||
 		m_ItemDataMap.find(base_id) == m_ItemDataMap.end() ||
@@ -343,9 +336,9 @@ eError CDial::isGoldBoxIDExist(BYTE Iter, UINT base_id)					//是否存在该宝箱
 	else { return NO_MSG_ERRO; }
 }
 
-bool  CDial::isMsgWrong(MSG_GOLD_BOX* pGoldBoxMsg)				//验证消息的合法性
+bool  CDial::isMsgWrong(MSG_GOLD_BOX* pGoldBoxMsg)
 {
-	if (pGoldBoxMsg->Type != 8 ||  //临时的都是8
+	if (pGoldBoxMsg->Type != 8 ||
 		pGoldBoxMsg->Iter < 0 ||
 		pGoldBoxMsg->Iter >= MAX_BAG_GRID * MAX_BAGS ||
 		pGoldBoxMsg->GoldBoxId>10000)

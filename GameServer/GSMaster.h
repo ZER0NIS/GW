@@ -34,8 +34,8 @@ void	 __cdecl 	OnDealWithPassiveSkill(CPlayer* pPlayer);
 void	 __cdecl 	OnDealWithActiveSkill(CPlayer* pPlayer);
 void	 __cdecl 	OnDealWithKitBag(CPlayer* pPlayer);
 
-extern char			strKeyBuffer[256];
-extern long			lKeyCount;
+extern char strKeyBuffer[256];
+extern long lKeyCount;
 
 class  GSMaster : private sbase::IThreadEvent
 {
@@ -67,11 +67,11 @@ private:
 	static DWORD WINAPI BackUpThreadRun(LPVOID lpParam);
 
 public:
-	void			GOutPut();
-	void			GOutPut(int a);
+	void GOutPut();
+	void GOutPut(int a);
 
-	BYTE			GetTotalPlayerNum();
-	void			CommandRelease(void);
+	BYTE GetTotalPlayerNum();
+	void CommandRelease(void);
 
 private:
 	sbase::CThread* m_pThread;

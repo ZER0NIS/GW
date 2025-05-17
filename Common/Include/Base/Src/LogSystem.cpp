@@ -63,7 +63,7 @@ ILogger* CLogSystem::GetLogger(const char* pszLoggerName, const LOG_APPENDER eAp
 
 		if (pLogger)
 		{
-			m_vecLogger.push_back(pLogger);
+ m_vecLogger.push_back(pLogger);
 		}
 	}
 
@@ -84,7 +84,7 @@ ILogger* CLogSystem::FindLogger(const char* pszLoggerName)
 	{
 		if (stricmp(pszLoggerName, m_vecLogger[i]->GetName()) == 0)
 		{
-			return m_vecLogger[i];
+ return m_vecLogger[i];
 		}
 	}
 

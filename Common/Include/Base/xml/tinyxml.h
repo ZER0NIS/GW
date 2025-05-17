@@ -40,7 +40,7 @@ distribution.
 #include "..\inc\SvrBase.h"
 #else
 #include <assert.h>
-#define		ASSERT			assert
+#define		ASSERT assert
 #endif
 
 // Help out windows:
@@ -177,15 +177,15 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 
 	@verbatim
 	A Document can contain:	Element	(container or leaf)
-							Comment (leaf)
-							Unknown (leaf)
-							Declaration( leaf )
+  	Comment (leaf)
+  	Unknown (leaf)
+  	Declaration( leaf )
 
 	An Element can contain:	Element (container or leaf)
-							Text	(leaf)
-							Attributes (not on tree)
-							Comment (leaf)
-							Unknown (leaf)
+  	Text	(leaf)
+  	Attributes (not on tree)
+  	Comment (leaf)
+  	Unknown (leaf)
 
 	A Decleration contains: Attributes (not on tree)
 	@endverbatim
@@ -288,7 +288,7 @@ protected:
 	inline static bool IsWhiteSpace(int c)
 	{
 		if (c < 256)
-			return IsWhiteSpace((char)c);
+ return IsWhiteSpace((char)c);
 		return false;	// Again, only truly correct for English/Latin...but usually works.
 	}
 
@@ -306,11 +306,11 @@ protected:
 	/*	Reads text. Returns a pointer past the given end tag.
 		Wickedly complex options, but it keeps the (sensitive) code in one place.
 	*/
-	static const char* ReadText(const char* in,				// where to start
-		TIXML_STRING* text,			// the string read
+	static const char* ReadText(const char* in, 	// where to start
+		TIXML_STRING* text, // the string read
 		bool ignoreWhiteSpace,		// whether to keep the white space
-		const char* endTag,			// what ends this text
-		bool ignoreCase,			// whether to ignore case in the end tag
+		const char* endTag, // what ends this text
+		bool ignoreCase, // whether to ignore case in the end tag
 		TiXmlEncoding encoding);	// the current encoding
 
 	// If an entity has been found, transform it into a character.
@@ -323,34 +323,34 @@ protected:
 		ASSERT(p);
 		if (encoding == TIXML_ENCODING_UTF8)
 		{
-			*length = utf8ByteTable[*((const unsigned char*)p)];
-			ASSERT(*length >= 0 && *length < 5);
+ *length = utf8ByteTable[*((const unsigned char*)p)];
+ ASSERT(*length >= 0 && *length < 5);
 		}
 		else
 		{
-			*length = 1;
+ *length = 1;
 		}
 
 		if (*length == 1)
 		{
-			if (*p == '&')
-				return GetEntity(p, _value, length, encoding);
-			*_value = *p;
-			return p + 1;
+ if (*p == '&')
+ 	return GetEntity(p, _value, length, encoding);
+ *_value = *p;
+ return p + 1;
 		}
 		else if (*length)
 		{
-			//strncpy( _value, p, *length );	// lots of compilers don't like this function (unsafe),
-												// and the null terminator isn't needed
-			for (int i = 0; p[i] && i < *length; ++i) {
-				_value[i] = p[i];
-			}
-			return p + (*length);
+ //strncpy( _value, p, *length );	// lots of compilers don't like this function (unsafe),
+    // and the null terminator isn't needed
+ for (int i = 0; p[i] && i < *length; ++i) {
+ 	_value[i] = p[i];
+ }
+ return p + (*length);
 		}
 		else
 		{
-			// Not valid text.
-			return 0;
+ // Not valid text.
+ return 0;
 		}
 	}
 
@@ -381,18 +381,18 @@ protected:
 	{
 		if (encoding == TIXML_ENCODING_UTF8)
 		{
-			if (v < 128) return tolower(v);
-			return v;
+ if (v < 128) return tolower(v);
+ return v;
 		}
 		else
 		{
-			return tolower(v);
+ return tolower(v);
 		}
 	}
 	static void ConvertUTF32ToUTF8(unsigned long input, char* output, int* length);
 
 private:
-	TiXmlBase(const TiXmlBase&);				// not implemented.
+	TiXmlBase(const TiXmlBase&); 	// not implemented.
 	void operator=(const TiXmlBase& base);	// not allowed.
 
 	struct Entity
@@ -453,7 +453,7 @@ public:
 #endif
 
 	/** The types of XML nodes supported by TinyXml. (All the
-			unsupported types are picked up by UNKNOWN.)
+ unsupported types are picked up by UNKNOWN.)
 	*/
 	enum NodeType
 	{
@@ -515,7 +515,7 @@ public:
 
 	const TiXmlNode* FirstChild()	const { return firstChild; }		///< The first child of this node. Will be null if there are no children.
 	TiXmlNode* FirstChild() { return firstChild; }
-	const TiXmlNode* FirstChild(const char* value) const;			///< The first child of this node with the matching 'value'. Will be null if none found.
+	const TiXmlNode* FirstChild(const char* value) const; ///< The first child of this node with the matching 'value'. Will be null if none found.
 	/// The first child of this node with the matching 'value'. Will be null if none found.
 	TiXmlNode* FirstChild(const char* _value) {
 		// Call through to the const version - safe since nothing is changed. Exiting syntax: cast this to a const (always safe)
@@ -525,7 +525,7 @@ public:
 	const TiXmlNode* LastChild() const { return lastChild; }		/// The last child of this node. Will be null if there are no children.
 	TiXmlNode* LastChild() { return lastChild; }
 
-	const TiXmlNode* LastChild(const char* value) const;			/// The last child of this node matching 'value'. Will be null if there are no children.
+	const TiXmlNode* LastChild(const char* value) const; /// The last child of this node matching 'value'. Will be null if there are no children.
 	TiXmlNode* LastChild(const char* _value) {
 		return const_cast<TiXmlNode*> ((const_cast<const TiXmlNode*>(this))->LastChild(_value));
 	}
@@ -540,13 +540,13 @@ public:
 	/** An alternate way to walk the children of a node.
 		One way to iterate over nodes is:
 		@verbatim
-			for( child = parent->FirstChild(); child; child = child->NextSibling() )
+ for( child = parent->FirstChild(); child; child = child->NextSibling() )
 		@endverbatim
 
 		IterateChildren does the same thing with the syntax:
 		@verbatim
-			child = 0;
-			while( child = parent->IterateChildren( child ) )
+ child = 0;
+ while( child = parent->IterateChildren( child ) )
 		@endverbatim
 
 		IterateChildren takes the previous child as input and finds
@@ -672,7 +672,7 @@ public:
 
 	/** Query the type (as an enumerated value, above) of this node.
 		The possible types are: DOCUMENT, ELEMENT, COMMENT,
-								UNKNOWN, TEXT, and DECLARATION.
+  		UNKNOWN, TEXT, and DECLARATION.
 	*/
 	int Type() const { return type; }
 
@@ -757,7 +757,7 @@ protected:
 	TiXmlNode* next;
 
 private:
-	TiXmlNode(const TiXmlNode&);				// not implemented.
+	TiXmlNode(const TiXmlNode&); 	// not implemented.
 	void operator=(const TiXmlNode& base);	// not allowed.
 };
 
@@ -803,10 +803,10 @@ public:
 	const char* Name()  const { return name.c_str(); }		///< Return the name of this attribute.
 	const char* Value() const { return value.c_str(); }		///< Return the value of this attribute.
 #ifdef TIXML_USE_STL
-	const std::string& ValueStr() const { return value; }				///< Return the value of this attribute.
+	const std::string& ValueStr() const { return value; } 	///< Return the value of this attribute.
 #endif
-	int				IntValue() const;									///< Return the value of this attribute, converted to an integer.
-	double			DoubleValue() const;								///< Return the value of this attribute, converted to a double.
+	int 	IntValue() const;   ///< Return the value of this attribute, converted to an integer.
+	double DoubleValue() const;  		///< Return the value of this attribute, converted to a double.
 
 	// Get the tinyxml string representation
 	const TIXML_STRING& NameTStr() const { return name; }
@@ -824,11 +824,11 @@ public:
 	/// QueryDoubleValue examines the value string. See QueryIntValue().
 	int QueryDoubleValue(double* _value) const;
 
-	void SetName(const char* _name) { name = _name; }				///< Set the name of this attribute.
-	void SetValue(const char* _value) { value = _value; }				///< Set the value.
+	void SetName(const char* _name) { name = _name; } 	///< Set the name of this attribute.
+	void SetValue(const char* _value) { value = _value; } 	///< Set the value.
 
-	void SetIntValue(int _value);										///< Set the value from an integer.
-	void SetDoubleValue(double _value);								///< Set the value from a double.
+	void SetIntValue(int _value);   	///< Set the value from an integer.
+	void SetDoubleValue(double _value);  		///< Set the value from a double.
 
 #ifdef TIXML_USE_STL
 	/// STL std::string form.
@@ -854,7 +854,7 @@ public:
 	bool operator>(const TiXmlAttribute& rhs)  const { return name > rhs.name; }
 
 	/*	Attribute parsing starts: first letter of the name
-						 returns: the next char after the value end quote
+   returns: the next char after the value end quote
 	*/
 	virtual const char* Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding);
 
@@ -869,7 +869,7 @@ public:
 	void SetDocument(TiXmlDocument* doc) { document = doc; }
 
 private:
-	TiXmlAttribute(const TiXmlAttribute&);				// not implemented.
+	TiXmlAttribute(const TiXmlAttribute&); 	// not implemented.
 	void operator=(const TiXmlAttribute& base);	// not allowed.
 
 	TiXmlDocument* document;	// A pointer back to a document, for error reporting.
@@ -983,7 +983,7 @@ public:
 		double d;
 		int result = QueryDoubleAttribute(name, &d);
 		if (result == TIXML_SUCCESS) {
-			*_value = (float)d;
+ *_value = (float)d;
 		}
 		return result;
 	}
@@ -998,12 +998,12 @@ public:
 	{
 		const TiXmlAttribute* node = attributeSet.Find(name);
 		if (!node)
-			return TIXML_NO_ATTRIBUTE;
+ return TIXML_NO_ATTRIBUTE;
 
 		std::stringstream sstream(node->ValueStr());
 		sstream >> *outValue;
 		if (!sstream.fail())
-			return TIXML_SUCCESS;
+ return TIXML_SUCCESS;
 		return TIXML_WRONG_TYPE;
 	}
 #endif
@@ -1077,8 +1077,8 @@ public:
 		GetText() will return "This is ".
 
 		WARNING: GetText() accesses a child node - don't become confused with the
-				 similarly named TiXmlHandle::Text() and TiXmlNode::ToText() which are
-				 safe type casts on the referenced node.
+ 	 similarly named TiXmlHandle::Text() and TiXmlNode::ToText() which are
+ 	 safe type casts on the referenced node.
 	*/
 	const char* GetText() const;
 
@@ -1088,7 +1088,7 @@ public:
 	virtual void Print(FILE* cfile, int depth) const;
 
 	/*	Attribtue parsing starts: next char past '<'
-						 returns: next char past '>'
+   returns: next char past '>'
 	*/
 	virtual const char* Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding);
 
@@ -1141,7 +1141,7 @@ public:
 	virtual void Print(FILE* cfile, int depth) const;
 
 	/*	Attribtue parsing starts: at the ! of the !--
-						 returns: next char past '>'
+   returns: next char past '>'
 	*/
 	virtual const char* Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding);
 
@@ -1225,7 +1225,7 @@ protected:
 #endif
 
 private:
-	bool cdata;			// true if this should be input and output as a CDATA style text element
+	bool cdata; // true if this should be input and output as a CDATA style text element
 };
 
 /** In correct XML the declaration is the first entry in the file.
@@ -1385,7 +1385,7 @@ public:
 	bool SaveFile(FILE*) const;
 
 #ifdef TIXML_USE_STL
-	bool LoadFile(const std::string& filename, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING)			///< STL std::string version.
+	bool LoadFile(const std::string& filename, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING) ///< STL std::string version.
 	{
 		//		StringToBuffer f( filename );
 		//		return ( f.buffer && LoadFile( f.buffer, encoding ));
@@ -1524,8 +1524,8 @@ private:
 	@verbatim
 	<Document>
 		<Element attributeA = "valueA">
-			<Child attributeB = "value1" />
-			<Child attributeB = "value2" />
+ <Child attributeB = "value1" />
+ <Child attributeB = "value2" />
 		</Element>
 	<Document>
 	@endverbatim
@@ -1540,13 +1540,13 @@ private:
 		TiXmlElement* element = root->FirstChildElement( "Element" );
 		if ( element )
 		{
-			TiXmlElement* child = element->FirstChildElement( "Child" );
-			if ( child )
-			{
-				TiXmlElement* child2 = child->NextSiblingElement( "Child" );
-				if ( child2 )
-				{
-					// Finally do something useful.
+ TiXmlElement* child = element->FirstChildElement( "Child" );
+ if ( child )
+ {
+ 	TiXmlElement* child2 = child->NextSiblingElement( "Child" );
+ 	if ( child2 )
+ 	{
+ 		// Finally do something useful.
 	@endverbatim
 
 	And that doesn't even cover "else" cases. TiXmlHandle addresses the verbosity
@@ -1576,7 +1576,7 @@ private:
 	{
 		TiXmlElement* child = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", i ).ToElement();
 		if ( !child )
-			break;
+ break;
 		// do something
 		++i;
 	}
@@ -1745,7 +1745,7 @@ public:
 private:
 	void DoIndent() {
 		for (int i = 0; i < depth; ++i)
-			buffer += indent;
+ buffer += indent;
 	}
 	void DoLineBreak() {
 		buffer += lineBreak;
