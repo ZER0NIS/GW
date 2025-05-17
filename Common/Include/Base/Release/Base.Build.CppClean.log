@@ -1,5 +1,4 @@
 e:\gw\release\base.pdb
-e:\gw\common\include\base\release\timer.obj
 e:\gw\common\include\base\release\threadpool.obj
 e:\gw\common\include\base\release\thread.obj
 e:\gw\common\include\base\release\systimer.obj
@@ -7,6 +6,7 @@ e:\gw\common\include\base\release\svrbase.obj
 e:\gw\common\include\base\release\string.obj
 e:\gw\common\include\base\release\singleton.obj
 e:\gw\common\include\base\release\queue.obj
+e:\gw\common\include\base\release\msg.obj
 e:\gw\common\include\base\release\mempool.obj
 e:\gw\common\include\base\release\map.obj
 e:\gw\common\include\base\release\logsystem.obj
@@ -25,7 +25,7 @@ e:\gw\common\include\base\release\tinyxmlerror.obj
 e:\gw\common\include\base\release\tinyxml.obj
 e:\gw\common\include\base\release\tinystr.obj
 e:\gw\common\include\base\release\vector.obj
-e:\gw\common\include\base\release\msg.obj
+e:\gw\common\include\base\release\timer.obj
 e:\gw\common\lib\release\base.lib
 e:\gw\common\include\base\release\base.tlog\cl.command.1.tlog
 e:\gw\common\include\base\release\base.tlog\cl.items.tlog

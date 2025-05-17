@@ -1,19 +1,7 @@
-//========================================================
-//
-//    Copyright (c) 2007,欢乐连线工作室
-//    All rights reserved.
-//
-//    文件名称：CirBuffer.h
-//    摘  要：  CirBuffer封装类
-//
-//    当前版本：1.01
-//    作   者： 李锋军
-//    完成日期：2007-12-15
-//    说   明： TCP粘包处理
-//
-//========================================================
 #ifndef _FILE_CIRBUFFER_H
 #define _FILE_CIRBUFFER_H
+
+#include <mutex>
 
 namespace snet
 {
@@ -40,12 +28,13 @@ namespace snet
 		unsigned long m_count;
 
 	private:
-		CircularBuffer(const CircularBuffer&) {}
-		CircularBuffer& operator=(const CircularBuffer&) { return *this; }
+		CircularBuffer(const CircularBuffer&) = delete;
+		CircularBuffer& operator=(const CircularBuffer&) = delete;
+
 		char* buf;
 		size_t m_max;
 
-		CRITICAL_SECTION   m_CriSec;
+		std::mutex m_Mutex;
 	};
 }
 

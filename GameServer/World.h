@@ -109,8 +109,6 @@ public:
 
 	void	RemoveBackBuff(size_t nLen);
 
-	bool IsPackBackOver();
-
 protected:
 private:
 	void            OnSceneChange();
@@ -118,8 +116,6 @@ private:
 	void            OnTradeDangerousPlayer();
 	void            GMStat();
 	void            EntityAI();
-
-	void DBCallBack();
 
 public:
 

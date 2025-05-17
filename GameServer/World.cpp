@@ -28,7 +28,7 @@ volatile bool CWorld::m_stopEvent = false;
 volatile bool CWorld::m_startEvent = false;
 
 CWorld::CWorld(GSMaster* pGSMaster, ServerSocketEventHandle* pSocketHandle) :nFPS(0), nAIFPS(0), g_pBackUpMgr(NULL),
-m_pGSMaster(pGSMaster), m_pSocketHandle(pSocketHandle), m_pSrvIocp(new snet::CIOCP()), m_BackBuff(1024 * 1024 * 2)
+m_pGSMaster(pGSMaster), m_pSocketHandle(pSocketHandle), m_pSrvIocp(new snet::CIOCP()), m_BackBuff(1024 * 1024 * 10)
 {
 	g_lPlayerCount = 0;
 	g_lMainCity = 0;
@@ -115,16 +115,18 @@ bool CWorld::Init()
 	QuestManager::Instance()->Check();
 	m_pGSMaster->GOutPut();
 
-	/*printf(">>Initialize GM service...\n");
+	printf(">>Initialize GM service...\n");
 	CGMMgr::Instance()->Init(this);
-	m_pGSMaster->GOutPut();*/
+	m_pGSMaster->GOutPut();
 
-	//printf(">>Initialize Key Filter...\n");
-	//CKeyWords::Instance()->Init();
-	//m_pGSMaster->GOutPut();
+	printf(">>Initialize Key Filter...\n");
+	CKeyWords::Instance()->Init();
+	m_pGSMaster->GOutPut();
 
 	//m_TimerArray[TIMER_LOGIC].Startup(HINT_TIMEOUT);
 	//m_TimerArray[TIMER_GM].Startup(GM_TIMEOUT);
+
+	//m_BackBuff.Initnalize();
 
 	return true;
 }
@@ -137,9 +139,7 @@ void CWorld::Run()
 
 	GameLogic();
 
-	GMStat();
-
-	DBCallBack();
+	//GMStat();
 
 	snet::CSocket* ClosedSocket = NULL;
 
@@ -548,19 +548,7 @@ bool CWorld::WriteToBackBuff(char* pMsg, size_t iLen)
 {
 	sbase::CSingleLock xLock(&m_xBackLock);
 
-	if (((MsgHead*)pMsg)->usSize > 6004 || 0 == strlen(((BACKUP_MSG*)pMsg)->SQL)) {
-		USHORT usType = ((MsgHead*)pMsg)->usType;
-
-		LOGERR->OutInfo("DBBuffError", "Type:%d", usType);
-		ASSERT(0);
-		return false;
-	}
-
-	if (!m_BackBuff.Write(pMsg, iLen))
-	{
-		LOGERR->OutInfo("DBPending", "%s", pMsg);
-		return false;
-	}
+	m_BackBuff.Write(pMsg, iLen);
 
 	return true;
 }
@@ -571,7 +559,6 @@ bool CWorld::ReadBackBuff(char** Paket)
 	if (nLen > sizeof(sbase::MsgHead) && m_BackBuff.GetStart()) {
 		sbase::MsgHead* pHead = (sbase::MsgHead*)m_BackBuff.GetStart();
 		if (nLen >= pHead->usSize) {
-			//*Paket = m_BackBuff.GetStart();
 			return m_BackBuff.Read((char*)Paket, pHead->usSize);
 		}
 		else {
@@ -584,6 +571,7 @@ bool CWorld::ReadBackBuff(char** Paket)
 
 	return false;
 }
+
 void CWorld::RemoveBackBuff(size_t nLen)
 {
 	sbase::CSingleLock xLock(&m_xBackLock);

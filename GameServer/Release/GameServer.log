@@ -1,15 +1,4 @@
-﻿  stdafx.cpp
-E:\GW\Common\Include\cNet\stdafx.h(25,9): warning C4005: 'DEFAULT_BUFFER_SIZE': redefinición de macro
-  (compilando archivo de origen "stdafx.cpp")
-      E:\GW\Common\Include\sNet\stdafx.h(30,10):
-      vea la definición anterior de “DEFAULT_BUFFER_SIZE”
-  
-E:\GW\Common\Include\cNet\stdafx.h(26,9): warning C4005: 'DEFAULT_OVERLAPPED_COUNT': redefinición de macro
-  (compilando archivo de origen "stdafx.cpp")
-      E:\GW\Common\Include\sNet\stdafx.h(29,10):
-      vea la definición anterior de “DEFAULT_OVERLAPPED_COUNT”
-  
-  ChatCommand.cpp
+﻿  ChatCommand.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/ChatCommand.cpp")
       E:\GW\Common\Include\Base\Inc\SvrBase.h(73,10):
@@ -75,10 +64,7 @@ E:\GW\GameServer\GameCore\Altar.cpp(28,11): warning C4018: '>=': no coinciden si
 E:\GW\GameServer\GameCore\Altar.cpp(51,92): warning C4018: '<': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Altar.cpp")
   
-  Backup.cpp
-  Bag.cpp
   BaseManager.cpp
-  Buff.cpp
   ChangeRegion.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/ChangeRegion.cpp")
@@ -97,8 +83,6 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Combat.cpp")
   
-  Country.cpp
-  DropItemMgr.cpp
   EquipForge.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/EquipForge.cpp")
@@ -123,7 +107,6 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Error.cpp")
   
-  GMCrl.cpp
   GMMgr.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/GMMgr.cpp")
@@ -141,46 +124,6 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
   
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/GameObject.cpp")
-  
-  Item.cpp
-E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
-  (compilando archivo de origen "/GameCore/Item.cpp")
-      E:\GW\Common\Include\Base\Inc\SvrBase.h(73,10):
-      vea la definición anterior de “ASSERT”
-  
-E:\GW\GameServer\GameCore\Item.cpp(280,33): warning C4244: '+=': conversión de 'float' a 'LONG'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/Item.cpp")
-  
-E:\GW\GameServer\GameCore\Item.cpp(283,35): warning C4244: '+=': conversión de 'float' a 'LONG'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/Item.cpp")
-  
-E:\GW\GameServer\GameCore\Item.cpp(382,33): warning C4244: '-=': conversión de 'float' a 'LONG'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/Item.cpp")
-  
-E:\GW\GameServer\GameCore\Item.cpp(385,35): warning C4244: '-=': conversión de 'float' a 'LONG'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/Item.cpp")
-  
-  Compilando...
-  ItemBackup.cpp
-E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
-      E:\GW\Common\Include\Base\Inc\SvrBase.h(73,10):
-      vea la definición anterior de “ASSERT”
-  
-E:\GW\GameServer\GameCore\ItemBackup.cpp(47,30): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
-  
-E:\GW\GameServer\GameCore\ItemBackup.cpp(48,30): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
-  
-E:\GW\GameServer\GameCore\ItemBackup.cpp(128,30): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
-  
-E:\GW\GameServer\GameCore\ItemBackup.cpp(129,30): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
-  
-E:\GW\GameServer\GameCore\ItemBackup.cpp(130,33): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/ItemBackup.cpp")
   
   ItemManager.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
@@ -269,7 +212,6 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Map.cpp")
   
-  Mat.cpp
   Monster.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/Monster.cpp")
@@ -291,9 +233,6 @@ E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinci
 E:\GW\GameServer\GameCore\NPC.cpp(775,21): warning C4018: '<': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/NPC.cpp")
   
-  Obj.cpp
-  ObjMgr.cpp
-  Obstacle.cpp
   Player.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/Player.cpp")
@@ -303,61 +242,62 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(156,16): warning C4553: "==": el resultado de la expresión no se usa. ¿Quiso decir "="?
+E:\GW\GameServer\GameCore\Player.cpp(173,16): warning C4553: "==": el resultado de la expresión no se usa. ¿Quiso decir "="?
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(268,26): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
+E:\GW\GameServer\GameCore\Player.cpp(309,26): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
   (compilando archivo de origen "/GameCore/Player.cpp")
-      E:\GW\GameServer\GameCore\Player.cpp(268,26):
+      E:\GW\GameServer\GameCore\Player.cpp(309,26):
       los marcadores de posición y sus parámetros esperan 0 argumentos variádicos, pero se proporcionaron 1
   
-E:\GW\GameServer\GameCore\Player.cpp(983,29): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+E:\GW\GameServer\GameCore\Player.cpp(1180,29): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
   (compilando archivo de origen "/GameCore/Player.cpp")
-      E:\GW\GameServer\GameCore\Player.cpp(983,29):
+      E:\GW\GameServer\GameCore\Player.cpp(1180,29):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\GameServer\GameCore\Player.cpp(983,29):
+      E:\GW\GameServer\GameCore\Player.cpp(1180,29):
       considere el uso de ' %I64d' en la cadena de formato
   
-E:\GW\GameServer\GameCore\Player.cpp(1013,32): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+E:\GW\GameServer\GameCore\Player.cpp(1210,32): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
   (compilando archivo de origen "/GameCore/Player.cpp")
-      E:\GW\GameServer\GameCore\Player.cpp(1013,32):
+      E:\GW\GameServer\GameCore\Player.cpp(1210,32):
       considere el uso de ' %lld' en la cadena de formato
-      E:\GW\GameServer\GameCore\Player.cpp(1013,32):
+      E:\GW\GameServer\GameCore\Player.cpp(1210,32):
       considere el uso de ' %I64d' en la cadena de formato
   
-E:\GW\GameServer\GameCore\Player.cpp(3185,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3731,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3207,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3758,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3229,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3785,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3251,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3812,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3266,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3833,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3281,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3852,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3296,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3871,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3335,37): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3914,37): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3344,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3926,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3350,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3935,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
-E:\GW\GameServer\GameCore\Player.cpp(3362,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
+E:\GW\GameServer\GameCore\Player.cpp(3951,36): warning C4267: '=': conversión de 'size_t' a 'USHORT'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/Player.cpp")
   
+  Compilando...
   PlayerAttack.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/PlayerAttack.cpp")
@@ -382,16 +322,16 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/PlayerItem.cpp")
   
-E:\GW\GameServer\GameCore\PlayerItem.cpp(686,27): warning C4305: 'return': truncamiento de 'int' a 'bool'
+E:\GW\GameServer\GameCore\PlayerItem.cpp(810,27): warning C4305: 'return': truncamiento de 'int' a 'bool'
   (compilando archivo de origen "/GameCore/PlayerItem.cpp")
   
-E:\GW\GameServer\GameCore\PlayerItem.cpp(687,34): warning C4305: 'return': truncamiento de 'int' a 'bool'
+E:\GW\GameServer\GameCore\PlayerItem.cpp(811,34): warning C4305: 'return': truncamiento de 'int' a 'bool'
   (compilando archivo de origen "/GameCore/PlayerItem.cpp")
   
-E:\GW\GameServer\GameCore\PlayerItem.cpp(695,28): warning C4305: 'return': truncamiento de 'int' a 'bool'
+E:\GW\GameServer\GameCore\PlayerItem.cpp(819,28): warning C4305: 'return': truncamiento de 'int' a 'bool'
   (compilando archivo de origen "/GameCore/PlayerItem.cpp")
   
-E:\GW\GameServer\GameCore\PlayerItem.cpp(696,35): warning C4305: 'return': truncamiento de 'int' a 'bool'
+E:\GW\GameServer\GameCore\PlayerItem.cpp(820,35): warning C4305: 'return': truncamiento de 'int' a 'bool'
   (compilando archivo de origen "/GameCore/PlayerItem.cpp")
   
   PlayerQuest.cpp
@@ -421,10 +361,6 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/PlayerTeam.cpp")
   
-  QuestDef.cpp
-E:\GW\GameServer\GameCore\QuestDef.h(387,16): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
-  (compilando archivo de origen "/GameCore/QuestDef.cpp")
-  
   QuestManager.cpp
 E:\GW\GameServer\GameCore\QuestDef.h(387,16): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
   (compilando archivo de origen "/GameCore/QuestManager.cpp")
@@ -446,17 +382,16 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameCore/Region.cpp")
   
-E:\GW\GameServer\GameCore\Region.cpp(2307,91): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
+E:\GW\GameServer\GameCore\Region.cpp(2306,91): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
   (compilando archivo de origen "/GameCore/Region.cpp")
-      E:\GW\GameServer\GameCore\Region.cpp(2307,91):
+      E:\GW\GameServer\GameCore\Region.cpp(2306,91):
       los marcadores de posición y sus parámetros esperan 0 argumentos variádicos, pero se proporcionaron 1
   
-E:\GW\GameServer\GameCore\Region.cpp(2334,91): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
+E:\GW\GameServer\GameCore\Region.cpp(2333,91): warning C4474: "sprintf": se pasaron demasiados argumentos para la cadena de formato
   (compilando archivo de origen "/GameCore/Region.cpp")
-      E:\GW\GameServer\GameCore\Region.cpp(2334,91):
+      E:\GW\GameServer\GameCore\Region.cpp(2333,91):
       los marcadores de posición y sus parámetros esperan 0 argumentos variádicos, pero se proporcionaron 1
   
-  Compilando...
   RegionIni.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/GameCore/RegionIni.cpp")
@@ -551,19 +486,73 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/GameScript.cpp")
   
-E:\GW\GameServer\GameScript.cpp(1337,52): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\GameServer\GameScript.cpp(201,10): warning C4566: el carácter representado por el nombre de carácter universal '\u91A0' no se puede representar en la página de códigos actual (1252)
   (compilando archivo de origen "/GameScript.cpp")
   
-E:\GW\GameServer\GameScript.cpp(1348,40): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\GameServer\GameScript.cpp(224,10): warning C4566: el carácter representado por el nombre de carácter universal '\u91A0' no se puede representar en la página de códigos actual (1252)
   (compilando archivo de origen "/GameScript.cpp")
   
-E:\GW\GameServer\GameScript.cpp(1412,42): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\GameServer\GameScript.cpp(1332,52): warning C4018: '<': no coinciden signed/unsigned
   (compilando archivo de origen "/GameScript.cpp")
   
-E:\GW\GameServer\GameScript.cpp(1423,46): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\GameServer\GameScript.cpp(1343,40): warning C4018: '<': no coinciden signed/unsigned
   (compilando archivo de origen "/GameScript.cpp")
   
-E:\GW\GameServer\GameScript.cpp(1431,44): warning C4018: '<': no coinciden signed/unsigned
+E:\GW\GameServer\GameScript.cpp(1407,42): warning C4018: '<': no coinciden signed/unsigned
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1418,46): warning C4018: '<': no coinciden signed/unsigned
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1426,44): warning C4018: '<': no coinciden signed/unsigned
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1906,19): warning C4566: el carácter representado por el nombre de carácter universal '\u6539' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1906,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D8' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1906,19): warning C4566: el carácter representado por el nombre de carácter universal '\u5934' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1906,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D1' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1909,19): warning C4566: el carácter representado por el nombre de carácter universal '\u6539' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1909,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D8' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1909,19): warning C4566: el carácter representado por el nombre de carácter universal '\u5934' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1909,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D1' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1947,19): warning C4566: el carácter representado por el nombre de carácter universal '\u6539' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1947,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D8' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1947,19): warning C4566: el carácter representado por el nombre de carácter universal '\u5934' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1947,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D1' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1951,19): warning C4566: el carácter representado por el nombre de carácter universal '\u6539' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1951,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D8' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1951,19): warning C4566: el carácter representado por el nombre de carácter universal '\u5934' no se puede representar en la página de códigos actual (1252)
+  (compilando archivo de origen "/GameScript.cpp")
+  
+E:\GW\GameServer\GameScript.cpp(1951,19): warning C4566: el carácter representado por el nombre de carácter universal '\u53D1' no se puede representar en la página de códigos actual (1252)
   (compilando archivo de origen "/GameScript.cpp")
   
   GameServer.cpp
@@ -576,6 +565,7 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/ListenConnect.cpp")
   
+  Compilando...
   ServiceLoader.cpp
 E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefinición de macro
   (compilando archivo de origen "/ServiceLoader.cpp")
@@ -585,10 +575,10 @@ E:\GW\Common\Include\Base\xml\tinyxml.h(43,10): warning C4005: 'ASSERT': redefin
 E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinciden signed/unsigned
   (compilando archivo de origen "/ServiceLoader.cpp")
   
-E:\GW\GameServer\ServiceLoader.cpp(381,15): warning C4477: 'sprintf' : la cadena de formato '%s' requiere un argumento de tipo 'char *', pero el argumento variádico 1 tiene el tipo 'int'
+E:\GW\GameServer\ServiceLoader.cpp(380,15): warning C4477: 'sprintf' : la cadena de formato '%s' requiere un argumento de tipo 'char *', pero el argumento variádico 1 tiene el tipo 'int'
   (compilando archivo de origen "/ServiceLoader.cpp")
   
-E:\GW\GameServer\ServiceLoader.cpp(2232,21): warning C4018: '>': no coinciden signed/unsigned
+E:\GW\GameServer\ServiceLoader.cpp(2230,21): warning C4018: '>': no coinciden signed/unsigned
   (compilando archivo de origen "/ServiceLoader.cpp")
   
   World.cpp
@@ -602,8 +592,8 @@ E:\GW\GameServer\GameCore\RoleRelation.h(529,31): warning C4018: '>=': no coinci
   
 e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\GameServer.exe) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Run\GameServer\GameServer.exe). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
   Generando código
-  0 of 9813 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  431 of 10045 functions ( 4.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    67 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
   GameServer.vcxproj -> E:\GW\Release\GameServer.exe

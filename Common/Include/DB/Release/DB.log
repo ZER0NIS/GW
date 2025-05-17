@@ -1,4 +1,56 @@
-﻿e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\DB.dll) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Common\Dll\Release\DB.dll). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
+﻿  Database.cpp
+  Record.cpp
+E:\GW\Common\Include\DB\Src\Record.cpp(131,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(131,24):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(131,24):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(133,24): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(133,24):
+      considere el uso de ' %lld' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(133,24):
+      considere el uso de ' %I64d' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(138,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(138,24):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(138,24):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(140,24): warning C4477: 'sprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(140,24):
+      considere el uso de ' %lld' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(140,24):
+      considere el uso de ' %I64d' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(145,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(145,24):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(145,24):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(147,24): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(147,24):
+      considere el uso de ' %lld' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(147,24):
+      considere el uso de ' %I64d' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(152,24): warning C4477: 'sprintf' : la cadena de formato '%u' requiere un argumento de tipo 'unsigned int', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(152,24):
+      considere el uso de ' %llu' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(152,24):
+      considere el uso de ' %I64u' en la cadena de formato
+  
+E:\GW\Common\Include\DB\Src\Record.cpp(154,24): warning C4477: 'sprintf' : la cadena de formato '%ld' requiere un argumento de tipo 'long', pero el argumento variádico 1 tiene el tipo '__int64'
+      E:\GW\Common\Include\DB\Src\Record.cpp(154,24):
+      considere el uso de ' %lld' en la cadena de formato
+      E:\GW\Common\Include\DB\Src\Record.cpp(154,24):
+      considere el uso de ' %I64d' en la cadena de formato
+  
+  Recordset.cpp
+E:\GW\Common\Include\DB\Src\Recordset.cpp(292,28): warning C4477: 'sprintf' : la cadena de formato '%s' requiere un argumento de tipo 'char *', pero el argumento variádico 2 tiene el tipo 'rade_db::IData'
+e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\DB.dll) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Common\Dll\Release\DB.dll). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
      Creando biblioteca ../../LIB/Release/DB.lib y objeto ../../LIB/Release/DB.exp
   Generando código
   0 of 1044 functions ( 0.0%) were compiled, the rest were copied from previous compilation.

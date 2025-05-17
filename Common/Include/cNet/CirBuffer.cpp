@@ -30,13 +30,11 @@ namespace cnet
 	CircularBuffer::~CircularBuffer()
 	{
 		delete[] buf;
-		::DeleteCriticalSection(&m_CriSec);
 	}
 
 	void CircularBuffer::Initnalize()
 	{
 		Clear();
-		::InitializeCriticalSection(&m_CriSec);
 	};
 
 	void CircularBuffer::Clear()
@@ -49,7 +47,7 @@ namespace cnet
 
 	bool CircularBuffer::Write(const char* s, size_t l)
 	{
-		::EnterCriticalSection(&m_CriSec);
+		std::lock_guard<std::mutex> lock(m_Mutex);
 
 		if (m_q + l > m_max)
 		{
@@ -59,8 +57,7 @@ namespace cnet
 				stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
 				stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond,
 				stLocalTime.wMilliseconds);
-			::LeaveCriticalSection(&m_CriSec);
-			//溢出
+
 			return false;
 		}
 		m_count += (unsigned long)l;
@@ -81,18 +78,18 @@ namespace cnet
 			m_q += l;
 		}
 
-		::LeaveCriticalSection(&m_CriSec);
+		// 	::LeaveCriticalSection(&m_CriSec);
 		return true;
 	}
 
 	bool CircularBuffer::Read(char* s, size_t l)
 	{
-		::EnterCriticalSection(&m_CriSec);
+		std::lock_guard<std::mutex> lock(m_Mutex);
 
 		if (l > m_q)
 		{
-			::LeaveCriticalSection(&m_CriSec);
-			//没有足够的缓冲
+			// 	::LeaveCriticalSection(&m_CriSec);
+				//没有足够的缓冲
 			return false;
 		}
 		if (m_b + l > m_max)
@@ -122,18 +119,18 @@ namespace cnet
 			m_b = m_t = 0;
 		}
 
-		::LeaveCriticalSection(&m_CriSec);
+		// 	::LeaveCriticalSection(&m_CriSec);
 
 		return true;
 	}
 
 	bool CircularBuffer::SoftRead(char* s, size_t l)
 	{
-		::EnterCriticalSection(&m_CriSec);
+		std::lock_guard<std::mutex> lock(m_Mutex);
 
 		if (l > m_q)
 		{
-			::LeaveCriticalSection(&m_CriSec);
+			// 	::LeaveCriticalSection(&m_CriSec);
 			return false;
 		}
 		if (m_b + l > m_max)
@@ -153,7 +150,7 @@ namespace cnet
 			}
 		}
 
-		::LeaveCriticalSection(&m_CriSec);
+		// 	::LeaveCriticalSection(&m_CriSec);
 		return true;
 	}
 

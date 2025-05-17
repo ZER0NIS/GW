@@ -345,7 +345,8 @@ namespace snet
 
 				if (NO_ERROR != Error)
 				{
-					EnterCriticalSection(&Clientobj->SockCritSec);
+					std::lock_guard<std::mutex> lock(Clientobj->SockMutex);
+
 					if ((Clientobj->OutstandingSend == 0) &&
 						(Clientobj->OutstandingRecv == 0))
 					{
@@ -359,7 +360,6 @@ namespace snet
 					}
 
 					Error = NO_ERROR;
-					LeaveCriticalSection(&Clientobj->SockCritSec);
 				}
 			}
 
@@ -399,7 +399,8 @@ namespace snet
 			}
 			else
 			{
-				EnterCriticalSection(&Sockobj->SockCritSec);
+				std::lock_guard<std::mutex> lock(Clientobj->SockMutex);
+
 				Sockobj->m_BClosing = TRUE;
 				FreePerIOData(Buf);
 				if ((Sockobj->OutstandingSend == 0) &&
@@ -407,7 +408,7 @@ namespace snet
 				{
 					bCleanupSocket = TRUE;
 				}
-				LeaveCriticalSection(&Sockobj->SockCritSec);
+				//LeaveCriticalSection(&Sockobj->SockCritSec);
 			}
 		}
 		else if (Buf->m_iOperation == OP_WRITE)
@@ -430,14 +431,15 @@ namespace snet
 			}
 			else
 			{
-				EnterCriticalSection(&Sockobj->SockCritSec);
+				std::lock_guard<std::mutex> lock(Clientobj->SockMutex);
+
 				Sockobj->m_BClosing = TRUE;
 				if ((Sockobj->OutstandingSend == 0) &&
 					(Sockobj->OutstandingRecv == 0))
 				{
 					bCleanupSocket = TRUE;
 				}
-				LeaveCriticalSection(&Sockobj->SockCritSec);
+				//LeaveCriticalSection(&Sockobj->SockCritSec);
 			}
 
 			FreePerIOData(Buf);

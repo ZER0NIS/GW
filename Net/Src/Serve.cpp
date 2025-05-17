@@ -16,7 +16,6 @@ namespace serve
 	{
 	}
 
-	//////////////////////////////////////////////////////////////////////
 	CServe::~CServe()
 	{
 		SAFE_DELETE(m_pThread);
@@ -31,11 +30,8 @@ namespace serve
 	{
 		const DWORD dwServeInterval = m_serve->GetInterval();
 
-		//启动接受线程
-		m_pThread = sbase::CThread::CreateNew(*this, sbase::CThread::RUN, dwServeInterval);
+		m_pThread = sbase::CThread::CreateNew(*this, 0, dwServeInterval);
 		ASSERT(m_pThread != NULL);
-		//::OutputDebugStr(_T("网络线程启动!\n"));
-
 		return !!m_pThread;
 	}
 }

@@ -858,8 +858,6 @@ bool CPlayer::QuestTeamLimit(int qid)//组队限制检查
 	default:
 		return true;
 	}
-
-	return false;
 }
 
 bool CPlayer::QuestClassLimit(int qid)//职业限制检查

@@ -1,4 +1,8 @@
-﻿e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\LoginServer.exe) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Run\LoginServer\LoginServer.exe). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
+﻿  Command.cpp
+  LoginLogic.cpp
+  LoginServer.cpp
+  Session.cpp
+e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\LoginServer.exe) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Run\LoginServer\LoginServer.exe). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
   Generando código
   Not all modules are compiled with -Gy (function comdat), build without incremental LTCG.
   Generación de código finalizada

@@ -1,17 +1,3 @@
-//========================================================
-//
-//    Copyright (c) 2006,欢乐连线工作室
-//    All rights reserved.
-//
-//    文件名称 ： GameLogic.h
-//    摘    要 ： 游戏服务器逻辑框架
-//
-//    当前版本 ： 1.00
-//    作    者 ： 林德辉
-//    完成日期 ： 2007-01-08
-//
-//========================================================
-
 #include "stdafx.h"
 #include <mmsystem.h>
 #include "GSMaster.h"
@@ -39,15 +25,15 @@ BYTE GSMaster::GetTotalPlayerNum()
 	BYTE status;
 	if (per <= 0.60000f && per >= 0.00000f)
 	{
-		status = 1; //正常
+		status = 1;
 	}
 	else if (per <= 0.800000f && per >= 0.60000f)
 	{
-		status = 2; //繁忙
+		status = 2;
 	}
 	else
 	{
-		status = 3; //已满
+		status = 3;
 	}
 	return status;
 }
@@ -56,7 +42,6 @@ void   CWorld::OnNewEnterGameWorld()
 {
 	snet::CSocket* pNewSocket = m_pSrvIocp->PopNewConnect();
 
-	//处理玩家登陆
 	while (NULL != pNewSocket)
 	{
 		assert(pNewSocket->m_pIOCP);
@@ -92,13 +77,10 @@ void CWorld::NewSocketProc(CPlayer* pPlayer)
 			default:
 				return;
 			}
-
-			//pSocket->Remove(pszBuff->usSize);
-		} // end while
+		}
 	}
 	else
 	{
-		//客户端关闭
 		m_pSrvIocp->PushNewClose(pSocket);
 		DelPlayer(pPlayer);
 		pPlayer->DelayExit(0);
@@ -137,7 +119,6 @@ void   CWorld::OnReadlyForGame()
 		{
 			itor = g_setPlayer.erase(itor);
 
-			//客户端关闭
 			if (p->IsMove())
 			{
 				printf("%s刚准备进入就异常退出游戏！\n", p->GetName());
@@ -151,19 +132,14 @@ void   CWorld::OnReadlyForGame()
 
 long CWorld::GameLogic(void)
 {
-	// 用于场景切换
 	OnSceneChange();
 
-	//AI逻辑
 	EntityAI();
 
-	//刷新任务
 	QuestManager::Instance()->UpData();
 
-	//每日公会消耗刷新
 	g_pConsortiaManager->UpData();
 
-	//危险份子
 	OnTradeDangerousPlayer();
 
 	return 0;
@@ -193,7 +169,6 @@ void CWorld::OnSceneChange()
 		{
 			tarSceneChange* p = *it;
 			p->pPlayer->ClearPath();
-			//	p->pPlayer->SetPos( p->x, 0.0f, p->z, true );
 			p->pPlayer->SetfX(p->x);
 			p->pPlayer->SetfZ(p->z);
 			GetRegion(p->lFromSceneID)->RemoveObject(p->pPlayer->GetID());
@@ -226,7 +201,6 @@ void CWorld::UpdateGameLoginQueue()
 		CPlayer* pPlayer = *itor;
 		if (!pPlayer->RefreshLoginQueue(Index))
 		{
-			//排队结束
 			itor = g_QueuePlayerVec.erase(itor);
 		}
 		else
@@ -240,19 +214,18 @@ void CWorld::UpdateGameLoginQueue()
 
 void CWorld::OnTradeDangerousPlayer()
 {
-	// 用于踢人
 	if (g_listKickPlayer.size() != 0)
 	{
 		for (list< CPlayer* >::iterator it = g_listKickPlayer.begin(); it != g_listKickPlayer.end(); it++)
 		{
 			CPlayer* pPlayer = *it;
-			if (pPlayer->GetlFaction() == 1)  //athen
+			if (pPlayer->GetlFaction() == 1)
 			{
 				pPlayer->SetlRegionID(pPlayer->GetRegion()->GetAthensRevival()->MapID);
 				pPlayer->SetfX(pPlayer->GetRegion()->GetAthensRevival()->X);
 				pPlayer->SetfZ(pPlayer->GetRegion()->GetAthensRevival()->Z);
 			}
-			else if (pPlayer->GetlFaction() == 0) //sparta
+			else if (pPlayer->GetlFaction() == 0)
 			{
 				pPlayer->SetlRegionID(pPlayer->GetRegion()->GetSpartaRevival()->MapID);
 				pPlayer->SetfX(pPlayer->GetRegion()->GetSpartaRevival()->X);
@@ -266,11 +239,6 @@ void CWorld::OnTradeDangerousPlayer()
 
 void  CWorld::GMStat()
 {
-	if (m_TimerArray[TIMER_GM].IsExpire())
-	{
-		m_TimerArray[TIMER_GM].Update();
-		//sbase::LogSave("GM", "The max online: %d ", GetNowPlayer());
-	}
 }
 
 void   CWorld::EntityAI()
@@ -307,18 +275,4 @@ void   CWorld::EntityAI()
 			GetRepRegion(i)->AI();
 		}
 	}
-}
-
-void  CWorld::DBCallBack() {
-	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
-	if (DB)
-		DB->CallBackAsyncSQL();
-
-	//if (!this->isRepetitionServer())
-	//{
-	//	rade_db::IDatabase* DBName = CGameObject::s_World->GetDBAddr(DB_NAME);
-	//	if (DBName)
-	//		DBName->CallBackAsyncSQL();
-	//}
-	//MAKE_LOG_END_LOGIC;
 }

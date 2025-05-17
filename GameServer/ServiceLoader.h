@@ -1,3 +1,21 @@
+//========================================================
+//
+//    Copyright (c) 2006,欢乐连线工作室
+//    All rights reserved.
+//
+//    文件名称 ： ServieLoader.h
+//    摘    要 ： 游戏服务器初始化
+//
+//    当前版本 ： 1.01
+//    作    者 ： 李锋军
+//    完成日期 ： 2007-01-18
+
+//    当前版本 ： 1.02
+//    作    者 ： 李锋军
+//    完成日期 ： 2007-05-23
+//    修改说明 ： 1,将每条消息处理函数都返回一个eError的错误代码，用于客户端返回
+//========================================================
+
 #pragma  once
 
 #include "ErrorMessage.h"
@@ -14,7 +32,7 @@
 #define  CHECKT_PIPE_TIMER	30000
 
 #define  MAX_THREAD_DB  1
-enum STATE_TYPE { OFFLINE, NORMAL, BUSY, FULL };
+enum STATE_TYPE { OFFLINE, NORMAL, BUSY, FULL };  //开启,空闲,繁忙,已满,关闭
 enum DB_TYPE { DB_PRI, DB_READ, DB_WRITE, DB_NONE };
 
 class ServerSocketEventHandle;
@@ -44,6 +62,7 @@ struct CSockHandle
 #pragma pack(pop)
 
 class CWorld;
+//游戏世界服务基类
 class  IService
 {
 	enum eServiceStatus
@@ -69,6 +88,7 @@ public:
 	CWorld* m_pWorld;
 };
 
+//数据库服务
 class  DBService : public IService
 {
 #define  DB_TIMER	5000
@@ -80,9 +100,10 @@ public:
 	void* GetValue() { return m_pDB; }
 protected:
 private:
-	rade_db::IDatabase* m_pDB;
+	rade_db::IDatabase* m_pDB/*[MAX_THREAD_DB]*/;
 };
 
+//管道服务
 class  PipeService : public IService, private sbase::IThreadEvent
 {
 	typedef ipc_np::CPipe* (*CreatePipeClient)(const char*, const char*, const char*, const char*);
@@ -136,6 +157,7 @@ struct KeyCommand
 	long lID;
 };
 
+//命令行服务
 class  CommandService : public IService
 {
 #define  COMMAND_TIMER	50
@@ -150,24 +172,24 @@ private:
 	long ParseCommand(char* Argcommand);
 	KeyCommand* GetConmandFunTable();
 public:
-	void Key_Help(char*, pFunPrintf);
-	void Key_Exit(char*, pFunPrintf);
-	void Key_Quit(char*, pFunPrintf);
-	void Key_List(char*, pFunPrintf);
-	void Key_Fps(char*, pFunPrintf);
-	void Key_Resource(char*, pFunPrintf);
-	void Key_Reset(char*, pFunPrintf);
-	void Key_Role(char*, pFunPrintf);
-	void Key_Accounts(char*, pFunPrintf);
-	void Key_Queue(char*, pFunPrintf);
-	void Key_Reloadselling(char*, pFunPrintf);
-	void Key_Reloadquest(char*, pFunPrintf);
-	void Key_Broadcast(char*, pFunPrintf);
-	void Key_Send(char*, pFunPrintf);
-	void Key_SaveAll(char*, pFunPrintf);
-	void Key_Kick(char*, pFunPrintf);
-	void Key_Move(char*, pFunPrintf);
-	void Key_Expand(char*, pFunPrintf);
+	void Key_Help(char*, pFunPrintf);           //帮助
+	void Key_Exit(char*, pFunPrintf);           //立即关闭服务器
+	void Key_Quit(char*, pFunPrintf);           //指定的秒数后关闭服务器
+	void Key_List(char*, pFunPrintf);           //玩家列表
+	void Key_Fps(char*, pFunPrintf);            //AI帧数
+	void Key_Resource(char*, pFunPrintf);       //资源
+	void Key_Reset(char*, pFunPrintf);          //重置
+	void Key_Role(char*, pFunPrintf);           //角色信息
+	void Key_Accounts(char*, pFunPrintf);       //帐号信息
+	void Key_Queue(char*, pFunPrintf);          //消息队列状态
+	void Key_Reloadselling(char*, pFunPrintf);  //摆摊
+	void Key_Reloadquest(char*, pFunPrintf);    //任务
+	void Key_Broadcast(char*, pFunPrintf);      //世界范围广播系统消息
+	void Key_Send(char*, pFunPrintf);           //给一个玩家发送消息
+	void Key_SaveAll(char*, pFunPrintf);        //保存所有角色
+	void Key_Kick(char*, pFunPrintf);           //将用户踢下线
+	void Key_Move(char*, pFunPrintf);           //移动玩家坐标
+	void Key_Expand(char*, pFunPrintf);         //扩展在线人数上限
 };
 
 #define CMD_FORMAT(a) a,(sizeof(a)-1)
@@ -195,6 +217,7 @@ static KeyCommand Commands[] =
 
 #define  AllCmds sizeof(Commands)/sizeof(KeyCommand)
 
+//注册服务
 class  RegisterService : public IService
 {
 #define  REGISTER_TIMER	 10000
@@ -220,6 +243,7 @@ public:
 
 		return string("");
 	}
+	//校验码缓存
 	static void CacheValidCode(string Accounts, string Valid)
 	{
 		sbase::CSingleLock xLock(&m_xLock);
@@ -255,8 +279,13 @@ private:
 	const char* GetHostIP();
 	bool		RegisterToLoginServer(void);
 	bool		ConnectLoginServer();
+	//	bool	    PackMsg( char* pMsg, int nLen);
 	bool		OnRead();
 	bool		OnWrite();
+	//处理消息
+	//void		ReslovePacket(const void * pPacket, snet::CSocket *pSocket);
+
+	//设置自己状态
 	void		SetState(STATE_TYPE eState) { m_eState = eState; }
 	STATE_TYPE	GetState() { return m_eState; }
 private:
@@ -270,17 +299,19 @@ private:
 	UINT            m_nListenPort;
 	UINT            m_nPlayerNum;
 
+	//自己的状态
 	STATE_TYPE      m_eState;
 
 	bool			m_bIsConnect;
 
 	string			m_strHostIp;
 
-	static map< string, string > m_valid_map;
+	static map< string, string > m_valid_map;	//登入服务器返回的检验码
 	static map< snet::CSocket*, string>  m_Soket_map;
 	static sbase::CCriticalSection m_xLock;
 };
 
+//排队服务
 class  QueueService : public IService
 {
 #define  QUEUE_TIMER	10000
@@ -295,6 +326,7 @@ private:
 	sbase::CCriticalSection m_xLock;
 };
 
+//备份服务
 class  BackUpService : public IService, private sbase::IThreadEvent
 {
 #define  BACKUP_TIMER	 10000

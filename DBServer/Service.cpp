@@ -417,10 +417,10 @@ bool CBackService::Init()
 	if (!LoadNetService())
 		return false;
 
-	m_pThread = sbase::CThread::CreateNew(*this, sbase::CThread::RUN, 10);
+	m_pThread = sbase::CThread::CreateNew(*this, 0, 10);
 	if (m_pThread == NULL)
 		return false;
-	m_pThread->SetThreadAMask(12);
+
 	cout << "Initialize Successfully!\n" << endl;
 	sbase::SetConsoleFontColor(FOREGROUND_INTENSITY);
 

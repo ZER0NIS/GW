@@ -213,12 +213,12 @@ bool GSMaster::Init()
 
 	CWorld::m_startEvent = true;
 
-	m_pThread = sbase::CThread::CreateNew(*this, sbase::CThread::RUN, 11);
+	m_pThread = sbase::CThread::CreateNew(*this, 0, 11);
 	if (!m_pThread)
 	{
 		::MessageBox(NULL, "Create NetWorker thread fail.", "Error", MB_OK | MB_ICONERROR);
 	}
-	m_pThread->SetThreadAMask(12);
+	//m_pThread->SetThreadAMask(12);
 	cout << "\n¡ï¡ï¡ïInitialize successfully!¡ï¡ï¡ï" << endl;
 	sbase::SetConsoleFontColor();
 

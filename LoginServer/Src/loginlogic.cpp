@@ -595,7 +595,7 @@ namespace login
 
 			if (pSocket->IsValid())
 			{
-				printf("[NET] Escribiendo datos para usuario %s\n", itor->second->GetAccount());
+				//printf("[NET] Escribiendo datos para usuario %s\n", itor->second->GetAccount());
 				pSocket->Write();
 
 				if (itor->second->GetAccountFlag())

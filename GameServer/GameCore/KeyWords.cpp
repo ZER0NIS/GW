@@ -1,4 +1,4 @@
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN		// 从 Windows 头中排除极少使用的资料
 
 #include "stdafx.h"
 #include <stdlib.h>
@@ -38,6 +38,7 @@ CKeyWords::CKeyWords(void)
 CKeyWords::~CKeyWords(void)
 {
 }
+// //读取关键字
 int CKeyWords::ReadFile(char* FileName)
 {
 	FILE* stream;
@@ -54,14 +55,15 @@ int CKeyWords::ReadFile(char* FileName)
 	for (this->KeyWordsNum = 0;;)
 	{
 		if (fscanf(stream, "%s", mychar) == EOF) { break; }
-		temp = _com_util::ConvertStringToBSTR(mychar);
+		temp = _com_util::ConvertStringToBSTR(mychar);//转换程宽字符
 
 		lKeyWordsList.push_back(temp);
 		this->KeyWordsNum++;
 	}
 	fclose(stream);
-	if (this->KeyWordsNum == 0) { return 1; }
-	lKeyWordsList.sort();
+	if (this->KeyWordsNum == 0) { return 1; }//没有关键词
+	//	lKeyWordsList.sort(mysort());//排序
+	lKeyWordsList.sort();//排序
 
 	for (iter = this->lKeyWordsList.begin(), i = 0; iter != this->lKeyWordsList.end(); iter++, i++)
 	{
@@ -80,8 +82,8 @@ bool CKeyWords::FindKeyWord(char* pchr)
 
 	wstring str, str1, str2;
 	memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
-	wchr = _com_util::ConvertStringToBSTR(chr);
-	temp = _com_util::ConvertStringToBSTR(pchr);
+	wchr = _com_util::ConvertStringToBSTR(chr);//转换程宽字符
+	temp = _com_util::ConvertStringToBSTR(pchr);//转换程宽字符
 
 	ilen = (int)wcslen(temp);
 	for (int i = 0; i < ilen; i++)
@@ -90,12 +92,12 @@ bool CKeyWords::FindKeyWord(char* pchr)
 		for (index = 0; index < this->KeyWordsNum; index++)
 		{
 			if (isfind == -1) { break; }
-			if (temp[i] == this->sshort[index])
+			if (temp[i] == this->sshort[index])//索引匹配
 			{
 				isfind = 1;
 				str = this->vKeyWordsList[index];
 				keylen = (int)str.length();
-				if ((i + keylen) <= ilen)
+				if ((i + keylen) <= ilen)//不超长
 				{
 					memset(pwchr_temp, 0, sizeof(wchar_t) * 256);
 					wcsncpy(pwchr_temp, temp + i, keylen);
@@ -103,9 +105,11 @@ bool CKeyWords::FindKeyWord(char* pchr)
 					{
 						{ delete[] pwchr_temp; return true; }
 					}
+					//屏蔽通配符类关键字 法%功
 					wildcard = (int)str.find(L"%", 0);
 					if (wildcard != str.npos)
 					{
+						//分别获取两个子串
 						str1 = str;
 						str1.erase(wildcard, str.length() - wildcard);
 						str2 = str;
@@ -135,5 +139,7 @@ bool CKeyWords::FindKeyWord(char* pchr)
 }
 bool CKeyWords::FindBlank(char* pchr)
 {
-	return strchr(pchr, ' ') != nullptr;
+	int  ch = ' ';
+	if (strchr(pchr, ch)) { return true; }
+	return false;
 }

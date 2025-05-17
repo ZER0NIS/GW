@@ -119,13 +119,12 @@ bool PipeService::Init()
 		return false;
 	}
 
-	m_pThread = sbase::CThread::CreateNew(*this, sbase::CThread::RUN, 10);
+	m_pThread = sbase::CThread::CreateNew(*this, 0, 10);
 	if (m_pThread == NULL)
 	{
 		printf("CThread::CreateNew failed!\n");
 		return false;
 	}
-	m_pThread->SetThreadAMask(12);
 	m_Timer.Startup(PIPE_TIMER);
 	m_ConsortiaTimer.Startup(CONSOR_BACKUP_TIMEOUT);
 	m_RegTimer.Startup(REGISTER_DB_TIMER);
@@ -803,8 +802,9 @@ bool RegisterService::OnWrite()
 	{
 		return m_pClientSck->Write();
 	}
-
-	return false;
+	else
+	{
+	}
 }
 
 bool  RegisterService::ConnectLoginServer()
@@ -935,14 +935,14 @@ bool BackUpService::Init()
 {
 	m_pNetClient = new	cnet::CIOCP();
 
-	m_pThread = sbase::CThread::CreateNew(*this, sbase::CThread::RUN, 10);
+	m_pThread = sbase::CThread::CreateNew(*this, 0, 10);
 
 	if (m_pThread == NULL)
 	{
 		printf("CThread::CreateNew failed!\n");
 		return false;
 	}
-	m_pThread->SetThreadAMask(12);
+	//m_pThread->SetThreadAMask(12);
 	m_Timer.Startup(BACKUP_TIMER);
 	m_ConsortiaTimer.Startup(CONSOR_BACKUP_TIMEOU);
 
@@ -1028,25 +1028,34 @@ bool BackUpService::ConnectPipeServer()
 }
 bool BackUpService::OnWrite()
 {
-	if (m_pClientSocket == NULL) {
+	char temp[4096] = { 0 };
+	string strRecv;
+	if (m_pClientSocket == NULL || !m_bIsConnect)
+	{
 		return false;
 	}
-	static BACKUP_MSG pMsg;
-	memset(pMsg.SQL, 0, sizeof(pMsg.SQL));
+
+	BACKUP_MSG* pMsg = NULL;
 
 	while (m_pWorld->ReadBackBuff((char**)&pMsg))
 	{
-		if (!SendMsgToServer(&pMsg, pMsg.Head.usSize)) {
-			LOGERR->OutInfo("BackupErr", "type=%d, size=%d", pMsg.Head.usType, pMsg.Head.usSize);
-			break;
-		}
+		SendMsgToServer(pMsg, pMsg->Head.usSize);
 
-		memset(pMsg.SQL, 0, sizeof(pMsg.SQL));
+		BACKUP_MSG* pszBuff = (BACKUP_MSG*)pMsg;
+
+		m_pWorld->RemoveBackBuff(pMsg->Head.usSize);
 	}
 
-	return m_pClientSocket->IsValid();
-}
+	if (m_pClientSocket->IsValid())
+	{
+		m_pClientSocket->Write();
+	}
+	else
+	{
+	}
 
+	return true;
+}
 bool BackUpService::OnRead()
 {
 	if (m_pClientSocket == NULL)
@@ -1058,7 +1067,7 @@ bool BackUpService::OnRead()
 
 	if (m_pClientSocket->IsValid())
 	{
-		while (m_pClientSocket->Read((char**)&pszBuff, 4096))
+		while (m_pClientSocket->Read((char**)&pszBuff))
 		{
 			switch (((MsgHead*)pszBuff)->usType)
 			{
@@ -1111,14 +1120,6 @@ void BackUpService::SetState(bool bState)
 
 bool BackUpService::SendMsgToServer(void* pMsg, int ilen)
 {
-	if (!m_pClientSocket)
-		return false;
-
-	if (ilen != ((MsgHead*)pMsg)->usSize) {
-		sbase::SysLogSave("RegisterService::SendMsgToServer Error,type=%d,size=%d", ((MsgHead*)pMsg)->usType, ((MsgHead*)pMsg)->usSize);
-		return false;
-	}
-
 	return	m_pClientSocket->PackMsg((char*)pMsg, ilen);
 }
 
@@ -1154,9 +1155,6 @@ void  ServerSocketEventHandle::SendErrorInfo(int ErrID, CPlayer* pPlayer)
 
 void ServerSocketEventHandle::ResloveGamePacket(const void* pPacket, CPlayer* pPlayer)
 {
-	IF_NOT(pPlayer)
-		return;
-
 	USHORT temp = 0;
 	static const  SSockHandle* NetEventHandle = GetSockHandleTab(temp);
 

@@ -27,16 +27,21 @@ extern MSG_OBJECTINFO msg, msg2other;
 extern MSG_SYN_GAMEDATA  msg_syn_gamedata;
 extern MSG_USEOREQUIP_ITEM msg_useorequip_item;
 
+//------------------------------------------------------------------------------------
 PARAME CPlayer::Param;
 ATTACK_PARAM  CPlayer::AttackParam;
+
+//------------------------------------------------------------------------------------
 
 HASH_STR CPlayer::m_Player_RoleName;
 HASH_STR CPlayer::m_Player_Accounts;
 HASH_INT CPlayer::m_Player_Socket;
 
+//------------------------------------------------------------------------------------
 map< string, string >  CPlayer::m_valid_map;
 map<  snet::CSocket*, string >  CPlayer::m_Soket_map;
 
+//------------------------------------------------------------------------------------
 sbase::CCriticalSection g_xLock;
 
 void CPlayer::AddSocketHashMap(snet::CSocket* PSocket, CPlayer* pPlayer)
@@ -100,6 +105,7 @@ CPlayer* CPlayer::GetPlayerFromRoleName(string rolename)
 	return (itor != m_Player_RoleName.end()) ? itor->second : NULL;
 }
 
+//------------------------------------------------------------------------------------
 CPlayer::CPlayer(void)
 {
 	m_eType = OBJECTTYPE_PLAYER;
@@ -108,6 +114,9 @@ CPlayer::CPlayer(void)
 	m_pSocket = NULL;
 
 	Init();
+	//回写数据库
+	//	LoadPlayerConfig();
+
 	m_Trade.SetThis(this);
 	m_Storage.Init(this);
 	m_Stall.Init(this);
@@ -116,10 +125,15 @@ CPlayer::CPlayer(void)
 	m_RunTimer.Startup(PLAYER_AI_TIMER);
 
 	m_pTeamLeader = NULL;
+	// 	for (int i = 0; i<MAX_TEAM_NUMBER; i++)
+	// 	{
+	// 		m_pTeam[i] = NULL;
+	// 	}
 	ucChannel = 255;
 	unTalkTime = 0;
 }
 
+//------------------------------------------------------------------------------------
 CPlayer::~CPlayer(void)
 {
 	if (m_pRec != NULL)
@@ -132,6 +146,9 @@ LONG CPlayer::GetDBID()
 {
 	return m_DBID;
 }
+//------------------------------------------------------------------------------------
+//加载玩家相关属性
+//------------------------------------------------------------------------------------
 void CPlayer::Init()
 {
 	m_Bags[0].SetActive(true);
@@ -197,12 +214,12 @@ void CPlayer::Init()
 	m_pCurrentCell = NULL;
 	m_bOtherHands = false;
 
-	InitTeam_New();
+	InitTeam_New();//队伍信息清空
 
-	GoldOpendNum = 0;
-	m_GoldBoxId = 0;
-	memset(&m_InDialItemID, 0, sizeof(m_InDialItemID));
-	m_SumRand = 0;
+	GoldOpendNum = 0;			//宝箱开启次数
+	m_GoldBoxId = 0;			//正在开启的宝箱ID
+	memset(&m_InDialItemID, 0, sizeof(m_InDialItemID));	//入围物品ID
+	m_SumRand = 0;				//入围物品总几率
 
 	m_Kills = 0;
 	m_OverQuests = 0;
@@ -210,16 +227,23 @@ void CPlayer::Init()
 	m_BeginX = 0;
 	m_BeginZ = 0;
 	m_GM = false;
+	//m_SceneChangeFlag = false;
 	m_EquipForge.Clear();
 
 	m_Login_time = NULL;
 	m_LastUpte_time = NULL;
 
+	//倒计时
 	m_bExitGameStart = false;
 	m_UpdateTime.Clear();
 	m_Start_Time = 0;
 	PassTime = 0;
 
+	/*------------------------------------------------------------------------------
+	 *作者：C.D
+	 *日期：2008-06-16
+	 *描述：
+	 -----------------------------------------------------------------------------*/
 	m_ChatBubbleType = 0;
 	m_bIsPKProtected = false;
 	m_bIsGreenName = false;
@@ -232,26 +256,43 @@ void CPlayer::Init()
 	ClearQuest();
 }
 
+//------------------------------------------------------------------------------------
+//更改玩家数据(数值型)
+//------------------------------------------------------------------------------------
 void   CPlayer::SetPropertyValue(unsigned int ivalue, USERDATA  stData)
 {
 	m_pRec->Field(stData) = ivalue;
 }
 
+//------------------------------------------------------------------------------------
+//更改玩家数据(字符型)
+//------------------------------------------------------------------------------------
 void      CPlayer::SetPropertyValue(const char* ivalue, USERDATA  stData)
 {
 	m_pRec->Field(stData) = ivalue;
 }
 
-LONG   CPlayer::GetPropertyValue(USERDATA)
+//------------------------------------------------------------------------------------
+//得到玩家数据(字符型)
+//------------------------------------------------------------------------------------
+LONG   CPlayer::GetPropertyValue(USERDATA /*stData*/)
 {
 	return  m_pRec->Field(UINT(0));
 }
 
+//------------------------------------------------------------------------------------
+//得到玩家数据(数值型)
+//------------------------------------------------------------------------------------
 SHORT     CPlayer::GetPropertyValue(USERDATA  stData) const
 {
 	return  m_pRec->Field(UINT(stData));
 }
 
+//------------------------------------------------------------------------------------
+//根据被动技能更新角色属性
+//------------------------------------------------------------------------------------
+
+// 初始化职业数量以及对应的被动技能
 bool CPlayer::InitClassPassiveSkill(void)
 {
 	sbase::CIni  Skill_ini("skill/skill.ini", false);
@@ -280,15 +321,20 @@ bool CPlayer::InitClassPassiveSkill(void)
 	return true;
 }
 
+//------------------------------------------------------------------------------------
+//初始化Obj数据库数据
+//------------------------------------------------------------------------------------
 bool  CPlayer::InitObjData(long ID)
 {
 	Init();
+	//从数据库得到基本数据
 	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
 	if (!DB)
 	{
 		ASSERT(0);
 		return false;
 	}
+	//_asm   int   0x3;
 	char szSQL[128];
 	sprintf(szSQL, SQL_SELECT_USER_BY_ID, ID);
 	sprintf(szSQL, "CALL SP_SELECT_PLAYER_INFO(%d);", ID);
@@ -304,6 +350,7 @@ bool  CPlayer::InitObjData(long ID)
 	IF_NOT(m_pRec)
 		return false;
 
+	//背包装备
 	sprintf(szSQL, "CALL SP_SELECT_KITBAG_INFO(%d);", ID);
 	pRes = DB->CreateRecordset(szSQL, rade_db::MODE_EDIT);
 	int RecordCount = pRes->CountRecord();
@@ -313,16 +360,19 @@ bool  CPlayer::InitObjData(long ID)
 		rade_db::IRecord* rec = pRes->GetRecord();
 		for (int i = 0; i < 6; i++)
 		{
-			char* EquipInfo = (char*)rec->Field(UINT(i));
+			char* EquipInfo = (char*)rec->Field(UINT(i));  //道具栏1
 			if (CreatePropFromDB(EquipInfo, i))
 			{
+				//产生装备的处理
 			}
 		}
 	}
 	else
 	{
+		//发送无装备信息
 	}
 
+	//将读出来的数据赋值给内部结构体
 	char* Name = m_pRec->Field(CHARACTER_NAME);
 	SetName(Name);
 	char* Gender = m_pRec->Field(CHARACTER_GENDER);
@@ -347,12 +397,13 @@ bool  CPlayer::InitObjData(long ID)
 	m_ObjectData.m_cRank = (BYTE)m_pRec->Field(CHARACTER_LV);
 	m_ObjectData.m_lHP = (UINT)m_pRec->Field(CHARACTER_HP_CUR);
 	m_ObjectData.m_lMP = (UINT)m_pRec->Field(CHARACTER_MP_CUR);
-	m_ObjectData.m_usAttackDistance = (USHORT)m_pRec->Field(CHARACTER_HP_CUR);
-	m_ObjectData.m_usAttackSpeed = (USHORT)m_pRec->Field(CHARACTER_HP_CUR);
-	m_ObjectData.m_cHairStyle = (BYTE)m_pRec->Field(CHARACTER_HAIRSTYLE);
-	m_ObjectData.m_cPupilColor = (BYTE)m_pRec->Field(CHARACTER_FACESHAP);
+	m_ObjectData.m_usAttackDistance = (USHORT)m_pRec->Field(CHARACTER_HP_CUR);         //数据库暂时没有此字段
+	m_ObjectData.m_usAttackSpeed = (USHORT)m_pRec->Field(CHARACTER_HP_CUR);         //数据库暂时没有此字段
+	m_ObjectData.m_cHairStyle = (BYTE)m_pRec->Field(CHARACTER_HAIRSTYLE);       //数据库暂时没有此字段
+	m_ObjectData.m_cPupilColor = (BYTE)m_pRec->Field(CHARACTER_FACESHAP);	      //数据库暂时没有此字段
 	m_ObjectData.m_usBelief = (USHORT)m_pRec->Field(CHARACTER_BELIFE);
 
+	//得到被动技能数据
 	sprintf(szSQL, "SELECT skill_id ,practice_degree FROM user_skill WHERE user_id = %d;", ID);
 	rade_db::IRecordset* pPassiveSkillRes = DB->CreateRecordset(szSQL, rade_db::MODE_EDIT);
 	int count = pPassiveSkillRes->CountRecord();
@@ -365,10 +416,12 @@ bool  CPlayer::InitObjData(long ID)
 		SkillID = tempRecord->Field(UINT(0));
 		PASSIVEINFO   passive_info;
 		passive_info.Grade = 0;
+		//	passive_info.Degree_Practice = tempRecord->Field( 1 );
 		m_PassiveSkill[SkillID] = passive_info;
 		UpdateAttributeInfo(SkillID, TYPE_ADD);
 	}
 
+	//得到主动技能数据
 	sprintf(szSQL, "SELECT * FROM user_magic WHERE user_id = %d;", ID);
 	rade_db::IRecordset* pActiveSkillRes = DB->CreateRecordset(szSQL, rade_db::MODE_EDIT);
 	count = pActiveSkillRes->CountRecord();
@@ -391,6 +444,9 @@ bool  CPlayer::InitObjData(long ID)
 	return true;
 }
 
+//-----------------------------------------------------------------------------------
+// 离线状态更新DB
+//-----------------------------------------------------------------------------------
 void CPlayer::UpdateDB_Offline(const char* Name, UINT Union, BYTE UnionDuty)
 {
 	char szSQL[512];
@@ -407,6 +463,9 @@ void CPlayer::UpdateDB_Offline(const char* Name, UINT Union, BYTE UnionDuty)
 	DB->ExecuteAsyncSQL(szSQL, (void*)this, &CPlayer::DealWith_Offline_Update_Uinon);
 	InterlockedIncrement(&SynDBOutStand);
 }
+//-----------------------------------------------------------------------------------
+// 离线状态更新祭坛DB
+//-----------------------------------------------------------------------------------
 void CPlayer::UpdateDB_Altar(const char* Name)
 {
 	char szSQL[512];
@@ -422,6 +481,9 @@ void CPlayer::UpdateDB_Altar(const char* Name)
 	DB->ExecuteAsyncSQL(szSQL, NULL, NULL);
 }
 
+//------------------------------------------------------------------------------------
+//角色属性
+//------------------------------------------------------------------------------------
 void    CPlayer::UpdateDB_RoleAttribute(CPlayer* pPlayer)
 {
 	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
@@ -429,6 +491,9 @@ void    CPlayer::UpdateDB_RoleAttribute(CPlayer* pPlayer)
 	InterlockedIncrement(&pPlayer->SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//道具装备
+//------------------------------------------------------------------------------------
 UINT CPlayer::GetDBIDByRoleName(string RoleName)
 {
 	UINT  UserID = 0;
@@ -462,6 +527,14 @@ ULONG CPlayer::SetAtttibute()
 	m_BaseData.m_lMagicDefend = CPeizhi::Instance()->GetDefaultValue(PLAYER_MAGIC_DEFEND);
 	m_BaseData.m_lHit = CPeizhi::Instance()->GetDefaultValue(PLAYER_HIT);
 	m_BaseData.m_lDodge = CPeizhi::Instance()->GetDefaultValue(PLAYER_MISS);
+	/* by lion 为了解决当前值 最大值不匹配问题
+		if ( m_ObjectData.m_lHP >= m_BaseData.m_lMaxHP )
+			m_ObjectData.m_lHP = m_BaseData.m_lMaxHP;
+
+		if ( m_ObjectData.m_lMP >=  m_BaseData.m_lMaxMP  )
+			m_ObjectData.m_lMP = m_BaseData.m_lMaxMP;
+	*/
+	//add by lion 有可能不对 同步当前HP MP
 	m_ObjectData.m_lHP = GetMaxHP();
 	m_ObjectData.m_lMP = GetMaxMP();
 
@@ -470,6 +543,18 @@ ULONG CPlayer::SetAtttibute()
 
 void CPlayer::SynTeamData(void* buf)
 {
+	//队友
+	// 	if ( NULL != m_pTeam[0]   )
+	// 	{
+	// 		for ( int a = 0; a < MAX_TEAM_NUMBER; a++ )
+	// 		{
+	// 			if ( m_pTeam[a] != this && !GetRegion()->GetMap()->IsTwoCellCross( GetCurrentCell(), m_pTeam[a]->GetCurrentCell() ) )
+	// 			{
+	// 				CGameObject::s_World->SendMsgToClient( buf , m_pTeam[a]->GetSocket() );
+	// 			}
+	// 		}
+	// 	}
+	//修改by C.D 20071226
 	if (m_pTeamLeader != NULL)
 	{
 		if (m_pTeamLeader != this && !GetRegion()->GetMap()->IsTwoCellCross(GetCurrentCell(), m_pTeamLeader->GetCurrentCell()))
@@ -486,12 +571,17 @@ void CPlayer::SynTeamData(void* buf)
 			}
 		}
 	}
+
+	//20071226
 }
 
 void CPlayer::AddGMControl(ActionElem& elem)
 {
 	m_GMctr->Push(elem);
 }
+//------------------------------------------------------------------------------------
+//同步数据
+//------------------------------------------------------------------------------------
 void  CPlayer::SynGameData(bool IsSelf)
 {
 	msg_syn_gamedata.Head.usSize = sizeof(msg_syn_gamedata);
@@ -503,6 +593,10 @@ void  CPlayer::SynGameData(bool IsSelf)
 	msg_syn_gamedata.sGameData.m_lRegionID = CGameObject::s_World->GetRegionFromLogicID(GetlRegionID())->GetID();
 	msg_syn_gamedata.sBaseData.m_lMaxHP = GetAlllMaxHP();
 	msg_syn_gamedata.sBaseData.m_lMaxMP = GetAlllMaxMP();
+	//工会名称 add by lion
+//	m_pConsortia =  CGameObject::s_World->g_pConsortiaManager->GetConsortiaInfo( GetcUnion());
+//	strcpy( msg_syn_gamedata.sGameData.m_acName, m_pConsortia->acName );
+
 	if (msg_syn_gamedata.sGameData.m_lMP > msg_syn_gamedata.sBaseData.m_lMaxMP)
 		msg_syn_gamedata.sGameData.m_lMP = msg_syn_gamedata.sBaseData.m_lMaxMP;
 	else if (msg_syn_gamedata.sGameData.m_lMP < 0)
@@ -537,6 +631,9 @@ void  CPlayer::SynGameData(bool IsSelf)
 		CGameObject::s_World->SendMsgToClient(&msg_syn_gamedata, GetSocket());
 	else
 	{
+		//队友( 仅限不在可见区域内)
+		//SynTeamData( &msg_syn_gamedata );
+		//周围玩家
 		GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_syn_gamedata);
 	}
 }
@@ -586,6 +683,9 @@ void  CPlayer::RequestGameData(CPlayer* pPlayer)
 	CGameObject::s_World->SendMsgToClient(&msg_syn_gamedata, pPlayer->GetSocket());
 }
 
+//------------------------------------------------------------------------------------
+//同步主动技能
+//------------------------------------------------------------------------------------
 void  CPlayer::SynClientActiveSkillData()
 {
 	if (m_ActiveSkill.size() > 0)
@@ -606,16 +706,21 @@ void  CPlayer::SynClientActiveSkillData()
 			a++;
 		}
 		msg_activeskill_info.MagicCounts = (USHORT)a;
+		//msg_activeskill_info.Head.usSize = sizeof(msg_activeskill_info.Head ) + 6  +  msg_activeskill_info.MagicCounts * sizeof( MAGIC_INFO ) ;
 		int size = sizeof(MSG_ACTIVESKILL_INFO) - 150 * sizeof(MAGIC_INFO);
 		msg_activeskill_info.Head.usSize = size + msg_activeskill_info.MagicCounts * sizeof(MAGIC_INFO);
 		CGameObject::s_World->SendMsgToClient(&msg_activeskill_info, GetSocket());
 	}
 }
 
+//------------------------------------------------------------------------------------
+//同步被动技能
+//------------------------------------------------------------------------------------
 void  CPlayer::SynClientPassiveSkillData()
 {
 	msg_passiveskill_info.SkillCounts = (USHORT)m_PassiveSkill.size();
 	int size = sizeof(MSG_PASSIVESKILL_INFO) - sizeof(SKILL_INFO) * 20;
+	/*msg_passiveskill_info.Head.usSize = sizeof( msg_passiveskill_info.Head ) + 6 + msg_passiveskill_info.SkillCounts * sizeof( SKILL_INFO ) ;*/
 	msg_passiveskill_info.Head.usSize = size + msg_passiveskill_info.SkillCounts * sizeof(SKILL_INFO);
 	msg_passiveskill_info.uiID = GetID();
 
@@ -624,6 +729,62 @@ void  CPlayer::SynClientPassiveSkillData()
 	for (; itertor != m_PassiveSkill.end(); itertor++)
 	{
 		USHORT UP_LV = 0;
+		/*by lion
+		switch( itertor->first )
+		{
+		case SKILL_HALENESS:
+		UP_LV= m_EquipData.StrongLevel;
+		break;
+		case SKILL_FEAT:
+		UP_LV = m_EquipData.FeatLevel;
+		break;
+		case SKILL_DEFEND:
+		UP_LV = m_EquipData.DefanceLevel;
+		break;
+		case SKILL_ARMOURP_ROCTECT:
+		UP_LV = m_EquipData.ArmourLevel;
+		break;
+		case SKILL_ESCRIME:
+		UP_LV = m_EquipData.SwordplayLevel;
+		break;
+		case SKILL_GLAVE_GAS:
+		UP_LV = m_EquipData.SwordAirLevel;
+		break;
+		case SKILL_EXACTITUDE_ATTACK:
+		UP_LV = m_EquipData.PrecisionLevel;
+		break;
+		case SKILL_MUMP:
+		UP_LV = m_EquipData.FighterAirLevel;
+		break;
+		case SKILL_ENERGY:
+		UP_LV = m_EquipData.EnergyPowerLevel;
+		break;
+		case SKILL_ELEMENTS_STRENGTHEN:
+		UP_LV = m_EquipData.ElementIntensifyLevel;
+		break;
+		case SKILL_ELEMENTS:
+		UP_LV = m_EquipData.ElementElementsLevel;
+		break;
+		case SKILL_ELEMENTS_DEFEND:
+		UP_LV = m_EquipData.ElementImmunityLevel;
+		break;
+		case SKILL_ELEMENTS_VOLITION:
+		UP_LV = m_EquipData.EnergyFixLevel;
+		break;
+		case SKILL_FIR_STRENGTHEN:
+		UP_LV = m_EquipData.FireIntensifyLevel;
+		break;
+		case SKILL_FLEXILE:
+		UP_LV = m_EquipData.FlexibleShieldLevel;
+		break;
+		case SKILL_LIFE_CHANNELS:
+		UP_LV = m_EquipData.LifeChannelsLevel;
+		break;
+		default:
+		UP_LV= 0 ;
+		break;
+		}
+		*/
 		itertor->second.EquipLV = (UP_LV >= 15) ? 15 : UP_LV;
 		msg_passiveskill_info.Skill[a].cType = itertor->first;
 		msg_passiveskill_info.Skill[a].Rank = itertor->second.Grade;
@@ -634,6 +795,9 @@ void  CPlayer::SynClientPassiveSkillData()
 	CGameObject::s_World->SendMsgToClient(&msg_passiveskill_info, GetSocket());
 }
 
+//------------------------------------------------------------------------------------
+//打包背包信息
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackBagkitInfo(int Index)
 {
 	static char szSQL[4000];
@@ -693,6 +857,9 @@ const char* CPlayer::PackBagkitInfo(int Index)
 	return szSQL;
 }
 
+//------------------------------------------------------------------------------------
+// 打包仓库信息
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackStorageInfo()
 {
 	static char szSQL[4000];
@@ -755,6 +922,9 @@ const char* CPlayer::PackStorageInfo()
 	return szSQL;
 }
 
+//------------------------------------------------------------------------------------
+//打包装备信息
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackEquipInfo()
 {
 	static char szSQL[2000];
@@ -788,6 +958,19 @@ const char* CPlayer::PackEquipInfo()
 				TempStr += string(",");
 			}
 		}
+		// 		for ( int i = 0; i< MAX_EQUIPAPPEND_COUNT; i++)
+		// 		{
+		// 			if (  abs( EquipData.AppendValue[i] - ( -1 ) ) >= 0.00000001f )
+		// 			{
+		// 				sprintf( convert, "%0.3f", EquipData.AppendValue[i] );
+		// 				TempStr += string(convert) + string(",");
+		// 			}
+		// 			else
+		// 			{
+		// 				TempStr +=string(",");
+		// 			}
+		// 		}
+
 		TempStr += string("1,1,");
 		TempStr += itoa(EquipData.BaseLV, convert, 10) + string(",");
 		sprintf(convert, "%d,%d]#", EquipData.AppendLV, EquipData.CdKey);
@@ -803,8 +986,12 @@ const char* CPlayer::PackEquipInfo()
 	return szSQL;
 }
 
+//------------------------------------------------------------------------------------
+//公会数据回写
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackConsortiaInfo()
 {
+	//判断会长(会长负责更所属公会的共有信息)
 	static char szSQL[2000];
 	memset(szSQL, 0L, sizeof(szSQL));
 
@@ -833,6 +1020,9 @@ const char* CPlayer::PackConsortiaInfo()
 	return "";
 }
 
+//------------------------------------------------------------------------------------
+//好友数据回写
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackFriendInfo()
 {
 	static char szSQL[2000];
@@ -847,6 +1037,9 @@ const char* CPlayer::PackFriendInfo()
 	return szSQL;
 }
 
+//------------------------------------------------------------------------------------
+//黑名单数据回写
+//------------------------------------------------------------------------------------
 const char* CPlayer::PackBackList()
 {
 	static char szSQL[2000];
@@ -880,6 +1073,7 @@ const char* CPlayer::PackActiveSkill()
 		time_t surplus_time = 0;
 		if (active.Time_style == TIME_STYLE_COOL)
 		{
+			//计算该技能剩余冷却时间
 			surplus_time = active.Time_start + pActiveSkill->usCoolingTime;
 			time_t  sss = time(NULL);
 			surplus_time -= sss;
@@ -910,6 +1104,7 @@ const char* CPlayer::PackPassiveSkill()
 	static char szSQL[4000];
 	memset(szSQL, 0L, sizeof(szSQL));
 
+	//等级和熟练度
 	string TempStr("");
 	char convert[32];
 
@@ -950,12 +1145,13 @@ const char* CPlayer::PackQuest()
 	string  TimeQuest = "";
 	string  AcceptQuest = "";
 
+	//所有任务完成情况
 	char convert[64], TimeQuestConver[64], AcceptQuestConvert[64];
 	unsigned __int64  temppack = 0;
 	int a = 0;
 	for (; a < QUEST_COUNT; a++)
 	{
-		if (!m_Quests[a].Quest) continue;
+		if (!m_Quests[a].Quest) continue;//break;
 
 		unsigned __int64   converttemp = (unsigned __int64)(m_Quests[a].Status == QUEST_STATUS_OVER ? 1 : 0);
 		temppack |= converttemp << (a % SINGLE_QUEST_ID);
@@ -968,6 +1164,7 @@ const char* CPlayer::PackQuest()
 			temppack = 0;
 		}
 
+		//任务具体状态
 		if (m_Quests[a].Quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_TIMED) && !GetAcceptQuest(m_Quests[a].Quest->QuestID))
 		{
 			TimeQuest += "[";
@@ -1050,6 +1247,9 @@ const char* CPlayer::PackQuest()
 	return szSQL;
 }
 
+//------------------------------------------------------------------------------------
+//道具装备数据回写
+//------------------------------------------------------------------------------------
 void    CPlayer::UpdateDB_KitBag(CPlayer* pPlayer)
 {
 	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
@@ -1065,6 +1265,9 @@ void    CPlayer::UpdateDB_KitBag(CPlayer* pPlayer)
 	InterlockedIncrement(&pPlayer->SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//社会关系
+//------------------------------------------------------------------------------------
 void    CPlayer::UpdateDB_Relation(CPlayer* pPlayer)
 {
 	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
@@ -1076,6 +1279,9 @@ void    CPlayer::UpdateDB_Relation(CPlayer* pPlayer)
 	InterlockedIncrement(&pPlayer->SynDBOutStand);
 }
 
+//-----------------------------------------------------------------------------------
+//更新任务
+//-----------------------------------------------------------------------------------
 void  CPlayer::UpdateDB_Quest(CPlayer* pPlayer)
 {
 	rade_db::IDatabase* DB = CGameObject::s_World->GetDBAddr(DB_NONE);
@@ -1083,14 +1289,28 @@ void  CPlayer::UpdateDB_Quest(CPlayer* pPlayer)
 	InterlockedIncrement(&pPlayer->SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//玩家退出回写数据库
+//------------------------------------------------------------------------------------
 bool    CPlayer::UpDateDB()
 {
+	//  	for ( int i=0;i<300;i++ )
+	//  	{
 	BackUp();
+	//  	}
+
+	//	CGameObject::s_World->BackUpConsortia();
+
 	return true;
 }
 
+//-----------------------------------------------------------------------------------
+// 好友黑名单
+//-----------------------------------------------------------------------------------
 void CPlayer::SendRelationMsg(void)
 {
+	//sbase::CSingleLock xLock1(&m_xLock);
+
 	if (!GetJoinFlag())
 	{
 		return;
@@ -1105,6 +1325,7 @@ void CPlayer::SendRelationMsg(void)
 	memset(&relation_friend, 0L, sizeof(MSG_RELATIONALL));
 	std::map< string, RELATION > RelationMgr = m_RelationMgr.m_Relation;
 
+	//好友
 	relation_friend.Head.usSize = sizeof(MSG_RELATIONALL) - 30 * sizeof(Friend);
 	relation_friend.Head.usType = _MSG_RELATIONALL;
 	relation_friend.uiUserID = GetID();
@@ -1122,7 +1343,7 @@ void CPlayer::SendRelationMsg(void)
 	{
 		CPlayer* pPlayer = GetPlayerFromRoleName(itor->first);
 
-		if (itor->second.Type == TYPE_FRIEND)
+		if (itor->second.Type == TYPE_FRIEND) //好友
 		{
 			strcpy(relation_friend.sFriend[relation_friend.cNum].Name, itor->first.c_str());
 			if (NULL == pPlayer)
@@ -1144,7 +1365,7 @@ void CPlayer::SendRelationMsg(void)
 			relation_friend.cNum++;
 			relation_friend.Head.usSize += sizeof(Friend);
 		}
-		else if (itor->second.Type == TYPE_BLACKLIST)
+		else if (itor->second.Type == TYPE_BLACKLIST) //黑名单
 		{
 			strcpy(relation_blackList.sFriend[relation_blackList.cNum].Name, itor->first.c_str());
 			if (NULL == pPlayer)
@@ -1179,15 +1400,22 @@ void CPlayer::SendRelationMsg(void)
 	}
 	m_MsgFlag[MSG_RELATION_BLACKLIST_FLAG] = true;
 
+	//公会
 	SendConsortiaMsg();
 }
 
+//------------------------------------------------------------------------------------
+//向客户端发送公会相关消息
+//------------------------------------------------------------------------------------
 void CPlayer::SendConsortiaMsg(void)
 {
+	//sbase::CSingleLock xLock1(&m_xLock);
+	//公会信息
 	m_pConsortia = CGameObject::s_World->g_pConsortiaManager->GetConsortiaInfo(GetcUnion());
 	if (NULL != m_pConsortia)
 	{
 		MSG_CONSORTIA_BASE_INFO BaseInfo;
+		//Clustering<ConsortiaRelationElem> *pElems =  CGameObject::s_World->g_pConsortiaManager->GetCurMemberWithJob( m_pConsortia, CONSORTIA_CHAIRMAN );
 		BaseInfo.Head.usSize = sizeof(MSG_CONSORTIA_BASE_INFO);
 		BaseInfo.Head.usType = _MSG_CONSORTIA_BASE_INFO;
 		strcpy(BaseInfo.acName, m_pConsortia->acName);
@@ -1210,6 +1438,7 @@ void CPlayer::SendConsortiaMsg(void)
 		CGameObject::s_World->SendMsgToClient(&BaseInfo, GetSocket());
 	}
 
+	//公会成员
 	MSG_CONSORTIA_MEMBER_LIST Memeber_List;
 	Memeber_List.Head.usSize = sizeof(MSG_CONSORTIA_MEMBER_LIST);
 	Memeber_List.Head.usType = _MSG_CONSORTIA_MEMBER_LIST;
@@ -1258,8 +1487,12 @@ void CPlayer::SendConsortiaMsg(void)
 
 	m_MsgFlag[MSG_RELATION_CONSORTIA_FLAG] = true;
 }
+//------------------------------------------------------------------------------------
+//向客户端发送祭坛相关消息
+//------------------------------------------------------------------------------------
 void CPlayer::SendAltarMsg(void)
 {
+	//sbase::CSingleLock xLock1(&m_xLock);
 	if (IsMsgOK(MSG_ALTAR_FLAG) || !IsMsgOK(MSG_RELATION_CONSORTIA_FLAG))
 	{
 		return;
@@ -1267,8 +1500,9 @@ void CPlayer::SendAltarMsg(void)
 
 	if (!m_pConsortia)
 	{
-		return;
+		return;  //没有公会就返回
 	}
+	//发送祭坛消息
 	MSG_ALTAR_INFO altar_info;
 	altar_info.Head.usSize = sizeof(MSG_ALTAR_INFO);
 	altar_info.Head.usType = _MSG_ALTAR_INFO;
@@ -1290,9 +1524,13 @@ void CPlayer::SendAltarMsg(void)
 
 	m_MsgFlag[MSG_ALTAR_FLAG] = true;
 }
+//------------------------------------------------------------------------------------
+//向客户端发送仓库相关消息
+//------------------------------------------------------------------------------------
 void CPlayer::SendStorageMsg(void)
 {
 #define SINGAL_STORAGE_NUM 12
+	//sbase::CSingleLock xLock1(&m_xLock);
 	MSG_STORAGE  StorageInfo;
 	ItemData  KitbagInfo;
 	StorageInfo.Head.usType = _MSG_STORAGE;
@@ -1316,10 +1554,12 @@ void CPlayer::SendStorageMsg(void)
 			StorageInfo.Head.usSize += sizeof(KitBag);
 		}
 
-		if ((i + 1) % SINGAL_STORAGE_NUM == 0 || (i == MaxActive - 1))
+		if ((i + 1) % SINGAL_STORAGE_NUM == 0 || (i == MaxActive - 1)) //每次发送12个
 		{
+			//cout<<"MAX_BAG_GRID can!"<<endl;
 			if (StorageInfo.Head.usSize >= sizeof(StorageInfo.Head) + 12)
 			{
+				//cout<<"MAX_BAG_GRID OK!"<<endl;
 				StorageInfo.cLine = TempLine;
 				CGameObject::s_World->SendMsgToClient(&StorageInfo, GetSocket());
 				TempLine += 2;
@@ -1332,6 +1572,9 @@ void CPlayer::SendStorageMsg(void)
 	}
 }
 
+//------------------------------------------------------------------------------------
+//向客户端发送背包相关消息
+//------------------------------------------------------------------------------------
 void CPlayer::SendPropertyMsg(void)
 {
 	MSG_SELFPROPERTY  Property;
@@ -1343,8 +1586,12 @@ void CPlayer::SendPropertyMsg(void)
 	CGameObject::s_World->SendMsgToClient(&Property, GetSocket());
 }
 
+//------------------------------------------------------------------------------------
+//向客户端发送背包相关消息
+//------------------------------------------------------------------------------------
 void CPlayer::SendKitBagMsg(int flag)
 {
+	//sbase::CSingleLock xLock1(&m_xLock);
 	MSG_KITBAG  KitBag;
 	ItemData  KitbagInfo;
 	KitBag.Head.usType = _MSG_KITBAG;
@@ -1362,10 +1609,12 @@ void CPlayer::SendKitBagMsg(int flag)
 	{
 		for (int i = 0; i < MAX_BAG_GRID; i++)
 		{
+			//cout<<"MAX_BAG_GRID"<<i<<endl;
 			KitbagInfo = m_Bags[0].GetItem(i)->GetItemData();
 			if (KitbagInfo.Base != -1)
 			{
 				KitBag.cKitBagFlag |= (1 << (i % 24));
+				//注意:这里两个结构不一样
 				memcpy(&KitBag.SKitBagInfo[index % 24], &KitbagInfo, sizeof(KitBag.SKitBagInfo[0]));
 				index++;
 				KitBag.Head.usSize += sizeof(KitBag.SKitBagInfo[0]);
@@ -1377,7 +1626,9 @@ void CPlayer::SendKitBagMsg(int flag)
 				{
 					if (index > 0)
 					{
+						//cout<<"MAX_BAG_GRID OK!"<<endl;
 						CGameObject::s_World->SendMsgToClient(&KitBag, GetSocket());
+						//cout<<GetName()<<" SendKitBagMsg Success!"<<endl;
 					}
 					m_MsgFlag[MSG_KITBAG_FLAG] = true;
 				}
@@ -1395,8 +1646,12 @@ void CPlayer::SendKitBagMsg(int flag)
 	}
 }
 
+//------------------------------------------------------------------------------------
+//同步客户端技能数据
+//------------------------------------------------------------------------------------
 void CPlayer::SynchronousClientSkill(bool IsMagic)
 {
+	//发送玩家主动技能信息
 	if (m_ActiveSkill.size() > 0 && IsMagic && GetJoinFlag())
 	{
 		msg_activeskill_info.MagicCounts = (USHORT)m_ActiveSkill.size();
@@ -1413,6 +1668,7 @@ void CPlayer::SynchronousClientSkill(bool IsMagic)
 		CGameObject::s_World->SendMsgToClient(&msg_activeskill_info, GetSocket());
 	}
 
+	//发送玩家被动技能信息
 	if (m_PassiveSkill.size() > 0 && !IsMagic && GetJoinFlag())
 	{
 		msg_passiveskill_info.SkillCounts = (USHORT)m_PassiveSkill.size();
@@ -1426,14 +1682,20 @@ void CPlayer::SynchronousClientSkill(bool IsMagic)
 			msg_passiveskill_info.Skill[a].cType = itertor->first;
 			msg_passiveskill_info.Skill[a].Rank = itertor->second.Grade;
 			msg_passiveskill_info.Skill[a].EquipLV = itertor->second.EquipLV;
+			//			msg_passiveskill_info.Skill[a].Exp   = itertor->second.Degree_Practice;
 			a++;
 		}
 		CGameObject::s_World->SendMsgToClient(&msg_passiveskill_info, GetSocket());
 	}
 }
 
+//------------------------------------------------------------------------------------
+//向客户端发送技能相关消息
+//------------------------------------------------------------------------------------
 void   CPlayer::SendSkillMsg(bool IsActive)
 {
+	//	sbase::CSingleLock xLock1(&m_xLock);
+		//发送玩家主动技能信息
 	if (m_ActiveSkill.size() > 0 && IsActive && !m_MsgFlag[MSG_SKILL_ACTIVE_FLAG] && GetJoinFlag())
 	{
 		msg_activeskill_info.MagicCounts = (USHORT)m_ActiveSkill.size();
@@ -1451,6 +1713,7 @@ void   CPlayer::SendSkillMsg(bool IsActive)
 		m_MsgFlag[MSG_SKILL_ACTIVE_FLAG] = true;
 	}
 
+	//发送玩家被动技能信息
 	if (m_PassiveSkill.size() > 0 && !IsActive && !m_MsgFlag[MSG_SKILL_PASSIVE_FLAG] && GetJoinFlag())
 	{
 		msg_passiveskill_info.SkillCounts = (USHORT)m_PassiveSkill.size();
@@ -1462,6 +1725,62 @@ void   CPlayer::SendSkillMsg(bool IsActive)
 		for (; itertor != m_PassiveSkill.end(); itertor++)
 		{
 			USHORT UP_LV = 0;
+			/*
+			switch( itertor->first )
+			{
+			case SKILL_HALENESS:
+			UP_LV= m_EquipData.StrongLevel;
+			break;
+			case SKILL_FEAT:
+			UP_LV = m_EquipData.FeatLevel;
+			break;
+			case SKILL_DEFEND:
+			UP_LV = m_EquipData.DefanceLevel;
+			break;
+			case SKILL_ARMOURP_ROCTECT:
+			UP_LV = m_EquipData.ArmourLevel;
+			break;
+			case SKILL_ESCRIME:
+			UP_LV = m_EquipData.SwordplayLevel;
+			break;
+			case SKILL_GLAVE_GAS:
+			UP_LV = m_EquipData.SwordAirLevel;
+			break;
+			case SKILL_EXACTITUDE_ATTACK:
+			UP_LV = m_EquipData.PrecisionLevel;
+			break;
+			case SKILL_MUMP:
+			UP_LV = m_EquipData.FighterAirLevel;
+			break;
+			case SKILL_ENERGY:
+			UP_LV = m_EquipData.EnergyPowerLevel;
+			break;
+			case SKILL_ELEMENTS_STRENGTHEN:
+			UP_LV = m_EquipData.ElementIntensifyLevel;
+			break;
+			case SKILL_ELEMENTS:
+			UP_LV = m_EquipData.ElementElementsLevel;
+			break;
+			case SKILL_ELEMENTS_DEFEND:
+			UP_LV = m_EquipData.ElementImmunityLevel;
+			break;
+			case SKILL_ELEMENTS_VOLITION:
+			UP_LV = m_EquipData.EnergyFixLevel;
+			break;
+			case SKILL_FIR_STRENGTHEN:
+			UP_LV = m_EquipData.FireIntensifyLevel;
+			break;
+			case SKILL_FLEXILE:
+			UP_LV = m_EquipData.FlexibleShieldLevel;
+			break;
+			case SKILL_LIFE_CHANNELS:
+			UP_LV = m_EquipData.LifeChannelsLevel;
+			break;
+			default:
+			UP_LV= 0 ;
+			break;
+			}
+			*/
 			itertor->second.EquipLV = (UP_LV > 15) ? 15 : UP_LV;
 			msg_passiveskill_info.Skill[a].cType = itertor->first;
 			msg_passiveskill_info.Skill[a].Rank = itertor->second.Grade;
@@ -1484,8 +1803,9 @@ int CPlayer::GetMoney() const
 	return m_ObjectData.m_lMoney;
 }
 
-void CPlayer::SetBijou(int)
+void CPlayer::SetBijou(int /*bijou*/)
 {
+	//m_ObjectData.m_lStone;
 }
 
 int CPlayer::GetBijou() const
@@ -1513,6 +1833,9 @@ void CPlayer::AddPoint(int Point)
 	m_ConvertPoint += Point;
 }
 
+//------------------------------------------------------------------------------------
+//根据DB产生相应道具
+//------------------------------------------------------------------------------------
 bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 {
 	string    tmpstr;
@@ -1523,6 +1846,7 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 	int c = 0;
 	int d;
 	size_t b;
+	//解析（道具+装备+仓库）
 	if (DBString.empty())
 	{
 		return  false;
@@ -1536,6 +1860,8 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 		b = tmpstr.find_first_of(']');
 		tmpstr.assign(DBString, 1, b - 1);
 		DBString.erase(0, a + 1);
+		//装备ID
+
 		tmpstr1 = tmpstr;
 		while (!tmpstr.empty())
 		{
@@ -1595,7 +1921,7 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 			{
 				if (c < 24)
 				{
-					ItemManager::Instance()->CreateItem(&prop, m_Bags[Index].GetItem(c));
+					ItemManager::Instance()->CreateItem(&prop, m_Bags[Index].GetItem(c));  //背包
 				}
 				else
 				{
@@ -1606,7 +1932,7 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 			{
 				if (c < 54)
 				{
-					ItemManager::Instance()->CreateItem(&prop, m_Storage.GetItem(c));
+					ItemManager::Instance()->CreateItem(&prop, m_Storage.GetItem(c));  //仓库
 				}
 			}
 			else if (Index == 5)
@@ -1615,7 +1941,7 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 				{
 					prop.Binding = 1;
 					prop.Overlap = 1;
-					ItemManager::Instance()->CreateItem(&prop, &m_Equips[c]);
+					ItemManager::Instance()->CreateItem(&prop, &m_Equips[c]);  //装备
 					m_Equips[c].Increase(&m_EquipData);
 				}
 			}
@@ -1624,16 +1950,21 @@ bool  CPlayer::CreatePropFromDB(string DBString, int Index)
 		c++;
 	}
 
+	//设置玩家仓库激活
 	if (Index == 4)
 	{
 		m_Storage.SetActive(c - 1);
 	}
 
+	//改变攻击速度
 	ChangeAttackSpeed();
 
 	return true;
 }
 
+//-----------------------------------------------------------------------------------
+// 根据DB更新激活任务
+//-----------------------------------------------------------------------------------
 bool CPlayer::CreateTimeQuestFromDB(string DBString, eTimeQuest TimeType)
 {
 	enum { QUEST_ID = 1, QUEST_COMPLATECOUNT, QUEST_STATES, QUEST_UPTETIME, QUEST_ITEMCOUNT, QUEST_CREATURECOUNT, QUEST_EXPLORERCOUNT };
@@ -1725,6 +2056,7 @@ bool CPlayer::CreateTimeQuestFromDB(string DBString, eTimeQuest TimeType)
 			}
 		}
 
+		//任务描述
 		SQuestStatus* qs = this->GetQuest(QuestID);
 		qs->Completed = QuestComplateCount;
 		qs->Status = QuestStatus(QuestStates);
@@ -1741,6 +2073,9 @@ bool CPlayer::CreateTimeQuestFromDB(string DBString, eTimeQuest TimeType)
 	return true;
 }
 
+//-----------------------------------------------------------------------------------
+// 根据DB更新所有任务
+//-----------------------------------------------------------------------------------
 bool CPlayer::CreateAllQuestFromDB(string DBString)
 {
 	size_t a = 0;
@@ -1769,6 +2104,9 @@ bool CPlayer::CreateAllQuestFromDB(string DBString)
 	return true;
 }
 
+//------------------------------------------------------------------------------------
+//根据DB产生相应主动技能
+//------------------------------------------------------------------------------------
 bool CPlayer::CreateActiveSkillFromDB(string DBString)
 {
 	string    tmpstr;
@@ -1776,6 +2114,10 @@ bool CPlayer::CreateActiveSkillFromDB(string DBString)
 	ItemData  prop;
 	size_t a = 0;
 	size_t b;
+
+	//DBString += "[0,0]#[31,0]#[40,0]#[50,0]#[70,0]#[80,0]#[90,0]#[250,0]#[260,0]#[270,0]#[280,0]#[290,0]#[300,0]#[310,0]#[320,0]#[330,0]#[340,0]#[350,0]#";
+	//DBString += "[500,0]#[510,0]#[520,0]#[530,0]#[540,0]#[550,0]#[560,0]#[570,0]#[580,0]#[590,0]#[600,0]#[750,0]#[760,0]#[770,0]#[780,0]#[790,0]#[800,0]#";
+	//DBString += "[810,0]#[820,0]#[830,0]#[840,0]#";
 
 	if (DBString.empty())
 	{
@@ -1823,6 +2165,9 @@ bool CPlayer::CreateActiveSkillFromDB(string DBString)
 	return true;
 }
 
+//------------------------------------------------------------------------------------
+//根据DB产生相应被动技能
+//------------------------------------------------------------------------------------
 bool CPlayer::CreatePassiveSkillFromDB(string DBString)
 {
 	string    tmpstr;
@@ -1857,24 +2202,30 @@ bool CPlayer::CreatePassiveSkillFromDB(string DBString)
 			passive_info.Grade = atoi(tmpprop.c_str());
 			tmpstr.erase(0, b + 1);
 
+			//passive_info.Degree_Practice = atoi( tmpstr.c_str() );
 			AddPassiveSkill(SkillID, passive_info.Grade, 0);
 		}
 	}
 	return true;
 }
 
+//------------------------------------------------------------------------------------
 double RandOne0_1(double& seed)
 {
-	seed = ((unsigned long)seed) % MODUL65536;
-	seed = RandCoef2053 * (seed)+RandCoef13849;
-	seed = ((unsigned long)seed) % MODUL65536;
-	double rand = (seed) / (double)MODUL65536;
-	return(rand);
+	//seed为随机数种子
+	seed = ((unsigned long)seed) % MODUL65536;		//以为模对种子取余
+	seed = RandCoef2053 * (seed)+RandCoef13849;	//乘、加系数
+	seed = ((unsigned long)seed) % MODUL65536;		//以为模对种子取余
+	double rand = (seed) / (double)MODUL65536;		//使随机数在[0,1]区间
+	return(rand);									//返回随机值
 }
 
+//-------------------------------------------------------------------------------------
+//[a,b]区间内产生stCount个随即数
+//--------------------------------------------------------------------------------------
 void
 RandSeries(size_t a, size_t b, size_t& seed, valarray<size_t>& sp, size_t stCount)
-{
+{   //a,b为区间左右端点，seed为种子，sp存放随机数序列，stCount指定随机数个数
 	size_t stk = b - a + 1;
 	size_t stl = 2;
 	while (stl < stk) stl = stl + stl;
@@ -1907,7 +2258,7 @@ double AverageRandom(double min, double max)
 
 size_t
 Rand_ab_One(size_t a, size_t b, size_t& seed)
-{
+{			//a,b为区间左右端点，seed为种子
 	size_t rand = 0;
 	size_t stk = b - a + 1;
 	size_t stl = 2;
@@ -1930,12 +2281,16 @@ Rand_ab_One(size_t a, size_t b, size_t& seed)
 	return(rand);
 }
 
+//------------------------------------------------------------------------------------
 void CPlayer::Activate(void)
 {
 	Init();
 	CGameObject::Activate();
 }
 
+//------------------------------------------------------------------------------------
+//删除角色关系
+//------------------------------------------------------------------------------------
 bool CPlayer::DeleteRelation(const char* RelationName)
 {
 	std::string temstr(RelationName);
@@ -1943,8 +2298,12 @@ bool CPlayer::DeleteRelation(const char* RelationName)
 	return true;
 }
 
+//------------------------------------------------------------------------------------
+//更新关系数据
+//------------------------------------------------------------------------------------
 eError CPlayer::UpdateRelation(RELATION& role, char& result)
 {
+	//是否添加过该好友
 	if (m_RelationMgr.FindRole(&role.strName))
 	{
 		RELATION* TempRole = m_RelationMgr.GetRelationRole(&role.strName);
@@ -1953,27 +2312,28 @@ eError CPlayer::UpdateRelation(RELATION& role, char& result)
 		{
 			if (TempRole->Type == 0)
 			{
-				return MSG_ERRO_0220;
+				return MSG_ERRO_0220; //该玩家已经是你的好友
 			}
 			else
 			{
-				return MSG_ERRO_0221;
+				return MSG_ERRO_0221; //该玩家已经在你的黑名单列表中
 			}
 		}
 		else
 		{
 			if (TempRole->Type == 1)
 			{
-				return MSG_ERRO_O224;
+				return MSG_ERRO_O224; //你已经把该玩家加入黑名单
 			}
 			else
 			{
-				return MSG_ERRO_0225;
+				return MSG_ERRO_0225; //该玩家已经在你的好友列表中
 			}
 		}
 	}
 	else
 	{
+		//列表是否已经满员
 		if (m_RelationMgr.IsOverFlow(role.Type))
 		{
 			result = 2;
@@ -1996,6 +2356,9 @@ eError CPlayer::UpdateRelation(RELATION& role, char& result)
 	}
 }
 
+//------------------------------------------------------------------------------------
+//查找角色
+//------------------------------------------------------------------------------------
 bool   CPlayer::FindRoleByName(const void* pBuf)
 {
 	MSG_ENTER_GAME* pGameEnter = (MSG_ENTER_GAME*)pBuf;
@@ -2009,6 +2372,9 @@ bool   CPlayer::FindRoleByName(const void* pBuf)
 	return false;
 }
 
+//------------------------------------------------------------------------------------
+//角色基本数据请求
+//------------------------------------------------------------------------------------
 void  CPlayer::RequestBaseRoleInfoFromDB(const void* pBuf)
 {
 	MSG_LOGIN_GAMESERVER* pLogin = (MSG_LOGIN_GAMESERVER*)pBuf;
@@ -2018,6 +2384,9 @@ void  CPlayer::RequestBaseRoleInfoFromDB(const void* pBuf)
 	InterlockedIncrement(&SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//角色添加请求
+//------------------------------------------------------------------------------------
 void    CPlayer::RequestAddRoleFromDB(const void* pBuf)
 {
 	MSG_CREATE_ROLE* pCreateRole = (MSG_CREATE_ROLE*)pBuf;
@@ -2036,12 +2405,28 @@ void    CPlayer::RequestAddRoleFromDB(const void* pBuf)
 	error.Head.usType = _MSG_MANAGE_RETURN;
 	error.ucErrorType = _MSG_CREATE_ROLE;
 
+	//长度限制
 	if (strlen(Role.Name) > MAX_ROLENAME_SIZE)
 	{
 		error.ucDisc = MSG_ERRO_0002;
 		CGameObject::s_World->SendMsgToClient(&error, GetSocket());
 		return;
 	}
+
+	//职业等级
+	/*
+	int F_LV,S_LV;
+	if ( !Role.uProfession )
+	{
+	F_LV = 1;
+	S_LV = 0;
+	}
+	else
+	{
+	F_LV = 0;
+	S_LV = 1;
+	}
+	*/
 
 	ULONG  MaxHP = CPeizhi::Instance()->GetPlayerMaxHP(1, Role.uProfession);
 	ULONG  MaxMP = CPeizhi::Instance()->GetPlayerMaxMP(1, Role.uProfession);
@@ -2051,23 +2436,28 @@ void    CPlayer::RequestAddRoleFromDB(const void* pBuf)
 	memset(szSQL, 0L, sizeof(szSQL));
 	char* Gender = (Role.ucGender == 1) ? "male" : "female";
 
+	//_asm int 3;
 	sprintf(szSQL, SQL_SELECT_SAME_ROLE, GetAccounts(), Role.Name, Gender, Role.ucCamp, Role.uProfession, 1, \
-		0, 0, 0, MaxHP, MaxMP, 0, Role.ucBelief, Role.ucHairStyle, Role.ucFaceShap);
+		0, 0, 0, MaxHP, MaxMP, 0, Role.ucBelief, Role.ucHairStyle, Role.ucFaceShap);//change by lion
 
 	CGameObject::s_World->GetDBAddr(DB_NONE)->ExecuteAsyncSQL(szSQL, (void*)this, &CPlayer::DealWith_Select_CanRoleAdd);
 	InterlockedIncrement(&SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//角色删除请求
+//------------------------------------------------------------------------------------
 void CPlayer::RequestDelRoleFromDB(const void* pBuf)
 {
 	MSG_DELETE_ROLE* pDelRole = (MSG_DELETE_ROLE*)pBuf;
 	if (!CGameObject::s_World->g_pConsortiaManager->DelRole(pDelRole->Name))
 	{
+		//向客户端发送消息，公会长如果有公会的话，不能删除
 		MSG_MANAGE_RETURN  error;
 		error.Head.usSize = sizeof(MSG_MANAGE_RETURN);
 		error.Head.usType = _MSG_MANAGE_RETURN;
 		error.ucErrorType = _MSG_DELETE_ROLE;
-		error.ucDisc = MSG_ERRO_0006;
+		error.ucDisc = MSG_ERRO_0006;  //公会长如果有公会的话，不能删除
 		CGameObject::s_World->SendMsgToClient(&error, GetSocket());
 		return;
 	}
@@ -2084,6 +2474,9 @@ void CPlayer::RequestDelRoleFromDB(const void* pBuf)
 	InterlockedIncrement(&SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+// 公会创建请求
+//------------------------------------------------------------------------------------
 void CPlayer::RequestAddConsortiaFromDB(const void* pBuf)
 {
 	MSG_CONSORTIA_CREATE* pDelRole = (MSG_CONSORTIA_CREATE*)pBuf;
@@ -2094,6 +2487,9 @@ void CPlayer::RequestAddConsortiaFromDB(const void* pBuf)
 	InterlockedIncrement(&SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//玩家登录请求数据
+//------------------------------------------------------------------------------------
 void CPlayer::RequestGameDataFromDB(const void* pBuf)
 {
 	UINT UserID = 0;
@@ -2146,6 +2542,9 @@ void CPlayer::RequestGameDataFromDB(const void* pBuf)
 	InterlockedIncrement(&SynDBOutStand);
 }
 
+//------------------------------------------------------------------------------------
+//添加角色基本
+//------------------------------------------------------------------------------------
 void   CPlayer::DealWith_Select_CanRoleAdd(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
@@ -2161,7 +2560,7 @@ void   CPlayer::DealWith_Select_CanRoleAdd(rade_db::PSQL_RESULT result)
 	error.Head.usSize = sizeof(MSG_MANAGE_RETURN);
 	error.Head.usType = _MSG_MANAGE_RETURN;
 	error.ucErrorType = _MSG_CREATE_ROLE;
-	error.ucDisc = MSG_ERRO_0005;
+	error.ucDisc = MSG_ERRO_0005;             //已经被注册
 
 	rade_db::IRecordset* pRes = result->pResult;
 	if (!pRes)
@@ -2170,10 +2569,13 @@ void   CPlayer::DealWith_Select_CanRoleAdd(rade_db::PSQL_RESULT result)
 		return;
 	}
 
+	//int RecordCount = pRes->CountRecord();
+
 	pRes->Move(0);
 	rade_db::IRecord* Record = pRes->GetRecord();
 	IF_NOT(Record)
 		return;
+	//__int64 id1 = Record->Field( UINT( 0 ) );
 	const char* RoleName = Record->Field(1);
 	__int64 LastID = Record->Field(2);
 	__int64 id = Record->Field(3);
@@ -2185,11 +2587,12 @@ void   CPlayer::DealWith_Select_CanRoleAdd(rade_db::PSQL_RESULT result)
 		if (itor != pPlayer->m_AddRole.end())
 		{
 			pPlayer->m_AddRole.erase(itor);
-			error.ucDisc = MSG_ERRO_0005;
+			error.ucDisc = MSG_ERRO_0005;           //已经被注册
 		}
 	}
 	else if (id == 0)
 	{
+		//插入已有角色
 		pPlayer->m_HaveRole[RoleName] = LastID;
 
 		if (itor != pPlayer->m_AddRole.end())
@@ -2204,6 +2607,9 @@ void   CPlayer::DealWith_Select_CanRoleAdd(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+// 能否创建工会
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_CanConsortiaAdd(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
@@ -2235,9 +2641,9 @@ void CPlayer::DealWith_Select_CanConsortiaAdd(rade_db::PSQL_RESULT result)
 	memcpy(Response.ci.acName, pPlayer->GetConsortia(), 32);
 	memcpy(Response.ci.acTextInfo, pPlayer->GetConsortia()->acTextInfo, 32);
 	Response.ci.iLevel = 1;
-	Response.ci.lCredit = 0;
-	Response.ci.AltarCounts = 0;
-	Response.ci.MaxMember = 50;
+	Response.ci.lCredit = 0;    //这个数字需要动态赋值 目前先放着
+	Response.ci.AltarCounts = 0;//这个数字需要动态赋值 目前先放着
+	Response.ci.MaxMember = 50; //这个数字需要动态赋值 目前先放着
 	Response.ci.lfound = Basefound->lfound;
 	Response.ci.lbijou = Basefound->lbijou;
 	Response.cm.acDuty = CONSORTIA_CHAIRMAN;
@@ -2253,8 +2659,10 @@ void CPlayer::DealWith_Select_CanConsortiaAdd(rade_db::PSQL_RESULT result)
 	}
 	else
 	{
+		//改变公会ID
 		pPlayer->GetConsortia()->uiID = LastID;
 
+		//添加新成员
 		ConsortiaRelationElem temp;
 		temp.strName = pPlayer->GetName();
 		temp.Job = CONSORTIA_CHAIRMAN;
@@ -2274,6 +2682,9 @@ void CPlayer::DealWith_Select_CanConsortiaAdd(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+// 任务数据处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_Quest(rade_db::PSQL_RESULT result)
 {
 	enum { DB_ID, DB_ALLQUEST, DB_ACTIVEQUEST, DB_TIMEQUEST, DB_PROFESSION, DB_CAMP, DB_LV, DB_SLV, DB_BELIEF };
@@ -2282,6 +2693,8 @@ void CPlayer::DealWith_Select_Quest(rade_db::PSQL_RESULT result)
 		return;
 	}
 
+	// 	IF_NOT( result )
+	// 		return;
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
 	if (pPlayer == NULL)
 	{
@@ -2302,6 +2715,7 @@ void CPlayer::DealWith_Select_Quest(rade_db::PSQL_RESULT result)
 		IF_NOT(Record)
 			return;
 
+		//UINT ID = Record->Field( UINT( DB_ID ) );
 		char* AllQuest = Record->Field(DB_ALLQUEST);
 		char* ActiveQuest = Record->Field(DB_ACTIVEQUEST);
 		char* TimeQuest = Record->Field(DB_TIMEQUEST);
@@ -2320,12 +2734,17 @@ void CPlayer::DealWith_Select_Quest(rade_db::PSQL_RESULT result)
 		return;
 	}
 
+	//pPlayer->OnProcess_KitBag( pPlayer );
+
 	pPlayer->LoadQuest();
 
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//角色基本数据处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
@@ -2343,6 +2762,7 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 
 	int RecordCount = pRes->CountRecord();
 
+	//得到被动技能数据
 	rade_db::IRecord* tempRecord;
 	MSG_ROLE_INFO   RoleInfo;
 	int i;
@@ -2369,7 +2789,8 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			}
 			RoleInfo.cCamp = tempRecord->Field(2);
 			RoleInfo.ucLV = tempRecord->Field(3);
-			RoleInfo.ucProfession = tempRecord->Field(4);
+			RoleInfo.ucProfession = tempRecord->Field(4);//by lion 职业
+			//			RoleInfo.ucScholarLV  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle = tempRecord->Field(5);
 			RoleInfo.ucFaceShap = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2392,7 +2813,8 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			}
 			RoleInfo.cCamp1 = tempRecord->Field(2);
 			RoleInfo.ucLV1 = tempRecord->Field(3);
-			RoleInfo.ucProfession1 = tempRecord->Field(4);
+			RoleInfo.ucProfession1 = tempRecord->Field(4);//by lion 职业
+			//			RoleInfo.ucScholarLV1  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle1 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap1 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2415,7 +2837,8 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			}
 			RoleInfo.cCamp2 = tempRecord->Field(2);
 			RoleInfo.ucLV2 = tempRecord->Field(3);
-			RoleInfo.ucProfession2 = tempRecord->Field(4);
+			RoleInfo.ucProfession2 = tempRecord->Field(4);//by lion 职业
+			//			RoleInfo.ucScholarLV2  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle2 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap2 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2438,7 +2861,8 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 			}
 			RoleInfo.cCamp3 = tempRecord->Field(2);
 			RoleInfo.ucLV3 = tempRecord->Field(3);
-			RoleInfo.ucProfession3 = tempRecord->Field(4);
+			RoleInfo.ucProfession3 = tempRecord->Field(4);//by lion 职业
+			//			RoleInfo.ucScholarLV3  = tempRecord->Field( 4 );
 			RoleInfo.ucHairStyle3 = tempRecord->Field(5);
 			RoleInfo.ucFaceShap3 = tempRecord->Field(6);
 			for (int a = 0; a < MAX_EQUIP_COUNT; a++)
@@ -2461,10 +2885,16 @@ void CPlayer::DealWith_Select_RoleBaseInfo(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//背包数据处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_KitBag(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
 		return;
+	//
+	// 	IF_NOT( result->Falg )  //写数据库失败
+	// 		return;
 	if (result->Falg == NULL)
 	{
 		return;
@@ -2489,14 +2919,17 @@ void CPlayer::DealWith_Select_KitBag(rade_db::PSQL_RESULT result)
 		rade_db::IRecord* rec = pRes->GetRecord();
 		for (int i = 0; i < 5; i++)
 		{
-			char* EquipInfo = (char*)rec->Field(UINT(i));
+			char* EquipInfo = (char*)rec->Field(UINT(i));  //道具栏1
+			//__asm int 3;
 			if (pPlayer->CreatePropFromDB(EquipInfo, i))
 			{
+				//产生装备的处理
 			}
 		}
 	}
 	else
 	{
+		//发送无装备信息
 	}
 
 	pPlayer->OnProcess_KitBag(pPlayer);
@@ -2505,10 +2938,16 @@ void CPlayer::DealWith_Select_KitBag(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//被动技能数据处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_PassiveSkill(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
 		return;
+	// 	IF_NOT( result->Falg )  //写数据库失败
+	// 		return;
+
 	if (result->Falg == NULL)
 	{
 		return;
@@ -2527,6 +2966,7 @@ void CPlayer::DealWith_Select_PassiveSkill(rade_db::PSQL_RESULT result)
 
 	int RecordCount = pRes->CountRecord();
 
+	//得到被动技能数据
 	rade_db::IRecord* tempRecord;
 	for (int i = 0; i < RecordCount; i++)
 	{
@@ -2541,10 +2981,16 @@ void CPlayer::DealWith_Select_PassiveSkill(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//主动技能数据处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_ActiveSkill(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
 		return;
+	// 	IF_NOT( result->Falg )  //写数据库失败
+	// 		return;
+
 	if (result->Falg == NULL)
 	{
 		return;
@@ -2563,6 +3009,7 @@ void CPlayer::DealWith_Select_ActiveSkill(rade_db::PSQL_RESULT result)
 		return;
 	int RecordCount = pRes->CountRecord();
 
+	//得到主动技能数
 	rade_db::IRecord* tempRecord;
 	for (int i = 0; i < RecordCount; i++)
 	{
@@ -2576,6 +3023,9 @@ void CPlayer::DealWith_Select_ActiveSkill(rade_db::PSQL_RESULT result)
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
+//----------------------------------------------------------------------------------
+//供奉祭坛处理
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_Altar(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
@@ -2618,10 +3068,16 @@ void CPlayer::DealWith_Select_Altar(rade_db::PSQL_RESULT result)
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
+//------------------------------------------------------------------------------------
+//社会关系处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_Relation(rade_db::PSQL_RESULT result)
 {
+	//__asm int 3;
 	IF_NOT(result)
 		return;
+	// 	IF_NOT( result->Falg )  //d数据库失败
+	// 		return;
 	if (result->Falg == NULL)
 	{
 		return;
@@ -2650,6 +3106,7 @@ void CPlayer::DealWith_Select_Relation(rade_db::PSQL_RESULT result)
 		Relation.Camp = (BYTE)tempRecord->Field(2);
 		Relation.City = (BYTE)tempRecord->Field(3);
 		Relation.LV = (BYTE)tempRecord->Field(4);
+		//		Relation.S_LV = (BYTE)tempRecord->Field(5);
 		Relation.Type = (BYTE)tempRecord->Field(6) == 0 ? TYPE_FRIEND : TYPE_BLACKLIST;
 		char Result = 0;
 		pPlayer->UpdateRelation(Relation, Result);
@@ -2660,10 +3117,16 @@ void CPlayer::DealWith_Select_Relation(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//基本属性处理
+//------------------------------------------------------------------------------------
 void CPlayer::DealWith_Select_RoleAttribute(rade_db::PSQL_RESULT result)
 {
 	IF_NOT(result)
 		return;
+	// 	IF_NOT( result->Falg )  //读数据库失败
+	// 		return;
+
 	if (result->Falg == NULL)
 	{
 		return;
@@ -2692,11 +3155,16 @@ void CPlayer::DealWith_Select_RoleAttribute(rade_db::PSQL_RESULT result)
 	IF_NOT(Record)
 		return;
 
+	//装备
 	char* Equip = Record->Field(UINT(CHARACTER_EQUIP));
 	pPlayer->CreatePropFromDB(Equip, 5);
 
+	//GM
 	pPlayer->SetGM(!!(BYTE)Record->Field(CHARACTER_GMFLAG));
 
+	//UINT id = Record->Field( UINT( CHARACTER_ID ) );
+
+	//将读出来的数据赋值给内部结构体
 	char* Name = Record->Field(CHARACTER_NAME);
 	pPlayer->SetName(Name);
 
@@ -2727,8 +3195,8 @@ void CPlayer::DealWith_Select_RoleAttribute(rade_db::PSQL_RESULT result)
 	pPlayer->m_ObjectData.m_cRank = (BYTE)Record->Field(CHARACTER_LV);
 	pPlayer->m_ObjectData.m_lHP = (UINT)Record->Field(CHARACTER_HP_CUR);
 	pPlayer->m_ObjectData.m_lMP = (UINT)Record->Field(CHARACTER_MP_CUR);
-	pPlayer->m_ObjectData.m_usAttackDistance = 1;
-	pPlayer->m_ObjectData.m_usAttackSpeed = 1500;
+	pPlayer->m_ObjectData.m_usAttackDistance = 1;           //裸人默认值
+	pPlayer->m_ObjectData.m_usAttackSpeed = 1500;         //裸人默认值
 	pPlayer->m_ObjectData.m_cHairStyle = (BYTE)Record->Field(CHARACTER_HAIRSTYLE);
 	pPlayer->m_ObjectData.m_cPupilColor = (BYTE)Record->Field(CHARACTER_FACESHAP);
 	pPlayer->m_ObjectData.m_lRegionID = (BYTE)Record->Field(CHARACTER_CURMAP);
@@ -2743,6 +3211,7 @@ void CPlayer::DealWith_Select_RoleAttribute(rade_db::PSQL_RESULT result)
 	pPlayer->SetSkillPoint((UINT)Record->Field(CHARACTER_SKILLPOINT));
 	pPlayer->SetSkillExp((UINT)Record->Field(CHARACTER_SKILLEXP));
 
+	//防止玩家意外进入档格容错处理
 	if (pPlayer->m_ObjectData.m_fX <= -240.f || pPlayer->m_ObjectData.m_fX >= 240.0f
 		|| pPlayer->m_ObjectData.m_fZ <= -240.f || pPlayer->m_ObjectData.m_fZ >= 240.0f)
 	{
@@ -2776,6 +3245,9 @@ void CPlayer::DealWith_Select_RoleAttribute(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//更新角色属性返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_RoleAttribute(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2790,12 +3262,16 @@ void CPlayer::DealWith_Update_RoleAttribute(rade_db::PSQL_RESULT result)
 	}
 	else
 	{
+		//cout<<pPlayer->GetAccounts()<<"Update role attribute success! "<<endl;
 	}
 
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//更新背包装备返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_KitBag(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2811,12 +3287,16 @@ void CPlayer::DealWith_Update_KitBag(rade_db::PSQL_RESULT result)
 	}
 	else
 	{
+		//cout<<pPlayer->GetAccounts()<<"Update role kitbag success! "<<endl;
 	}
 
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//更新主动技能返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_ActiveSkill(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2839,6 +3319,9 @@ void CPlayer::DealWith_Update_ActiveSkill(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//更新被动技能返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_PassiveSkill(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2861,6 +3344,9 @@ void CPlayer::DealWith_Update_PassiveSkill(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//更新社会关系返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_Relation(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2875,12 +3361,16 @@ void CPlayer::DealWith_Update_Relation(rade_db::PSQL_RESULT result)
 	}
 	else
 	{
+		// cout<<pPlayer->GetAccounts()<<"Update relation success! "<<endl;
 	}
 
 	if (pPlayer->WillRelease && pPlayer->SynDBOutStand == 0)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//删除角色返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_RoleUpate(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2903,6 +3393,9 @@ void CPlayer::DealWith_Update_RoleUpate(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//-----------------------------------------------------------------------------------
+//删除角色返回
+//-----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_RoleDel(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2915,20 +3408,22 @@ void CPlayer::DealWith_Update_RoleDel(rade_db::PSQL_RESULT result)
 	if (!result->Falg && !result)
 	{
 		cout << pPlayer->GetAccounts() << "Update delete role failed! " << endl;
+		//向客户端发送消息
 		MSG_MANAGE_RETURN  error;
 		error.Head.usSize = sizeof(MSG_MANAGE_RETURN);
 		error.Head.usType = _MSG_MANAGE_RETURN;
 		error.ucErrorType = _MSG_DELETE_ROLE;
-		error.ucDisc = MSG_ERRO_0007;
+		error.ucDisc = MSG_ERRO_0007;  //删除角色失败
 		CGameObject::s_World->SendMsgToClient(&error, pPlayer->GetSocket());
 	}
 	else
 	{
+		//向客户端发送消息
 		MSG_MANAGE_RETURN  error;
 		error.Head.usSize = sizeof(MSG_MANAGE_RETURN);
 		error.Head.usType = _MSG_MANAGE_RETURN;
 		error.ucErrorType = _MSG_DELETE_ROLE;
-		error.ucDisc = MSG_ERRO_0008;
+		error.ucDisc = MSG_ERRO_0008;  //删除角色成功
 		CGameObject::s_World->SendMsgToClient(&error, pPlayer->GetSocket());
 	}
 
@@ -2936,6 +3431,9 @@ void CPlayer::DealWith_Update_RoleDel(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//----------------------------------------------------------------------------------
+// 更新好友信息
+//----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_Friend(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2957,6 +3455,9 @@ void CPlayer::DealWith_Update_Friend(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//----------------------------------------------------------------------------------
+// 更新黑名单信息
+//----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_BlackList(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -2978,6 +3479,9 @@ void CPlayer::DealWith_Update_BlackList(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//----------------------------------------------------------------------------------
+// 离线更新工会信息
+//----------------------------------------------------------------------------------
 void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -3000,6 +3504,7 @@ void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 	rade_db::IRecord* Record = pRes->GetRecord();
 	IF_NOT(Record)
 		return;
+	//公会
 	char Success = Record->Field((UINT)0);
 	const char* RoleName = Record->Field(1);
 	char  OldDuty = Record->Field(2);
@@ -3009,6 +3514,7 @@ void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 	{
 		if (CONSORTIA_NONE == NewDuty)
 		{
+			//向所有成员广播玩家被提出公会的消息
 			MSG_CONSORTIA_MEMBER_DEL  BeDel;
 			memset(&BeDel, 0L, sizeof(BeDel));
 			BeDel.Head.usSize = sizeof(MSG_CONSORTIA_MEMBER_DEL);
@@ -3016,6 +3522,7 @@ void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 			strcpy(BeDel.strName, RoleName);
 			pPlayer->BroadcastConsortiaMsg(&BeDel);
 			CGameObject::s_World->g_pConsortiaManager->Del(pPlayer->GetConsortia(), RoleName);
+			//更新公会成员列表
 			pPlayer->BroadcastConMemberInfo();
 		}
 		else
@@ -3028,6 +3535,7 @@ void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 			strcpy(consortia_duty.NewName, RoleName);
 			consortia_duty.NewDuty = NewDuty;
 
+			//向所有成员发送修改公告消息
 			pPlayer->BroadcastConsortiaMsg(&consortia_duty);
 		}
 	}
@@ -3040,6 +3548,9 @@ void CPlayer::DealWith_Offline_Update_Uinon(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//----------------------------------------------------------------------------------
+// 更新公会信息
+//----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_Consortia(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -3062,6 +3573,9 @@ void CPlayer::DealWith_Update_Consortia(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//----------------------------------------------------------------------------------
+//任务信息
+//----------------------------------------------------------------------------------
 void CPlayer::DealWith_Update_Quest(rade_db::PSQL_RESULT result)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(result->pPlayer);
@@ -3084,12 +3598,18 @@ void CPlayer::DealWith_Update_Quest(rade_db::PSQL_RESULT result)
 		pPlayer->RealActive();
 }
 
+//------------------------------------------------------------------------------------
+//缓存校验码
+//------------------------------------------------------------------------------------
 void    CPlayer::CacheValidCode(string Accounts, string Valid)
 {
 	sbase::CSingleLock xLock(&g_xLock);
 	m_valid_map[Accounts] = Valid;
 }
 
+//------------------------------------------------------------------------------------
+//缓存校验码
+//------------------------------------------------------------------------------------
 void CPlayer::CacheSocket(snet::CSocket* PSocket, string strAccounts)
 {
 	if (m_valid_map.find(strAccounts) != m_valid_map.end())
@@ -3098,11 +3618,17 @@ void CPlayer::CacheSocket(snet::CSocket* PSocket, string strAccounts)
 	}
 }
 
+//------------------------------------------------------------------------------------
+//验证
+//------------------------------------------------------------------------------------
 bool   CPlayer::ValidateLogin(string validcode)
 {
 	return  (validcode == m_valid) ? true : false;
 }
 
+//------------------------------------------------------------------------------------
+//得到验证码
+//------------------------------------------------------------------------------------
 string   CPlayer::GetValidCode(string Accounts)
 {
 	map< string, string >::iterator  itor = m_valid_map.find(Accounts);
@@ -3114,6 +3640,9 @@ string   CPlayer::GetValidCode(string Accounts)
 	return string("");
 }
 
+//------------------------------------------------------------------------------------
+//清除验证码
+//------------------------------------------------------------------------------------
 void CPlayer::ClearValidCode(snet::CSocket* PSocket)
 {
 	string Accounts("");
@@ -3132,15 +3661,24 @@ void CPlayer::ClearValidCode(snet::CSocket* PSocket)
 	}
 }
 
+//------------------------------------------------------------------------------------
+//得到验证码
+//------------------------------------------------------------------------------------
 void   CPlayer::AddRole(ROLE_ATTRIBUTE Role)
 {
 	m_AddRole[Role.Name] = Role;
 }
 
+//------------------------------------------------------------------------------------
+//得到验证码
+//------------------------------------------------------------------------------------
 void   CPlayer::SelectRole(string Name)
 {
 }
 
+//------------------------------------------------------------------------------------
+//得到验证码
+//------------------------------------------------------------------------------------
 void    CPlayer::DelRole(string Name)
 {
 	m_DeleteRole.push_back(Name);
@@ -3155,8 +3693,13 @@ void	CPlayer::SetSkillMsg(MSG_SKILL* pSkillMsg)
 	memcpy(&m_SkillMsg, pSkillMsg, sizeof(MSG_SKILL));
 }
 
+//----------------------------------------------------------------------------------
+// 备份数据
+//----------------------------------------------------------------------------------
 bool  CPlayer::BackUp()
 {
+	// 	if (  CGameObject::s_World->g_pBackUpMgr->GetStatus() )
+	// 	{
 	if (GetJoinFlag())
 	{
 		BackUP_RoleAttribute();
@@ -3167,12 +3710,15 @@ bool  CPlayer::BackUp()
 		BackUp_Quest();
 	}
 	return true;
+	//	}
 	sbase::ConsoleWriteColorText(FOREGROUND_GREEN, "%s玩家数据保存", GetName());
 	return false;
 }
 
 bool  CPlayer::BackUP_RoleAttribute(void)
 {
+	//更新进入游戏角色数据
+	//int SendLength = 0;
 	static BACKUP_MSG  Msg;
 	memset(&Msg, 0L, sizeof(Msg));
 	Msg.Head.usType = TYPE_ROLE_ATTRIBUTE;
@@ -3183,6 +3729,10 @@ bool  CPlayer::BackUP_RoleAttribute(void)
 		return false;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	//CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	//CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize,SendLength);
+
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
 	return true;
@@ -3195,6 +3745,7 @@ bool  CPlayer::BackUp_ActiveSkill(void)
 		return false;
 	}
 
+	//int SendLength = 0;
 	static BACKUP_MSG  Msg;
 	memset(Msg.SQL, 0L, sizeof(Msg.SQL));
 
@@ -3205,6 +3756,10 @@ bool  CPlayer::BackUp_ActiveSkill(void)
 		return false;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
@@ -3218,6 +3773,7 @@ bool  CPlayer::BackUp_PassiveSkill(void)
 		return false;
 	}
 
+	//int SendLength = 0;
 	static BACKUP_MSG  Msg;
 	memset(Msg.SQL, 0L, sizeof(Msg.SQL));
 	Msg.Head.usType = TYPE_ROLE_PASSIVESKILL;
@@ -3228,15 +3784,20 @@ bool  CPlayer::BackUp_PassiveSkill(void)
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
 
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 	return true;
 }
 
 bool  CPlayer::BackUp_Relation(void)
 {
+	//int SendLength = 0;
 	static BACKUP_MSG  Msg;
 	memset(Msg.SQL, 0L, sizeof(Msg.SQL));
 
+	//好友
 	if (!IsMsgOK(MSG_RELATION_FRIENDS_FLAG))
 	{
 		goto BlckList;
@@ -3249,7 +3810,13 @@ bool  CPlayer::BackUp_Relation(void)
 		goto BlckList;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
+
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
+
+	//黑名单
 
 BlckList:
 	if (!IsMsgOK(MSG_RELATION_BLACKLIST_FLAG))
@@ -3264,8 +3831,12 @@ BlckList:
 		goto Consortia;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	// CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
+	//公会
 Consortia:
 	if (!IsMsgOK(MSG_RELATION_CONSORTIA_FLAG))
 	{
@@ -3279,8 +3850,12 @@ Consortia:
 		goto Altar;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
+	//祭坛
 Altar:
 	if (!IsMsgOK(MSG_ALTAR_FLAG))
 	{
@@ -3294,6 +3869,9 @@ Altar:
 		return false;
 	}
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 	return true;
 }
@@ -3305,6 +3883,7 @@ bool  CPlayer::BackUp_KitBag(void)
 		return false;
 	}
 
+	//int SendLength = 0;
 	static BACKUP_MSG  Msg;
 	memset(Msg.SQL, 0L, sizeof(Msg.SQL));
 
@@ -3333,6 +3912,9 @@ bool  CPlayer::BackUp_KitBag(void)
 		}
 
 		Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+		//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+		 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+		 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 		CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
 		memset(&Msg.SQL, 0, sizeof(Msg.SQL));
@@ -3342,12 +3924,18 @@ bool  CPlayer::BackUp_KitBag(void)
 	Msg.Head.usType = TYPE_ROLE_STORAGE;
 	strcpy(Msg.SQL, PackStorageInfo());
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize,SendLength );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
 	memset(&Msg.SQL, 0, sizeof(Msg.SQL));
 	Msg.Head.usType = TYPE_ROLE_EQUIP;
 	strcpy(Msg.SQL, PackEquipInfo());
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
 	return true;
@@ -3356,17 +3944,113 @@ bool  CPlayer::BackUp_KitBag(void)
 bool  CPlayer::BackUp_Quest(void)
 {
 	static  BACKUP_MSG  Msg;
+	//int SendLength = 0;
 	Msg.Head.usType = TYPE_ROLE_QUEST;
 	memset(Msg.SQL, 0L, sizeof(Msg.SQL));
 	strcpy(Msg.SQL, this->PackQuest());
 	Msg.Head.usSize = sizeof(MsgHead) + strlen(Msg.SQL);
+	//Msg.Head.usSize = Msg.Head.usSize + (4 - Msg.Head.usSize %4);
+	 //CGameObject::s_World->g_pBackUpMgr->SetSendBuf((void *)&Msg, Msg.Head.usSize );
+	 //CGameObject::s_World->g_pBackUpMgr->Write((void *)&Msg, Msg.Head.usSize, SendLength  );
 	CGameObject::s_World->WriteToBackBuff((char*)&Msg, Msg.Head.usSize);
 
 	return true;
 }
 
+//----------------------------------------------------------------------------
+//普通聊天频道（所在地图）
+//----------------------------------------------------------------------------
+// void CPlayer::TalkToMap( const char* pBuf, int nSize, BYTE ucType )
+// {
+// 	PlayerList  pList =   GetRegion()->GetPlayerList();
+// 	list< CPlayer* >::iterator  itor = pList.begin();
+// 	for ( ; itor != pList.end(); itor++ )
+// 	{
+// 		this->TalkToPlayer( *itor, pBuf, nSize, ucType );
+// 	}
+// }
+
+//----------------------------------------------------------------------------
+//阵营频道（所在阵营）
+//----------------------------------------------------------------------------
+// void CPlayer::TalkToCamp( const char* pBuf, int nSize, BYTE ucType )
+// {
+// 	for( int i=0; i<ACADEMIC_PLAYER_MEM_ID; i++ )
+// 	{
+// 		if ( CGameObject::s_World->g_pPlayer[i].IsActive()  && ( CGameObject::s_World->g_pPlayer[i].GetlFaction() == GetlFaction( ) ) )
+// 		{
+// 			this->TalkToPlayer(  &CGameObject::s_World->g_pPlayer[i], pBuf, nSize, ucType );
+// 		}
+// 	}
+// }
+
+//----------------------------------------------------------------------------
+//队伍频道（所在队伍）
+//----------------------------------------------------------------------------
+// void CPlayer::TalkToTeam( const char* pBuf, int nSize, BYTE ucType )
+// {
+// 	//修改 by C.D 20071226
+// 	if (NULL != m_pTeamLeader)
+// 	{
+// 		this->TalkToPlayer( m_pTeamLeader,  pBuf, nSize, ucType);
+// 		for ( vector<CPlayer*>::iterator iter = m_Teammates.begin();
+// 			iter != m_Teammates.end();
+// 			iter++ )
+// 		{
+// 			this->TalkToPlayer( (*iter),  pBuf, nSize, ucType);
+// 		}
+// 	}
+// 	//////////20071226
+// 	// 	for ( int a = 0; a < MAX_TEAM_NUMBER; a++  )
+// 	// 	{
+// 	// 		this->TalkToPlayer( m_pTeam[a],  pBuf, nSize, ucType);
+// 	// 	}
+// }
+
+//----------------------------------------------------------------------------
+//工会频道（所在公会）
+//----------------------------------------------------------------------------
+// void CPlayer::TalkToUnion( const char* , int, BYTE )
+// {
+// 	return;
+// }
+
+//----------------------------------------------------------------------------
+//私聊频道（单个玩家 ）
+//----------------------------------------------------------------------------
+// void CPlayer::TalkToPlayer( CPlayer *pPlayer, const char*, int nSize ,BYTE ucType )
+// {
+// 	MSG_TALK TalkTo;
+// 	TalkTo.Head.usType = _MSG_TALK;
+// 	TalkTo.Head.usSize = sizeof(MsgHead) + 11; // + chat length
+// 	TalkTo.uiUserID = pPlayer->GetID();
+// 	if( pPlayer == NULL )
+// 	{
+// 		//		TalkTo.uiOppositeID = -1;
+// 	}
+//
+// 	else
+// 	{
+// 		//		TalkTo.uiOppositeID = 0;//pTarget->GetID();
+// 	}
+//
+//
+// 	TalkTo.ucType = ucType;
+// 	TalkTo.ucTextSize = nSize;
+// 	//	wmemcpy( TalkTo.cContent, pBuf, nSize );//cContent已改成宽字符,小心
+//
+// 	TalkTo.Head.usSize += nSize;
+//
+// 	CGameObject::s_World->SendMsgToClient( &TalkTo, pPlayer->GetSocket() );
+// }
+
+//-------------------------------------------------------
+//将其他对象信息同步给自己
+//-------------------------------------------------------
 void CPlayer::AynObjToObj(CCell* pOldCell, CCell* pNewCell)
 {
+	//__asm int 3;
+	//同步旧区域Obj
 	std::vector<CCell*>  OldCell = GetRegion()->GetMap()->AreaCollisionTest(pNewCell, pOldCell);
 	std::vector<CCell*>::iterator  CellIter = OldCell.begin();
 	for (; CellIter != OldCell.end(); CellIter++)
@@ -3375,6 +4059,7 @@ void CPlayer::AynObjToObj(CCell* pOldCell, CCell* pNewCell)
 		pCell->SynOldObjInfoToPlayer(this);
 	}
 
+	//同步新区域Obj
 	std::vector<CCell*>  NewCell = GetRegion()->GetMap()->AreaCollisionTest(pOldCell, pNewCell);
 	std::vector<CCell*>::iterator  CellItor = NewCell.begin();
 	for (; CellItor != NewCell.end(); CellItor++)
@@ -3384,6 +4069,9 @@ void CPlayer::AynObjToObj(CCell* pOldCell, CCell* pNewCell)
 	}
 }
 
+//-------------------------------------------------------
+//将自己的信息同步给其他玩家
+//-------------------------------------------------------
 void CPlayer::AynMeToOther(CCell* pOldCell, CCell* pNewCell)
 {
 	CGameObject::AynMeToOther(pOldCell, pNewCell);
@@ -3394,12 +4082,17 @@ bool CPlayer::HaveConsortia()
 	return m_pConsortia != NULL;
 }
 
+//-------------------------------------------------------
+// 刷新关系数据
+//-------------------------------------------------------
 void CPlayer::RefreshRelation()
 {
+	//向客户端同步关系数据
 	MSG_RELATIONALL relation_friend, relation_blackList;
 	memset(&relation_friend, 0L, sizeof(MSG_RELATIONALL));
 	std::map< string, RELATION > RelationMgr = m_RelationMgr.m_Relation;
 
+	//好友
 	relation_friend.Head.usSize = sizeof(MSG_RELATIONALL) - 30 * sizeof(Friend);
 	relation_friend.Head.usType = _MSG_RELATIONALL;
 	relation_friend.uiUserID = GetID();
@@ -3417,7 +4110,7 @@ void CPlayer::RefreshRelation()
 	{
 		CPlayer* pPlayer = GetPlayerFromRoleName(itor->first);
 
-		if (itor->second.Type == TYPE_FRIEND)
+		if (itor->second.Type == TYPE_FRIEND) //好友
 		{
 			if (relation_friend.cNum >= MAX_FRIENDS_COUNT)
 				continue;
@@ -3442,7 +4135,7 @@ void CPlayer::RefreshRelation()
 			relation_friend.cNum++;
 			relation_friend.Head.usSize += sizeof(Friend);
 		}
-		else if (itor->second.Type == TYPE_BLACKLIST)
+		else if (itor->second.Type == TYPE_BLACKLIST) //黑名单
 		{
 			if (relation_blackList.cNum >= MAX_FRIENDS_COUNT)
 				continue;
@@ -3478,7 +4171,9 @@ void CPlayer::RefreshRelation()
 		CGameObject::s_World->SendMsgToClient(&relation_blackList, GetSocket());
 	}
 
+	//公会基本信息
 	BroadcastConsortiaBaseInfo();
+	//公会成员
 	MSG_CONSORTIA_MEMBER_LIST Memeber_List;
 	Memeber_List.Head.usSize = sizeof(MSG_CONSORTIA_MEMBER_LIST);
 	Memeber_List.Head.usType = _MSG_CONSORTIA_MEMBER_LIST;
@@ -3526,6 +4221,9 @@ void CPlayer::RefreshRelation()
 	}
 }
 
+//-------------------------------------------------------
+// 是否是该工会职务
+//-------------------------------------------------------
 bool CPlayer::IsThisDuty(CONSORTIA_JOB_TYPE Duty)
 {
 	if (m_pConsortia)
@@ -3533,6 +4231,9 @@ bool CPlayer::IsThisDuty(CONSORTIA_JOB_TYPE Duty)
 	return false;
 }
 
+//-------------------------------------------------------
+// 所在工会是否满员
+//-------------------------------------------------------
 bool CPlayer::IsMemeberFull()
 {
 	if (m_pConsortia)
@@ -3540,15 +4241,24 @@ bool CPlayer::IsMemeberFull()
 	return true;
 }
 
+//-------------------------------------------------------
+//获取公会的人数上限
+//-------------------------------------------------------
 int CPlayer::GetConsortiaMaxMember()
 {
 	return  CGameObject::s_World->g_pConsortiaManager->GetConsortiaMaxMember(m_pConsortia);
 }
 
+//-------------------------------------------------------
+//获取公会的当前人数
+//-------------------------------------------------------
 int CPlayer::GetConsortiaCurrentMember()
 {
 	return  CGameObject::s_World->g_pConsortiaManager->GetConsortiaSize(m_pConsortia);
 }
+//-------------------------------------------------------
+//获取公会的最大祭坛数
+//-------------------------------------------------------
 int CPlayer::GetConsortiaMaxAltar()
 {
 	if (!m_pConsortia)
@@ -3557,6 +4267,9 @@ int CPlayer::GetConsortiaMaxAltar()
 	}
 	return  CGameObject::s_World->g_pConsortiaManager->GetConsortiaMaxAltar(m_pConsortia->iLevel);
 }
+//-------------------------------------------------------
+//获取公会当前的祭坛个数
+//-------------------------------------------------------
 int CPlayer::GetConCurrentAltarNum()
 {
 	if (!m_pConsortia)
@@ -3565,6 +4278,9 @@ int CPlayer::GetConCurrentAltarNum()
 	}
 	return m_pConsortia->m_pAltar.size();
 }
+//-------------------------------------------------------
+//获取玩家当前已有的祭坛
+//------------------------------------------------------
 vector<int>& CPlayer::GetHavePlayerAltars()
 {
 	static vector<int> Has;
@@ -3580,12 +4296,17 @@ vector<int>& CPlayer::GetHavePlayerAltars()
 	return Has;
 }
 
+//读取数据库中玩家的所有祭坛
 void CPlayer::InitAltar(UINT id, UINT level)
 {
 	m_Altar[id] = level;
 }
+//-------------------------------------------------------
+// 由主动发起邀请的玩家负责添加
+//-------------------------------------------------------
 void CPlayer::AddConsortiaMember(ConsortiaRelationElem& rElems)
 {
+	//向老成员发送新成员加入消息
 	MSG_CONSORTIA_MEMBER_LIST Memeber_List;
 	Memeber_List.Head.usSize = sizeof(MSG_CONSORTIA_MEMBER_LIST);
 	Memeber_List.Head.usType = _MSG_CONSORTIA_MEMBER_LIST;
@@ -3599,20 +4320,27 @@ void CPlayer::AddConsortiaMember(ConsortiaRelationElem& rElems)
 	Memeber_List.Member[0].uiContribute = rElems.uiContribute;
 	BroadcastConsortiaMsg(&Memeber_List);
 
+	//添加新成员
 	CGameObject::s_World->g_pConsortiaManager->Add(m_pConsortia, rElems);
 }
 
+//-------------------------------------------------------
+// 会长解散工会
+//-------------------------------------------------------
 eError CPlayer::DismissConsortia()
 {
 	if (!m_pConsortia)
 	{
+		//威胁值加1
 		return NO_MSG_ERRO;
 	}
+	//判断会长
 	if (!IsThisDuty(CONSORTIA_CHAIRMAN))
 	{
 		return MSG_ERRO_0377;
 	}
 
+	//向所有成员发送解散公会消息
 	MSG_CONSORTIA_DISMISS  ConsortiaDismiss;
 	ConsortiaDismiss.Head.usSize = sizeof(MSG_CONSORTIA_DISMISS);
 	ConsortiaDismiss.Head.usType = _MSG_CONSORTIA_DISMISS;
@@ -3621,6 +4349,7 @@ eError CPlayer::DismissConsortia()
 
 	ConsortiaElem* temp = m_pConsortia;
 
+	//改变所有成员的公会属性
 	stdext::hash_map< ConsortiaElem*, CConsortiaMgr::Member >::iterator itor = CGameObject::s_World->g_pConsortiaManager->m_ConsortiaMemberMap.find(m_pConsortia);
 	if (itor != CGameObject::s_World->g_pConsortiaManager->m_ConsortiaMemberMap.end())
 	{
@@ -3637,12 +4366,13 @@ eError CPlayer::DismissConsortia()
 			}
 			else
 			{
-				UpdateDB_Offline(iter->second.m_Data._Ttype.strName.c_str(), 0, 0);
-				UpdateDB_Altar(iter->second.m_Data._Ttype.strName.c_str());
+				UpdateDB_Offline(iter->second.m_Data._Ttype.strName.c_str(), 0, 0); //清除数据库中自己的公会信息
+				UpdateDB_Altar(iter->second.m_Data._Ttype.strName.c_str());     //清除数据库中的所有祭坛
 			}
 		}
 	}
 
+	//解散公会
 	if (CGameObject::s_World->g_pConsortiaManager->DismissConsortia(temp))
 	{
 		return NO_MSG_ERRO;
@@ -3651,10 +4381,14 @@ eError CPlayer::DismissConsortia()
 	return NO_MSG_ERRO;
 }
 
+//-------------------------------------------------------
+// 自动离开公会
+//-------------------------------------------------------
 eError CPlayer::DelMeFromConsortia()
 {
 	if (!m_pConsortia)
 	{
+		//威胁值加1
 		return NO_MSG_ERRO;
 	}
 
@@ -3664,6 +4398,7 @@ eError CPlayer::DelMeFromConsortia()
 	Exit.Head.usType = _MSG_CONSORTIA_EXIT;
 	strcpy(Exit.StrName, GetName());
 
+	//自己是会长,任命新会长
 	if (GetcUnionBusiness() == CONSORTIA_CHAIRMAN)
 	{
 		CConsortiaMgr::ClusteringElems* pMember1 = CGameObject::s_World->g_pConsortiaManager->GetCurMemberWithJob(m_pConsortia, CONSORTIA_ASSISTANT_CHAIRMAN);
@@ -3674,22 +4409,27 @@ eError CPlayer::DelMeFromConsortia()
 
 		if ((pMember1 != NULL) || (pMember2 != NULL) || (pMember3 != NULL) || (pMember4 != NULL) || (pMember5 != NULL))
 		{
+			//如果公会里面还有人  会长脱离失败
 			return MSG_ERRO_0395;
 		}
 		else
 		{
+			//解散公会
 			DismissConsortia();
 			return NO_MSG_ERRO;
 		}
 	}
 
+	//向所有成员广播自己离开公会消息
 	BroadcastConsortiaMsg(&Exit);
 
 	CGameObject::s_World->g_pConsortiaManager->Del(m_pConsortia, GetName());
 
+	//重新发送公会成员列表
 	BroadcastConMemberInfo();
 
-	ClearAllAltar();
+	//清除数据库信息
+	ClearAllAltar();	//清除所有祭坛 等待场景刷新保存数据库
 	SetcUnion(0);
 	SetcUnionBusiness(0);
 	SetConsortiaInfo(NULL);
@@ -3697,18 +4437,24 @@ eError CPlayer::DelMeFromConsortia()
 	return NO_MSG_ERRO;
 }
 
+//-------------------------------------------------------------
+//修改公会公告
+//-------------------------------------------------------------
 eError CPlayer::ChangeConsortiaPlacard(const char* Placard)
 {
 	if (!m_pConsortia)
 	{
+		//威胁值加1
 		return NO_MSG_ERRO;
 	}
 
+	//判断会长
 	if (!IsThisDuty(CONSORTIA_CHAIRMAN) && !IsThisDuty(CONSORTIA_ASSISTANT_CHAIRMAN))
 	{
 		return MSG_ERRO_03A4;
 	}
 
+	//改变本公会公告
 	strcpy(m_pConsortia->acTextInfo, Placard);
 
 	MSG_CONSORTIA_BASE_INFO  ConsortiaInfo;
@@ -3722,18 +4468,24 @@ eError CPlayer::ChangeConsortiaPlacard(const char* Placard)
 	strcpy(ConsortiaInfo.acName, m_pConsortia->acName);
 	strcpy(ConsortiaInfo.acTextInfo, Placard);
 
+	//向所有成员发送修改公告消息
 	BroadcastConsortiaMsg(&ConsortiaInfo);
 
 	return NO_MSG_ERRO;
 }
 
+//-------------------------------------------------------------
+//晋升
+//-------------------------------------------------------------
 bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 {
 	if (!m_pConsortia)
 	{
+		//威胁值加1
 		return NO_MSG_ERRO;
 	}
 
+	//判断会长
 	if (GetcUnionBusiness() < CONSORTIA_ASSISTANT_CHAIRMAN || Duty <= CONSORTIA_NONE || Duty > CONSORTIA_CHAIRMAN || GetName() == StrName ||
 		(CGameObject::s_World->g_pConsortiaManager->GetConsortiaSize(m_pConsortia) == 1 && GetcUnionBusiness() == CONSORTIA_CHAIRMAN))
 	{
@@ -3747,6 +4499,7 @@ bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 	pPlayer = GetPlayerFromRoleName(StrName);
 	if (pPlayer != NULL && pPlayer->GetcUnionBusiness() == Duty)
 	{
+		//防止两个人同时晋升或降级一个人
 		return false;
 	}
 	if (CGameObject::s_World->g_pConsortiaManager->GrantJob(m_pConsortia, GetName(), StrName, Duty))
@@ -3763,6 +4516,7 @@ bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 			strcpy(consortia_duty.NewName, StrName.c_str());
 			consortia_duty.NewDuty = Duty;
 
+			//向所有成员发送修改公告消息
 			BroadcastConsortiaMsg(&consortia_duty);
 		}
 		else
@@ -3770,6 +4524,7 @@ bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 			UpdateDB_Offline(StrName.c_str(), m_pConsortia->uiID, Duty);
 		}
 
+		//转让会长
 		if (GetcUnionBusiness() == CONSORTIA_CHAIRMAN && Duty == CONSORTIA_CHAIRMAN)
 		{
 			if (CGameObject::s_World->g_pConsortiaManager->GrantJob(m_pConsortia, GetName(), string(GetName()), CONSORTIA_MEMBER))
@@ -3783,6 +4538,7 @@ bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 				strcpy(consortia_duty.NewName, GetName());
 				consortia_duty.NewDuty = CONSORTIA_MEMBER;
 
+				//向所有成员发送修改公告消息
 				BroadcastConsortiaMsg(&consortia_duty);
 			}
 		}
@@ -3797,38 +4553,47 @@ bool CPlayer::AppointDuty(std::string StrName, CONSORTIA_JOB_TYPE Duty)
 	return true;
 }
 
+//--------------------------------------------------------------------
+// 会长移除成员
+//--------------------------------------------------------------------
 eError  CPlayer::DelMemeber(std::string StrName)
 {
 	if (!m_pConsortia)
 	{
+		//威胁值加1
 		return NO_MSG_ERRO;
 	}
 
+	//判断会长
 	if (GetcUnionBusiness() < CONSORTIA_DIRECTOR)
 	{
 		return MSG_ERRO_03C2;
 	}
 
 	CPlayer* pPlayer = GetPlayerFromRoleName(StrName);
+	//删除自己
 	if (pPlayer == this)
 	{
 		DelMeFromConsortia();
 	}
 	else
 	{
+		//更新被踢玩家
 		if (NULL != pPlayer)
 		{
+			//不能剔除自己平级或者高于自己的玩家
 			if (pPlayer->GetcUnionBusiness() >= GetcUnionBusiness())
 			{
 				return MSG_ERRO_03C3;
 			}
 			else
 			{
-				pPlayer->ClearAllAltar();
+				pPlayer->ClearAllAltar();  //清除所有祭坛
 				pPlayer->SetcUnion(0);
 				pPlayer->SetcUnionBusiness(0);
 				pPlayer->SetConsortiaInfo(NULL);
 
+				//向所有成员广播玩家被提出公会的消息
 				MSG_CONSORTIA_MEMBER_DEL  BeDel;
 				memset(&BeDel, 0L, sizeof(BeDel));
 				BeDel.Head.usSize = sizeof(MSG_CONSORTIA_MEMBER_DEL);
@@ -3837,19 +4602,23 @@ eError  CPlayer::DelMemeber(std::string StrName)
 				BroadcastConsortiaMsg(&BeDel);
 
 				CGameObject::s_World->g_pConsortiaManager->Del(m_pConsortia, StrName);
+				//重新发送公会成员列表
 				BroadcastConMemberInfo();
 			}
 		}
 		else
 		{
-			UpdateDB_Offline(StrName.c_str(), 0, CONSORTIA_NONE);
-			UpdateDB_Altar(StrName.c_str());
+			UpdateDB_Offline(StrName.c_str(), 0, CONSORTIA_NONE);  //清除数据库中自己的公会信息
+			UpdateDB_Altar(StrName.c_str());     //清除数据库中的所有祭坛
 		}
 	}
 
 	return NO_MSG_ERRO;
 }
 
+//---------------------------------------------------------------------
+// 广播公会消息
+//---------------------------------------------------------------------
 bool CPlayer::BroadcastConsortiaMsg(void* buf)
 {
 	if (!m_pConsortia)
@@ -3868,6 +4637,9 @@ bool CPlayer::BroadcastConsortiaMsg(void* buf)
 	}
 	return true;
 }
+//---------------------------------------------------------------------
+// 广播公会基本信息消息
+//---------------------------------------------------------------------
 bool CPlayer::BroadcastConsortiaBaseInfo()
 {
 	if (NULL != m_pConsortia)
@@ -3897,8 +4669,12 @@ bool CPlayer::BroadcastConsortiaBaseInfo()
 	return true;
 }
 
+//----------------------------------------------------------------------
+// 广播公会成员列表（添加删除或是离开公会是用到）
+//----------------------------------------------------------------------
 bool CPlayer::BroadcastConMemberInfo()
 {
+	//公会成员
 	if (m_pConsortia)
 	{
 		MSG_CONSORTIA_MEMBER_LIST Memeber_List;
@@ -3949,11 +4725,14 @@ bool CPlayer::BroadcastConMemberInfo()
 	}
 	return true;
 }
+//----------------------------------------------------------------------
+// 职业转换
+//----------------------------------------------------------------------
 void CPlayer::ChangePlayeBuniness(int NewBuniness)
 {
-	m_PassiveSkill.clear();
-	InitClassPassiveSkill();
-	if (NewBuniness >= m_ClassCount) { ASSERT(0); }
+	m_PassiveSkill.clear();				//清空被动技能表
+	InitClassPassiveSkill();			//初始化职业技能信息
+	if (NewBuniness >= m_ClassCount) { ASSERT(0); }		//没有这个职业
 
 	m_ObjectData.m_lClass = NewBuniness;
 
@@ -3962,6 +4741,42 @@ void CPlayer::ChangePlayeBuniness(int NewBuniness)
 	{
 		AddPassiveSkill((*iter), 0);
 	}
+	/*by lion
+	switch( NewBuniness )
+	{
+	case FIGHTER_ONE:
+	{
+	m_ObjectData.m_lClass = FIGHTER_ONE;
+	AddPassiveSkill( SKILL_ESCRIME, 0 );  //剑术
+	AddPassiveSkill( SKILL_GLAVE_GAS, 0 );  //剑气
+	}
+	break;
+	case FIGHTER_TWO:
+	{
+	m_ObjectData.m_lClass = FIGHTER_TWO;
+	AddPassiveSkill( SKILL_EXACTITUDE_ATTACK, 0 );  //精准攻击
+	AddPassiveSkill( SKILL_MUMP, 0 );  //斗气
+	}
+	break;
+	case SCHOLAR_ONE:
+	{
+	m_ObjectData.m_lClass = SCHOLAR_ONE;
+	AddPassiveSkill( SKILL_ELEMENTS_VOLITION, 0 );  //元素意志
+	AddPassiveSkill( SKILL_FIR_STRENGTHEN, 0 );  //火焰强化
+	}
+	break;
+	case SCHOLAR_TWO:
+	{
+	m_ObjectData.m_lClass = SCHOLAR_TWO;
+	AddPassiveSkill( SKILL_FLEXILE, 0 );  //柔韧护盾
+	AddPassiveSkill( SKILL_LIFE_CHANNELS, 0 );  //生命通道
+	}
+	break;
+	default:
+	ASSERT(0);
+	break;
+	}
+	*/
 }
 
 bool CPlayer::CalculateExp(bool TarIsDead, int)
@@ -3996,6 +4811,7 @@ const char* CPlayer::PackRoleAttribute()
 
 	const char* Gender;
 
+	//防止进入档格
 	float temp_X, temp_Z;
 	if (GetLastMsg() == _MSG_WALK_BEGIN)
 	{
@@ -4007,6 +4823,7 @@ const char* CPlayer::PackRoleAttribute()
 		temp_Z = GetfZ();
 	}
 
+	//更新进入游戏角色数据
 	char LoginTime[32], LastUpdte[32];
 	sprintf(LoginTime, "%d-%d-%d %d:%d:%d", 1900 + m_Login_time->tm_year, m_Login_time->tm_mon + 1, m_Login_time->tm_mday, m_Login_time->tm_hour, m_Login_time->tm_min, m_Login_time->tm_sec);
 	sprintf(LastUpdte, "%d:%d:%d", m_LastUpte_time->tm_hour, m_LastUpte_time->tm_min, m_LastUpte_time->tm_sec);
@@ -4027,6 +4844,9 @@ const char* CPlayer::PackRoleAttribute()
 	return szSQL;
 }
 
+//------------------------------------------------------------
+//踢人
+//------------------------------------------------------------
 bool CPlayer::GM_Handler_kick(ActionElem& elem)
 {
 	if (elem.Head.usType == ACTION_KICK_PLAYER)
@@ -4038,13 +4858,17 @@ bool CPlayer::GM_Handler_kick(ActionElem& elem)
 	return false;
 }
 
+//------------------------------------------------------------
+//禁言
+//------------------------------------------------------------
 bool CPlayer::GM_Handler_speak(ActionElem& elem)
 {
 	if (elem.Head.usType == ACTION_BAN_SPEAK)
 	{
-		time_t CurrentTime = time(NULL);
+		time_t CurrentTime = time(NULL);//测试用 记得删除掉
 		if (elem.OriginalTime + elem.IntervalTime < CurrentTime)
 		{
+			//删除对应的角色名
 			CGameObject::s_World->Del_SpeakForbidPlayer(elem.ObjName);
 			return true;
 		}
@@ -4053,23 +4877,38 @@ bool CPlayer::GM_Handler_speak(ActionElem& elem)
 	return false;
 }
 
+//------------------------------------------------------------
+//添加道具
+//------------------------------------------------------------
 bool CPlayer::GM_Handler_item(ActionElem& elem)
 {
+	// 	if ( elem.Head.usType == ACTION_PLAYER_ITEM  )
+	// 	{
+	// 		//step 1:添加装备
+	//
+	// 		//step 2:踢玩家下线
+	// 		CGameObject::s_World->CloseSocket( static_cast<CPlayer*>(elem.Obj) );
+	//
+	// 		return true;
+	// 	}
+
 	return false;
 }
 
 eError CPlayer::ConsortiaLevelup()
 {
+	//还没有建立公会
 	if (!m_pConsortia)
 	{
 		return MSG_ERRO_03C5;
 	}
 
+	//判断是否有权限
 	if (IsThisDuty(CONSORTIA_CHAIRMAN) || IsThisDuty(CONSORTIA_ASSISTANT_CHAIRMAN))
 	{
 		if (m_pConsortia->iLevel >= MAX_CONSORTIA_GRADE)
 		{
-			return MSG_ERRO_O3C4;
+			return MSG_ERRO_O3C4; //公会已经最大等级
 		}
 
 		if (m_pConsortia->LevelUp(this))
@@ -4083,7 +4922,7 @@ eError CPlayer::ConsortiaLevelup()
 		}
 	}
 
-	return MSG_ERRO_03A4;
+	return MSG_ERRO_03A4;  //非正副会长
 }
 
 bool CPlayer::AltarLevelUp(int ID)
@@ -4099,10 +4938,12 @@ bool CPlayer::CreateAltar(int ID)
 	{
 		if (ID < 1 || ID >12)
 		{
+			//没有的祭坛号
 			return false;
 		}
 		if (m_pConsortia->CreateAltar(ID))
 		{
+			//成功创建完祭坛后向客户端重新发送一次公会的基本信息
 			BroadcastConsortiaBaseInfo();
 			return true;
 		}
@@ -4115,9 +4956,11 @@ bool CPlayer::DelAltar(int ID)
 {
 	if (IsThisDuty(CONSORTIA_CHAIRMAN) || IsThisDuty(CONSORTIA_ASSISTANT_CHAIRMAN))
 	{
+		//删除玩家身上对应的祭坛及所影响的数据
 		DelConMember_AltarInfo((UINT)ID);
 		if (m_pConsortia->DelAltar(ID))
 		{
+			//更新客户端公会成员的公会基本信息
 			BroadcastConsortiaBaseInfo();
 
 			return true;
@@ -4127,6 +4970,7 @@ bool CPlayer::DelAltar(int ID)
 	return false;
 }
 
+//删除玩家身上对应的祭坛及所影响的数据
 void CPlayer::DelConMember_AltarInfo(UINT ID)
 {
 	stdext::hash_map< ConsortiaElem*, CConsortiaMgr::Member >::iterator itor = CGameObject::s_World->g_pConsortiaManager->m_ConsortiaMemberMap.find(m_pConsortia);
@@ -4142,11 +4986,13 @@ void CPlayer::DelConMember_AltarInfo(UINT ID)
 			}
 			else
 			{
+				//处理离线的玩家数据库中的祭坛等级
 				ClearOneAltar_fromDB(iter->second.m_Data._Ttype.strName.c_str(), ID);
 			}
 		}
 	}
 }
+//处理在线玩家（删除玩家身上对应的祭坛及所影响的数据）
 void CPlayer::ClearOneAltar(UINT ID)
 {
 	map<UINT, UINT>::iterator itor = m_Altar.find(ID);
@@ -4173,6 +5019,7 @@ void CPlayer::ClearOneAltar_fromDB(const char* name, UINT ID)
 	DB->ExecuteAsyncSQL(szSQL, NULL, NULL);
 }
 
+//得到确定祭坛的供奉等级
 UINT  CPlayer::GetOblationLV(int ID)
 {
 	map<UINT, UINT>::iterator itor = m_Altar.find(ID);
@@ -4182,6 +5029,9 @@ UINT  CPlayer::GetOblationLV(int ID)
 	return itor->second;
 }
 
+//----------------------------------------------------------
+//提升祭坛供奉等级(脚本处理升级消耗及添加性能数据)
+//----------------------------------------------------------
 bool CPlayer::OblationLevelUp(UINT ID, eAltarDealType type)
 {
 	if (!m_pConsortia)
@@ -4190,6 +5040,9 @@ bool CPlayer::OblationLevelUp(UINT ID, eAltarDealType type)
 	}
 	return m_pConsortia->OblationLevelUp(this, ID, type);
 }
+//----------------------------------------------------------
+//提升祭坛供奉等级
+//----------------------------------------------------------
 bool  CPlayer::UPOblationLV(UINT ID)
 {
 	map<UINT, UINT>::iterator itor = m_Altar.find(ID);
@@ -4198,11 +5051,15 @@ bool  CPlayer::UPOblationLV(UINT ID)
 
 	m_Altar[ID]++;
 
+	//向该玩家发送祭坛列表（全部的祭坛重新发送一次）
 	UpdateAltarMsg();
 
 	return true;
 }
 
+//-----------------------------------------------------
+//删除供奉的祭坛
+//-----------------------------------------------------
 bool CPlayer::DelOblation(UINT ID)
 {
 	map<UINT, UINT>::iterator itor = m_Altar.find(ID);
@@ -4211,22 +5068,32 @@ bool CPlayer::DelOblation(UINT ID)
 
 	m_Altar[ID] = 0;
 
+	//向该玩家发送祭坛列表（全部的祭坛重新发送一次）
 	UpdateAltarMsg();
 
 	return true;
 }
 
+//---------------------------------------------------
+//清除所有祭坛祭坛
+//---------------------------------------------------
 void CPlayer::ClearAllAltar()
 {
+	//清空祭坛
 	map<UINT, UINT>::iterator itor = m_Altar.begin();
 	for (; itor != m_Altar.end(); itor++)
 	{
+		//清除祭坛带来的效果
 		OblationLevelUp(itor->first, eALTAR_DELETE);
 	}
 
+	//向客户端更新祭坛
 	UpdateAltarMsg();
 }
 
+//----------------------------------------------------
+//人物上线时 加载祭坛的特效
+//----------------------------------------------------
 void CPlayer::LoadAllAltar(UINT ID)
 {
 	m_pConsortia->OblationLevelUp(this, ID, eALTAR_LOAD_EFFECT);
@@ -4234,6 +5101,7 @@ void CPlayer::LoadAllAltar(UINT ID)
 
 void CPlayer::UpdateAltarMsg()
 {
+	//发送祭坛消息
 	MSG_ALTAR_INFO altar_info;
 	altar_info.Head.usSize = sizeof(MSG_ALTAR_INFO);
 	altar_info.Head.usType = _MSG_ALTAR_INFO;
@@ -4274,16 +5142,19 @@ UINT  CPlayer::GetVendAttr(int Type)
 
 void CPlayer::SendAddItem(ItemData& itemData, Item& item)
 {
+	//发送物品增加消息
 	MSG_SYS_ADD_ITEM add_item;
 	add_item.Head.usSize = sizeof(MSG_SYS_ADD_ITEM);
 	add_item.Head.usType = _MSG_SYS_ADD_ITEM;
 
 	add_item.itemData = itemData;
 
+	//判断包裹是否有空位
 	int ItemNum = 0;
 	ItemNum = GetFreeItemOverlap(&item);
 	if (ItemNum < itemData.Overlap)
 	{
+		//外挂
 		return;
 	}
 	CGameObject::s_World->SendMsgToClient(&add_item, GetSocket());
@@ -4321,6 +5192,8 @@ void CPlayer::SendUseOrEquip(int type)
 		Skill_UpGrade.Head.usType = _MSG_SKILL_UPGRADE;
 		Skill_UpGrade.uiSkillID = -1;
 		Skill_UpGrade.uiPlayerID = GetID();
+		//Skill_UpGrade.uiCurrentSkillGrade = m_PassiveSkill[ ucSkillID ].Grade;
+		//Skill_UpGrade.uiNextSkillGradePoint = CPeizhi::Instance()->GetPlayerSkillGradePoint( m_PassiveSkill[ ucSkillID ].Grade, pskill->ucID );
 		Skill_UpGrade.uiSurplusPoint = m_ConvertPoint;
 		s_World->SendMsgToClient(&Skill_UpGrade, GetSocket());
 	}
@@ -4356,6 +5229,8 @@ bool CPlayer::OnRead()
 
 			s_World->m_pSocketHandle->ResloveGamePacket(pszBuff, this);
 
+			//	m_pSocket->Remove(pszBuff->usSize);
+
 			Turn++;
 		}
 
@@ -4363,6 +5238,11 @@ bool CPlayer::OnRead()
 	}
 	else
 	{
+		//客户端关闭
+		//printf("%s将延时20秒退出游戏...\n",GetName());
+		m_pSocket->GetIOCP()->PushNewClose(m_pSocket);
+		//DelayExit(max(PLAYER_DEAD_TIMER - PassTime,0));
+		DelayExit(0);
 		return false;
 	}
 }
@@ -4393,10 +5273,13 @@ bool CPlayer::OnSend()
 	}
 	else
 	{
+		//客户端关闭
+		//printf("%s将延时20秒退出游戏...\n",GetName());
 		m_pSocket->GetIOCP()->PushNewClose(m_pSocket);
+		//DelayExit(max(PLAYER_DEAD_TIMER - PassTime,0));
 		DelayExit(0);
 		return false;
-	}
+	} // end if_else
 }
 
 bool CPlayer::IsMove()
@@ -4451,6 +5334,7 @@ bool CPlayer::IsMove()
 				GetRegion()->RemovePlayer(this);
 			}
 
+			//防止重复登陆后造成先登陆的玩家帐号清掉
 			CPlayer* pPlayer = GetPlayerFromAccounts(GetAccounts());
 			if (pPlayer == this)
 			{

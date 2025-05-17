@@ -1,19 +1,7 @@
 ﻿  Service.cpp
-E:\GW\DBServer\Service.cpp(53,63): error C2039: "RUN": no es un miembro de "sbase::CThread"
-      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
-      vea la declaración de 'sbase::CThread'
-  
-E:\GW\DBServer\Service.cpp(53,63): error C2065: 'RUN': identificador no declarado
-E:\GW\DBServer\Service.cpp(60,13): error C2039: "SetThreadAMask": no es un miembro de "sbase::CThread"
-      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
-      vea la declaración de 'sbase::CThread'
-  
-E:\GW\DBServer\Service.cpp(420,63): error C2039: "RUN": no es un miembro de "sbase::CThread"
-      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
-      vea la declaración de 'sbase::CThread'
-  
-E:\GW\DBServer\Service.cpp(420,63): error C2065: 'RUN': identificador no declarado
-E:\GW\DBServer\Service.cpp(423,13): error C2039: "SetThreadAMask": no es un miembro de "sbase::CThread"
-      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
-      vea la declaración de 'sbase::CThread'
-  
+e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1395,5): warning MSB8012: TargetPath(E:\GW\Release\DBServer.exe) no coincide con el valor de la propiedad OutputFile de Linker (E:\GW\Run\DBServer\DBServer.exe). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Link.OutputFile).
+  Generando código
+  Compiler switch has changed, fall back to full compilation.
+  All 1099 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  DBServer.vcxproj -> E:\GW\Release\DBServer.exe

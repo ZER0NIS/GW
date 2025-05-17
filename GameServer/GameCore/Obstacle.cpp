@@ -13,9 +13,9 @@ CObstacle::CObstacle()
 
 CObstacle::~CObstacle()
 {
-	for (auto& pair : m_mapCbstacleList)
+	for (size_t i = 0; i < m_mapCbstacleList.size(); i++)
 	{
-		SAFE_DELETE_ARRAY(pair.second);
+		SAFE_DELETE_ARRAY(m_mapCbstacleList[(int)i]);
 	}
 	m_mapCbstacleList.clear();
 }
@@ -43,26 +43,11 @@ void CObstacle::ReadObstacleList()
 {
 	for (int i = 0; i < m_iFileCount; i++)
 	{
+		/*DWORD dwCount = 0;*/
 		FILE* fp = fopen(m_strFileList[i].c_str(), "rb");
-		if (!fp)
-			continue; // o loguear error
-
 		BYTE* pTable = new BYTE[MAX_BLOCK_COUNT];
-		if (!pTable)
-		{
-			fclose(fp);
-			continue; // evitar crash si no se puede alocar
-		}
-
-		::ZeroMemory(pTable, MAX_BLOCK_COUNT);
-
-		if (fread(pTable, MAX_BLOCK_COUNT, 1, fp) != 1)
-		{
-			delete[] pTable;
-			fclose(fp);
-			continue; // leer falló
-		}
-
+		::ZeroMemory(pTable, sizeof(BYTE) * MAX_BLOCK_COUNT);
+		fread(pTable, sizeof(BYTE) * MAX_BLOCK_COUNT, 1, fp);
 		m_mapCbstacleList[i] = pTable;
 		fclose(fp);
 	}

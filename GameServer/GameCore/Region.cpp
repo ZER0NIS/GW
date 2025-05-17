@@ -972,7 +972,6 @@ eError CRegion::Talk_World(CPlayer* _pPlayer, MSG_TALK* _msg)
 		return NO_MSG_ERRO;
 	}
 }
-
 eError CRegion::Talk_GM(CPlayer* _pPlayer, MSG_TALK* _msg)
 {
 	if (!_pPlayer || !_msg)

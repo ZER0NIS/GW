@@ -20,6 +20,12 @@ extern MSG_ACTIVESKILL_INFO  msg_activeskill_info;
 extern MSG_USEOREQUIP_ITEM msg_useorequip_item;
 
 extern void ExcScript(CGameObject* p1, CGameObject* p2, int MagicID);
+//extern long &GetOnlinePlayer( void );
+//extern long GetNowPlayer( void );
+
+//------------------------------------------------------------------------------------
+//角色AI
+//------------------------------------------------------------------------------------
 void CPlayer::AI()
 {
 	OnRead();
@@ -32,9 +38,11 @@ void CPlayer::AI()
 	else
 		return;
 
+	//技能
 	IsRefresh(TIME_STYLE_COOL);
 
-	if ((m_ObjectData.m_lHP < GetMaxHP() || m_ObjectData.m_lMP < GetMaxMP()))
+	//HP,MP回复
+	if ((m_ObjectData.m_lHP < GetMaxHP() || m_ObjectData.m_lMP < GetMaxMP()))  //非战斗状态
 	{
 		if (m_Resume_Timer.IsActive() && m_Resume_Timer.IsExpire() && !IsDead())
 		{
@@ -56,16 +64,19 @@ void CPlayer::AI()
 			msg_Resume.ulHP = m_ObjectData.m_lHP;
 			msg_Resume.ulMP = m_ObjectData.m_lMP;
 			CGameObject::s_World->SendMsgToClient(&msg_Resume, GetSocket());
+			//GetRegion()->SendCellMsg( GetCurrentCell(),&msg_Resume );
 			ResetResumeTimer();
 		}
 	}
 
 	if (m_Relation_Timer.IsActive() && m_Relation_Timer.IsExpire() && !IsDead())
 	{
+		//自己关系数据
 		RefreshRelation();
 		ResetRelationTimer();
 	}
 
+	//交易
 	if (m_Trade.IsTrading())
 	{
 		float fPX = 0.0f;
@@ -74,6 +85,7 @@ void CPlayer::AI()
 		fPX = m_Trade.GetTrader()->GetPosX() - GetPosX();
 		fPZ = m_Trade.GetTrader()->GetPosZ() - GetPosZ();
 
+		// 当前位置与目标位置距离
 		int dist = sqrt(fPX * fPX + fPZ * fPZ);
 
 		if (dist > 20)
@@ -86,29 +98,38 @@ void CPlayer::AI()
 		}
 	}
 
+	//主动怪
 	if (!this->IsDead())
 		this->GetRegion()->RefreshInitiativeMonster(this);
 
+	//自己状态
 	__super::AI();
 
+	//倒计时退出
 	if (GetTimeStart())
 	{
 		Updata_SurplusTime();
 	}
+	//自己身上的收费道具计时函数
 	ClearExpiredItem();
 
+	//更新任务
 	QuestUpdata();
 
+	// 尝试切换场景
 	if (GetRegion()->ChangeRegion(this, GetPosX(), 0.0f, GetPosZ()))
 	{
+		//m_SceneChangeFlag = true;
 	}
 
+	//队伍信息更新
 	if ((NULL != m_pTeamLeader) && m_Team_Timer.IsActive() && m_Team_Timer.IsExpire())
 	{
 		m_pTeamLeader->UpdateTeam_New(true);
 		m_Team_Timer.Update();
 	}
 
+	//行为控制AI
 	m_GMctr->CrtAI();
 
 	if (GetDanger() >= 3)
@@ -122,6 +143,7 @@ int CPlayer::CheckBlock(int Mid, float x, float z)
 
 void CPlayer::Run(void)
 {
+	//自己状态逻辑
 	if (m_WorldStatus == eSCENECHANGE)
 	{
 		return;
@@ -139,20 +161,73 @@ void CPlayer::Run(void)
 		SAFE_DELETE(pWalk);
 	}
 
+	// 必定行走
 	if (m_queuePath.size() > 0)
 	{
 		PathIterator it = m_queuePath.begin();
 		tarPath* pPath = *it;
+		// 防止越界
 		if (pPath->nTick >= 60)
 		{
 			char Ifbuf[128];
 			_stprintf(Ifbuf, "玩家: %s 卡位了！", GetName());
 			sbase::ConsoleWriteColorText(FOREGROUND_RED, Ifbuf);
+			////测试卡位BUG，先放着看看，ZWX，卡位的还没完全解决
+			//m_queuePath.remove( pPath );
+			//if( m_queuePath.size() > 0 )
+			//{
+			//	it = m_queuePath.begin();
+			//	tarPath* pNextPath = *it;
+			//	SetPos( pNextPath->x, 0, pNextPath->z );
+			//	m_fatan2 = atan2( pNextPath->OffsetX, pNextPath->OffsetZ );
+
+			//	 post message to other player
+			//	msg_walk_begin.X = GetPosX();
+			//	msg_walk_begin.Y = 0.0f;
+			//	msg_walk_begin.Z = GetPosZ();
+			//	msg_walk_begin.uiTick = pPath->nEndTick;
+			//	msg_walk_begin.OffsetX = pNextPath->OffsetX;
+			//	msg_walk_begin.OffsetY = 0.0f;
+			//	msg_walk_begin.OffsetZ = pNextPath->OffsetZ;
+			//	msg_walk_begin.uiID = GetID();
+			//	msg_walk_begin.usMapID = (USHORT)this->GetID();
+			//	this->GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_begin );
+
+			//}
+			//else
+			//{
+			//	if( m_eState == OBJECT_RUN )
+			//		m_eState = OBJECT_IDLE;
+
+			//	 post message to other player
+			//	msg_walk_end.X = GetPosX();
+			//	msg_walk_end.Y = 0.0f;
+			//	msg_walk_end.Z = GetPosZ();
+			//	msg_walk_end.uiTick = pPath->nEndTick;
+			//	msg_walk_end.fAtan2 = m_fatan2;
+			//	msg_walk_end.uiID = GetID();
+			//	msg_walk_end.usMapID = (USHORT)this->GetID();
+			//	this->GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_walk_end );
+
+			//}
+			//SAFE_DELETE( pPath );
+			////END OF 测试卡位BUG
 		}
 		else
 		{
 			pPath->nTick++;
 			SetPos(GetPosX() + pPath->OffsetX, 0, GetPosZ() + pPath->OffsetZ);
+
+			/*
+			// 检测位置是否处于档格，进行威胁值功能判定
+			if( this->GetType() == OBJECTTYPE_PLAYER )
+			{
+				if( CGameObject::s_World->g_pObstacle->IsObstacleList( GetRegion()->GetID(), GetPosX(), GetPosZ() ) )
+					AddDanger();
+				if( GetDanger() > 100 )
+					KickPlayer( this );
+			}
+			*/
 		}
 
 		if (pPath == NULL)
@@ -161,12 +236,12 @@ void CPlayer::Run(void)
 			{
 				it = m_queuePath.begin();
 				pPath = *it;
-			}
+			}//测试卡位BUG
 		}
 
-		if (m_queuePath.size() > 0 && pPath->nEndTick != 0)
+		if (m_queuePath.size() > 0 && pPath->nEndTick != 0)	// 是否有停止指令
 		{
-			if (pPath->nTick >= pPath->nEndTick)
+			if (pPath->nTick >= pPath->nEndTick)		// 移动时间结束
 			{
 				SetPos(pPath->end_x, 0, pPath->end_z);
 				m_queuePath.remove(pPath);
@@ -177,6 +252,7 @@ void CPlayer::Run(void)
 					SetPos(pNextPath->x, 0, pNextPath->z);
 					m_fatan2 = atan2(pNextPath->OffsetX, pNextPath->OffsetZ);
 
+					// post message to other player
 					msg_walk_begin.X = GetPosX();
 					msg_walk_begin.Y = 0.0f;
 					msg_walk_begin.Z = GetPosZ();
@@ -193,6 +269,7 @@ void CPlayer::Run(void)
 					if (m_eState == OBJECT_RUN)
 						m_eState = OBJECT_IDLE;
 
+					// post message to other player
 					msg_walk_end.X = GetPosX();
 					msg_walk_end.Y = 0.0f;
 					msg_walk_end.Z = GetPosZ();
@@ -210,16 +287,18 @@ void CPlayer::Run(void)
 		}
 	}
 
-	Explorer();
+	Explorer();//探索任务，这里要再做个定时器定时检查
 
 	switch (m_eState)
 	{
-	case OBJECT_RUN:
+	case OBJECT_RUN:		// 玩家移动
 	{
+		//	Explorer();
 	}
 	break;
 	case OBJECT_CAST:
 	{
+		//ChangeActiveSkillStatus( GetCurActiveSkillID() , TIME_STYLE_COOL );
 		if (IsRefresh(TIME_STYLE_CAST))
 		{
 			m_eState = OBJECT_PERFORM;
@@ -231,7 +310,7 @@ void CPlayer::Run(void)
 		if (IsDead())
 			break;
 		const MagicData* magicData = CGameObject::s_World->g_pSkillManager->GetMagic(GetCurActiveSkillID());
-		CGameObject* pTarget = GetRegion()->CollectTarget(this, GetSkillTarget(), magicData->ucTarget, magicData);
+		CGameObject* pTarget = GetRegion()->CollectTarget(this, GetSkillTarget(), magicData->ucTarget, magicData);//
 		if (NULL == pTarget)
 		{
 			if (!((magicData->ucTarget & TARGET_POS) == TARGET_POS))
@@ -245,7 +324,7 @@ void CPlayer::Run(void)
 		if (pTarget)
 			FirstDead = pTarget->IsDead();
 
-		if (magicData->ucRange == 0)
+		if (magicData->ucRange == 0)  //单体魔法
 		{
 			if (FirstDead)
 			{
@@ -261,12 +340,13 @@ void CPlayer::Run(void)
 				fPosition[2] = pTarget->GetPosZ();
 				GetRegion()->AddMagicRegion(GetID(), GetCurActiveSkillID(), fPosition, magicData->ucRange, magicData->ucAffectObj, pTarget->GetID());
 			}
-			if (magicData->ucStyle == 1)
+			if (magicData->ucStyle == 1)         //增益
 			{
+				//状态数据(添加状态)(必中)
 				std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 				for (; iter != magicData->m_Status.end(); iter++)
 				{
-					if ((*iter) < 0)
+					if ((*iter) < 0) //去状态
 					{
 						pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 					}
@@ -276,20 +356,29 @@ void CPlayer::Run(void)
 					}
 				}
 
+				//增加仇恨
 				pTarget->CoagentEnmityList(this, magicData->iEnmity);
+
+				//执行脚本
+				/************************************************************************/
+				/* 测试                                                                     */
+				/************************************************************************/
+
+				//------------------------------------------------------------------------------
 
 				ExcScript(this, pTarget, GetCurActiveSkillID());
 			}
-			else
+			else //减益
 			{
-				if (magicData->ucEffect == 1)
+				if (magicData->ucEffect == 1)  //状态
 				{
-					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
+					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)  //命中
 					{
+						//状态数据(添加状态)
 						std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 						for (; iter != magicData->m_Status.end(); iter++)
 						{
-							if ((*iter) < 0)
+							if ((*iter) < 0) //去状态
 							{
 								pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 							}
@@ -305,6 +394,7 @@ void CPlayer::Run(void)
 						msg_magic.Status_Type = ATTACK_MISS;
 					}
 
+					// 发送执行消息
 					MSG_MAGIC_PERFORM mgicPerform;
 					mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 					mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -316,21 +406,31 @@ void CPlayer::Run(void)
 
 					if (!FirstDead)
 					{
+						// 							msg_magic.bType = 1;
+						// 							//状态命中等效技能命中
+						// 							msg_magic.Attack_Type = msg_magic.Status_Type;
+						// 							msg_magic.ucMagicID = GetCurActiveSkillID();
+						// 							msg_magic.uiObjectID = pTarget->GetID();
+						// 							msg_magic.uiID = GetID();
+						// 							msg_magic.x1 = m_SkillMsg.x1;
+						// 							msg_magic.z1 = m_SkillMsg.z1;
+						// 							GetRegion()->SendAreaMsgOneToOther( GetCurrentCell(), &msg_magic );
 					}
 
 					GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &mgicPerform);
 				}
-				else
+				else  //伤害
 				{
 					if (pTarget->GetlFaction() == this->GetlFaction())
 						return;
 
 					if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
 					{
+						//状态数据(添加状态)
 						std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 						for (; iter != magicData->m_Status.end(); iter++)
 						{
-							if ((*iter) < 0)
+							if ((*iter) < 0) //去状态
 							{
 								pTarget->DelStatus(CGameObject::s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 							}
@@ -342,6 +442,7 @@ void CPlayer::Run(void)
 						msg_magic.Status_Type = ATTACK_HIT;
 					}
 
+					// 计算攻击，伤害
 					if (pTarget && (pTarget->GetType() == OBJECTTYPE_MONSTER || pTarget->GetType() == OBJECTTYPE_PLAYER))
 					{
 						pTarget->ClearDamageInfo();
@@ -371,6 +472,7 @@ void CPlayer::Run(void)
 							msg_magic.iPower = damageInfo.MP;
 						}
 
+						// 发送执行消息
 						MSG_MAGIC_PERFORM mgicPerform;
 
 						mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
@@ -388,15 +490,17 @@ void CPlayer::Run(void)
 							msg_magic.x1 = m_SkillMsg.x1;
 							msg_magic.z1 = m_SkillMsg.z1;
 
+							//伤害
 							GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &msg_magic);
 						}
 
+						//发送魔法Perform消息
 						GetRegion()->SendAreaMsgOneToOther(GetCurrentCell(), &mgicPerform);
 					}
 				}
 			}
 		}
-		else
+		else // 群体魔法
 		{
 			ObjectList objlst;
 			float	   center[3];
@@ -433,17 +537,20 @@ void CPlayer::Run(void)
 				MAGIC_DAMAGE* mgicDamage = &clstDamager->magicDamage[i];
 				++i;
 
+				// 遍历所有对象
 				pTarget = (CGameObject*)*Iter;
 
-				if (magicData->ucStyle == 1)
+				// 群体中状态处理
+				if (magicData->ucStyle == 1)         //增益
 				{
 					if (FirstDead)
 						break;
 
+					//状态数据(添加状态)(必中)
 					std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 					for (; iter != magicData->m_Status.end(); iter++)
 					{
-						if ((*iter) < 0)
+						if ((*iter) < 0) //去状态
 						{
 							pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 						}
@@ -453,16 +560,17 @@ void CPlayer::Run(void)
 						}
 					}
 				}
-				else
+				else //减益
 				{
-					if (magicData->ucEffect == 1)
+					if (magicData->ucEffect == 1)  //只中状态
 					{
-						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
+						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)  //命中
 						{
+							//状态数据(添加状态)
 							std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 							for (; iter != magicData->m_Status.end(); iter++)
 							{
-								if ((*iter) < 0)
+								if ((*iter) < 0) //去状态
 								{
 									pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 								}
@@ -472,15 +580,16 @@ void CPlayer::Run(void)
 								}
 							}
 						}
-					}
-					else
+					}// end 只中状态
+					else  //伤害加状态
 					{
 						if (JudgeAppendStatusStyle(pTarget, magicData) == ATTACK_HIT)
 						{
+							//状态数据(添加状态)
 							std::vector<int>::const_iterator iter = magicData->m_Status.begin();
 							for (; iter != magicData->m_Status.end(); iter++)
 							{
-								if ((*iter) < 0)
+								if ((*iter) < 0) //去状态
 								{
 									pTarget->DelStatus(pTarget->s_World->g_pStatusManager->GetStatus((-1) * (*iter)));
 								}
@@ -490,11 +599,12 @@ void CPlayer::Run(void)
 								}
 							}
 						}
-					}
-				}
+					}// end 伤害加状态
+				}// end 减益 end 群体中状态处理
 
 				mgicDamage->uiObjectID = pTarget->GetID();
 
+				// 执行脚本
 				pTarget->ClearDamageInfo();
 				ExcScript(this, pTarget, GetCurActiveSkillID());
 				DAMAGE_INFO damageInfo = pTarget->GetDamageInfo();
@@ -514,12 +624,16 @@ void CPlayer::Run(void)
 
 				mgicDamage->Attack_Type = damageInfo.Type;
 
+				//if( pTarget->GetType() == OBJECTTYPE_MONSTER )
+				//{
 				if (pTarget->GetlHP() <= 0)
 				{
 					pTarget->Dead(this);
 				}
+				//}
 			}
 
+			// 发送执行消息
 			MSG_MAGIC_PERFORM mgicPerform;
 			mgicPerform.Head.usSize = sizeof(MSG_MAGIC_PERFORM);
 			mgicPerform.Head.usType = _MSG_MAGIC_PERFORM;
@@ -554,6 +668,7 @@ void CPlayer::Run(void)
 	}
 }
 
+//------------------------------------------------------------------------------------
 bool CPlayer::PickupDrops(Item* p)
 {
 	if (!IsMsgOK(MSG_KITBAG_FLAG))
@@ -568,6 +683,7 @@ bool CPlayer::PickupDrops(Item* p)
 	return false;
 }
 
+//------------------------------------------------------------------------------------
 Item* CPlayer::GetEmpty()
 {
 	for (int i = 0; i < MAX_BAGS; i++)
@@ -584,6 +700,7 @@ Item* CPlayer::GetEmpty()
 	return NULL;
 }
 
+//------------------------------------------------------------------------------------
 Item* CPlayer::GetItem(int index, int num)
 {
 	if (!m_Bags[index].GetActive())
@@ -602,6 +719,8 @@ void CPlayer::AddItem(Item* item, int index, int num)
 
 void CPlayer::AddItem(Item* item, int count)
 {
+	//消费道具重叠问题没有处理,
+
 	vector<Item*> free;
 
 	for (int i = 0; i < MAX_BAGS; i++)
@@ -622,6 +741,9 @@ void CPlayer::AddItem(Item* item, int count)
 	}
 }
 
+//------------------------------------------------------------
+//宝箱、钥匙是否存在 by lion
+//------------------------------------------------------------
 bool CPlayer::IsGoldBoxExist(int keyid)
 {
 	Item* temp_item = NULL;
@@ -632,7 +754,7 @@ bool CPlayer::IsGoldBoxExist(int keyid)
 		{
 			temp_item = m_Bags[i].GetItem(j);
 			if (!temp_item) { return false; }
-			ASSERT(temp_item->GetItemBaseAttribute());
+			ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 			if (!key) { if (temp_item->GetItemBaseAttribute()->KEY == keyid) { key = true; } }
 			if (!box) { if (temp_item->GetItemBaseAttribute()->GoldBoxIdx == keyid) { box = true; } }
 			if (key && box) { return true; }
@@ -640,6 +762,7 @@ bool CPlayer::IsGoldBoxExist(int keyid)
 	}
 	return false;
 }
+//是否可开启宝箱
 BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 {
 	Item* temp_item(NULL), * temp_item2(NULL);
@@ -650,7 +773,7 @@ BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 	temp_item = m_Bags[index1].GetItem(index2);
 	if (!temp_item) { return -1; }
 	if (temp_item->m_Lock) { return -1; }
-	ASSERT(temp_item->GetItemBaseAttribute());
+	ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 	if (temp_item->GetItemBaseAttribute()->ID != base_id)
 	{
 		return -1;
@@ -667,13 +790,14 @@ BYTE CPlayer::CanOpenbox(BYTE Iter, UINT base_id, int keyid)
 
 			if (temp_item2->GetItemBaseAttribute()->KEY == keyid)
 			{
+				//临时注销			temp_item->m_Lock = true;
 				return i * MAX_BAG_GRID + j;
 			}
 		}
 	}
 	return -1;
 }
-bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid)
+bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int keyid)		//临时			//消耗宝箱和钥匙
 {
 	Item* temp_item(NULL), * temp_item2(NULL);
 	BYTE index1(0), index2(0), index3(0), index4(0);
@@ -685,7 +809,7 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 	temp_item = m_Bags[index1].GetItem(index2);
 	if (!temp_item) { return -1; }
 	if (temp_item->m_Lock) { return -1; }
-	ASSERT(temp_item->GetItemBaseAttribute());
+	ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 	if (temp_item->GetItemBaseAttribute()->ID != base_id)
 	{
 		return false;
@@ -699,19 +823,22 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 		return false;
 	}
 
-	if (!UseOrEquip(index3, index4))
+	if (!UseOrEquip(index3, index4))//消耗钥匙
 	{
 		return false;
 	}
 
-	AddItem(&cur_box_item, index1, index2);
+	AddItem(&cur_box_item, index1, index2); //把宝箱替换成物品
+
+	//同步用
 
 	msg_useorequip_item.Index = (USHORT)index3;
 	msg_useorequip_item.Num = (USHORT)index4;
 	msg_useorequip_item.uiID = GetID();
 	msg_useorequip_item.False = false;
 
-	ASSERT(temp_item->GetItemBaseAttribute());
+	//同步
+	ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 	msg_useorequip_item.Base = temp_item->GetItemBaseAttribute()->ID;
 	for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 	{
@@ -728,12 +855,13 @@ bool CPlayer::ExpendGoldBoxIter(BYTE IterBox, BYTE IterKey, int base_id, int key
 	msg_useorequip_item.BaseLevel = temp_item->BaseLevel;
 	msg_useorequip_item.AppendLevel = temp_item->AppLevel;
 
+	// by fenjune SendMsgToPlayer(&msg_useorequip_item);
+//	CRegion* pRegion = GetRegion();
 	s_World->SendMsgToClient(&msg_useorequip_item, m_pSocket);
-
-	return true;
+	//	pRegion->SendAreaMsgOneToOther( GetCurrentCell(), &msg_useorequip_item );
 }
 
-bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
+bool CPlayer::ExpendGoldBoxKey(BYTE Iter)							//钥匙消耗
 {
 	Item* temp_item = NULL;
 
@@ -746,7 +874,7 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
 	if (!temp_item) { return false; }
 	if (temp_item->IsClear()) { return false; }
 	if (temp_item->m_Lock) { return false; }
-	ASSERT(temp_item->GetItemBaseAttribute());
+	ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 	if (temp_item->GetItemBaseAttribute()->KEY == Iter)
 	{
 		if (!UseOrEquip(index1, index2))
@@ -754,12 +882,15 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
 			return false;
 		}
 
+		//同步用
+
 		msg_useorequip_item.Index = (USHORT)index1;
 		msg_useorequip_item.Num = (USHORT)index2;
 		msg_useorequip_item.uiID = GetID();
 		msg_useorequip_item.False = false;
 
-		ASSERT(temp_item->GetItemBaseAttribute());
+		//同步
+		ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 		msg_useorequip_item.Base = temp_item->GetItemBaseAttribute()->ID;
 		for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 		{
@@ -776,6 +907,7 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
 		msg_useorequip_item.BaseLevel = temp_item->BaseLevel;
 		msg_useorequip_item.AppendLevel = temp_item->AppLevel;
 
+		// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 		CRegion* pRegion = GetRegion();
 		pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 		return true;
@@ -784,7 +916,7 @@ bool CPlayer::ExpendGoldBoxKey(BYTE Iter)
 	return false;
 }
 
-bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
+bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)							//宝箱消耗
 {
 	Item* temp_item = NULL;
 	bool key(false), box(false);
@@ -804,7 +936,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 			Item temp = *temp_item;
 			if (!key)
 			{
-				ASSERT(temp_item->GetItemBaseAttribute());
+				ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 				if (temp_item->GetItemBaseAttribute()->KEY == keyid)
 				{
 					key = true;
@@ -813,11 +945,14 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 						return false;
 					}
 
+					//同步用
+
 					msg_useorequip_item.Index = (USHORT)i;
 					msg_useorequip_item.Num = (USHORT)j;
 					msg_useorequip_item.uiID = GetID();
 					msg_useorequip_item.False = false;
 
+					//同步
 					msg_useorequip_item.Base = temp.GetItemBaseAttribute()->ID;
 					for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 					{
@@ -834,6 +969,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 					msg_useorequip_item.BaseLevel = temp.BaseLevel;
 					msg_useorequip_item.AppendLevel = temp.AppLevel;
 
+					// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 					CRegion* pRegion = GetRegion();
 					pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 					continue;
@@ -841,7 +977,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 			}
 			if (!box)
 			{
-				ASSERT(temp_item->GetItemBaseAttribute());
+				ASSERT(temp_item->GetItemBaseAttribute());//物品错啦
 				if (temp_item->GetItemBaseAttribute()->ID == gold_box_id)
 				{
 					box = true;
@@ -849,11 +985,14 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 					{
 						return false;
 					}
+					//同步用
+
 					msg_useorequip_item.Index = (USHORT)i;
 					msg_useorequip_item.Num = (USHORT)j;
 					msg_useorequip_item.uiID = GetID();
 					msg_useorequip_item.False = false;
 
+					//同步
 					msg_useorequip_item.Base = temp.GetItemBaseAttribute()->ID;
 					for (int i = 0; i < MAX_EQUIPAPPEND_COUNT; i++)
 					{
@@ -870,6 +1009,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 					msg_useorequip_item.BaseLevel = temp.BaseLevel;
 					msg_useorequip_item.AppendLevel = temp.AppLevel;
 
+					// by fenjune SendMsgToPlayer(&msg_useorequip_item);
 					CRegion* pRegion = GetRegion();
 					pRegion->SendAreaMsgOneToOther(GetCurrentCell(), &msg_useorequip_item);
 				}
@@ -879,7 +1019,7 @@ bool CPlayer::ExpendGoldBoxId(int gold_box_id, int keyid)
 	return false;
 }
 
-bool CPlayer::IsDoubleItem()
+bool CPlayer::IsDoubleItem()//宝箱计数增加 返回值决定是否双倍发送物品
 {
 	switch (++GoldOpendNum)
 	{
@@ -898,6 +1038,7 @@ bool CPlayer::AddItem(Item* item)
 {
 	if (item->GetItemBaseAttribute()->EType == ItemBaseAttribute::ConsumeItem)
 	{
+		//如果是消费道具
 		if (GetFreeItemCount() == 0)
 		{
 			int num = 0;
@@ -985,11 +1126,14 @@ eError CPlayer::SellItem(int index, int num)
 
 	if (!item)
 	{
+		//外
 		return NO_MSG_ERRO;
 	}
 
 	if (item->IsClear())
 	{
+		//外
+
 		return NO_MSG_ERRO;
 	}
 
@@ -1000,6 +1144,8 @@ eError CPlayer::SellItem(int index, int num)
 
 	if (m_Trade.IsTrading())
 	{
+		//企图作什么？
+
 		return NO_MSG_ERRO;
 	}
 
@@ -1070,11 +1216,15 @@ int CPlayer::GetFreeItemOverlap(Item* p)
 
 bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 {
+	//移动装备
+
 	if (IsGM())
 		return false;
 
 	if (index >= EquipCount)
 	{
+		//该死的外挂,
+
 		return false;
 	}
 
@@ -1085,6 +1235,7 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 
 	if (indexaim < 0 || numaim < 0)
 	{
+		//删除,
 		m_Equips[index].Decrease(&m_EquipData);
 		m_Equips[index].Clear();
 
@@ -1103,6 +1254,8 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 
 	if (!pitem->IsClear())
 	{
+		//处理物品到装备的过程
+
 		if (pitem->m_Lock)
 			return false;
 
@@ -1123,6 +1276,7 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 	{
 		if (m_Equips[index].IsClear())
 		{
+			//外挂
 			return false;
 		}
 
@@ -1156,7 +1310,8 @@ bool CPlayer::MoveEquip(int index, int indexaim, int numaim)
 	return true;
 }
 
-int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim)
+//------------------------------------------------------------------------------------
+int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim /*,int overlay*/)
 {
 	if (index < 0)
 	{
@@ -1170,11 +1325,15 @@ int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim)
 
 	if (index >= MAX_BAGS || indexaim >= MAX_BAGS)
 	{
+		//外挂
+
 		return NO_MSG_ERRO;
 	}
 
 	if (indexaim < 0 || numaim < 0)
 	{
+		//同时小于0,清除
+		//丢掉物品
 		if (m_Bags[index].Erase(num))
 		{
 			msg_move_item.uiID = this->GetID();
@@ -1189,20 +1348,59 @@ int  CPlayer::MoveItem(int index, int num, int indexaim, int numaim)
 		return NO_MSG_ERRO;
 	}
 
-	if (m_Bags[index].Move(&m_Bags[indexaim], num, numaim))
+	if (m_Bags[index].Move(&m_Bags[indexaim], num, numaim/*,overlay*/))
 	{
 		msg_move_item.uiID = this->GetID();
 		msg_move_item.Index = index;
 		msg_move_item.Num = num;
 		msg_move_item.IndexAim = indexaim;
 		msg_move_item.NumAim = numaim;
+		//msg_move_item.Overlap=overlay;
+
 		CGameObject::s_World->SendMsgToClient(&msg_move_item, GetSocket());
 	}
 
 	return NO_MSG_ERRO;
 }
+//拆分物品
+//------------------------------------------------------------------------------------
 int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overlay)
 {
+	//if (index < 0)
+	//{
+	//	return NO_MSG_ERRO;
+	//}
+
+	//if (num < 0)
+	//{
+	//	return MoveEquip(index , indexaim , numaim);
+	//}
+
+	//if (index >= MAX_BAGS || indexaim >= MAX_BAGS)
+	//{
+	//	//外挂
+
+	//	return NO_MSG_ERRO;
+	//}
+
+	//if (indexaim < 0 || numaim < 0)
+	//{
+	//	//同时小于0,清除
+	//	//丢掉物品
+	//	if (m_Bags[index].Erase(num))
+	//	{
+	//		msg_break_item.Index = index;
+	//		msg_break_item.Num = num;
+	//		msg_break_item.IndexAim = -1;
+	//		msg_break_item.NumAim = -1;
+	//		msg_break_item.Flags = 1;
+
+	//		CGameObject::s_World->SendMsgToClient(&msg_break_item, GetSocket());
+	//	}
+
+	//	return NO_MSG_ERRO;
+	//}
+
 	Item* item = GetItem(index, num);
 
 	if (m_Bags[index].Break(&m_Bags[indexaim], num, numaim, overlay))
@@ -1218,10 +1416,11 @@ int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overla
 	}
 	else
 	{
+		//发送拆分失败，解锁
 		if (item->m_Lock)
 		{
 			item->m_Lock = false;
-		}
+		}//endif
 
 		msg_break_item.Index = index;
 		msg_break_item.Num = num;
@@ -1237,13 +1436,18 @@ int  CPlayer::BreakItem(int index, int num, int indexaim, int numaim, int overla
 
 bool CPlayer::SetEquip(int index, int num, int indexaim)
 {
+	//不检测,检测在之前作.
 	Item* pitem = m_Bags[index].GetItem(num);
 
 	if (pitem->GetItemBaseAttribute()->Equip)
 	{
+		//装备
+
 		if (pitem->BaseLevel > m_ObjectData.m_cRank ||
 			pitem->GetItemBaseAttribute()->EType > ItemBaseAttribute::Ring)
 		{
+			//装备等级大于人物等级,明显是外挂,在下面处理,
+
 			return false;
 		}
 		if (!pitem->HasClass(m_ObjectData.m_lClass))
@@ -1387,11 +1591,13 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
+					//都空
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
 				else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 				{
+					//主手空
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
@@ -1399,6 +1605,7 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 				{
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 					{
+						//主手上是双手,把主手换下
 						if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 							return false;
 
@@ -1411,6 +1618,7 @@ bool CPlayer::SetEquip(int index, int num, int indexaim)
 					else if (pitem->GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
+						//双持
 						temp = m_Equips[Auxiliary];
 						m_Equips[Auxiliary] = *pitem;
 					}
@@ -1570,11 +1778,17 @@ void CPlayer::SendEquipTimeEnd(int index, int type, int bagnum)
 				{
 					if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pItemBaseInfo->UndoSkillID, 0, 0, 0) == NO_MSG_ERRO)
 					{
-						;
+						;//临时
 					}
 				}
 			}
 		}
+		// 		if ((--pItem->m_Overlap) == 0)
+		// 			pItem->Clear();
+
+		//丢掉物品
+		//if (m_Bags[index].Erase(bagnum))
+		//{
 		msg_move_item.uiID = this->GetID();
 		msg_move_item.Index = index;
 		msg_move_item.Num = bagnum;
@@ -1582,15 +1796,19 @@ void CPlayer::SendEquipTimeEnd(int index, int type, int bagnum)
 		msg_move_item.NumAim = -1;
 
 		s_World->SendMsgToClient(&msg_move_item, GetSocket());
+
+		//}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 int	CPlayer::GetNumOfItem(const int _ID)
 {
 	int	count = 0;
 	ItemBaseAttribute* pItemBaseInfo = NULL;
 	Item* pItem = NULL;
-	for (int i = 0; i < MAX_BAGS; i++)
+	for (int i = 0; i < MAX_BAGS; i++)			//应该改进为只查看玩家开放的背包
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
@@ -1607,11 +1825,11 @@ int	CPlayer::GetNumOfItem(const int _ID)
 	return	count;
 }
 
-bool	CPlayer::UseItem(const int _ID, int _Num)
+bool	CPlayer::UseItem(const int _ID, int _Num /* = 1 */)
 {
 	ItemBaseAttribute* pItemBaseInfo = NULL;
 	Item* pItem = NULL;
-	for (int i = 0; i < MAX_BAGS; i++)
+	for (int i = 0; i < MAX_BAGS; i++)			//应该改进为只查看玩家开放的背包
 	{
 		for (int j = 0; j < MAX_BAG_GRID; j++)
 		{
@@ -1621,7 +1839,7 @@ bool	CPlayer::UseItem(const int _ID, int _Num)
 			pItemBaseInfo = pItem->GetItemBaseAttribute();
 			if (!pItemBaseInfo)
 				continue;
-			if (_ID == pItemBaseInfo->ID)
+			if (_ID == pItemBaseInfo->ID)		//可以找到，理论上说明该道具的Overlap至少为1
 			{
 				(pItem->m_Overlap)--;
 				if (pItem->m_Overlap <= 0)
@@ -1645,8 +1863,9 @@ void CPlayer::ClearExpiredItem()
 
 		if (0 == ItemBaseInfo->Mode && m_Equips[i].IsActivated)
 		{
-			if (IsExpired(&(m_Equips[i].ExpiredDate)))
+			if (IsExpired(&(m_Equips[i].ExpiredDate)))//利用该参数判断是否该装备过期
 			{
+				//删除道具或装备
 				SendEquipTimeEnd(i, 0, 0);
 			}
 		}
@@ -1666,8 +1885,9 @@ void CPlayer::ClearExpiredItem()
 
 			if (0 == ItemBaseInfo->Mode && pItem->IsActivated)
 			{
-				if (IsExpired((&pItem->ExpiredDate)))
+				if (IsExpired((&pItem->ExpiredDate)))//利用该参数判断是否该装备过期
 				{
+					//删除道具或装备
 					SendEquipTimeEnd(i, 1, j);
 				}
 			}
@@ -1699,16 +1919,18 @@ void CPlayer::ClearExpiredItem()
 		}
 	}
 }
+//------------------------------------------------------------------------------
 bool	CPlayer::IsExpired(tm* _pTime)
 {
 	time_t	timep;
 	time(&timep);
 	tm* tm_buf = localtime(&timep);
-	timep = _mkgmtime(tm_buf);
-	if (timep > _mkgmtime(_pTime))
+	timep = _mkgmtime(tm_buf);	 //多转一次，修正误差
+	if (timep > _mkgmtime(_pTime))//当前系统时间大于设定时间，表示过期
 		return	true;
 	return	false;
 }
+//------------------------------------------------------------------------------
 void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 {
 	if (!_pItem)
@@ -1734,6 +1956,7 @@ void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 
 	_pItem->IsActivated = true;
 
+	//放入列表保存
 	vector<Item>::iterator itor = MallItemInUseList.begin();
 	vector<Item>::iterator itor_end = MallItemInUseList.end();
 	for (; itor != itor_end; itor++)
@@ -1750,18 +1973,30 @@ void	CPlayer::SetItemActivated(Item* _pItem, bool _IsActivated)
 	return;
 }
 
-bool CPlayer::UseOrEquip(int index, int num)
+//------------------------------------------------------------------------------------
+bool CPlayer::UseOrEquip(int index, int num)// 使用装备
 {
 	if (IsDead())
 		return false;
 
+	//不检测,检测在之前作.
 	Item* pitem = m_Bags[index].GetItem(num);
+
+	/************************************************************************/
+	/* 测试                                                                     */
+	/************************************************************************/
+// 	if ((--pitem->m_Overlap) == 0)
+// 		pitem->Clear();
+// 	return	true;
+	//------------------------------------------------------------------------------
 
 	if (pitem->m_Lock)
 		return false;
 
 	if (pitem->GetEquipLV() > m_ObjectData.m_cRank)
 	{
+		//等级大于人物等级,明显是外挂,在下面处理,
+
 		return false;
 	}
 
@@ -1774,6 +2009,8 @@ bool CPlayer::UseOrEquip(int index, int num)
 
 	if (pitem->GetItemBaseAttribute()->Equip)
 	{
+		//装备
+
 		if (IsGM())
 			return false;
 
@@ -1804,13 +2041,16 @@ bool CPlayer::UseOrEquip(int index, int num)
 			{
 				if (m_Equips[main].IsClear())
 				{
+					//主手空
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
 				else if (!m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
+					//副手空
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand != pitem->GetItemBaseAttribute()->eEquipHand)
 					{
+						//主手装备不可以双持
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -1824,11 +2064,13 @@ bool CPlayer::UseOrEquip(int index, int num)
 				{
 					if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType != ItemBaseAttribute::Weapon)
 					{
+						//副手不是武器
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
 					else if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
+						//双持
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -1853,11 +2095,13 @@ bool CPlayer::UseOrEquip(int index, int num)
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
+					//都空
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
 				else if (!m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
+					//副手空
 					temp = m_Equips[main];
 					m_Equips[main] = *pitem;
 				}
@@ -1866,6 +2110,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 					if (m_Equips[Auxiliary].GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[Auxiliary].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
+						//双持
 						temp = m_Equips[main];
 						m_Equips[main] = *pitem;
 					}
@@ -1883,11 +2128,13 @@ bool CPlayer::UseOrEquip(int index, int num)
 			{
 				if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 				{
+					//都空
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
 				else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 				{
+					//主手空
 					temp = m_Equips[Auxiliary];
 					m_Equips[Auxiliary] = *pitem;
 				}
@@ -1895,6 +2142,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 				{
 					if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 					{
+						//主手上是双手,把主手换下
 						if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 							return false;
 
@@ -1907,6 +2155,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 					else if (pitem->GetItemBaseAttribute()->EType == ItemBaseAttribute::Weapon &&
 						m_Equips[main].GetItemBaseAttribute()->eEquipHand == pitem->GetItemBaseAttribute()->eEquipHand)
 					{
+						//双持
 						temp = m_Equips[Auxiliary];
 						m_Equips[Auxiliary] = *pitem;
 					}
@@ -1931,11 +2180,13 @@ bool CPlayer::UseOrEquip(int index, int num)
 		{
 			if (m_Equips[main].IsClear() && m_Equips[Auxiliary].IsClear())
 			{
+				//都空
 				temp = m_Equips[Auxiliary];
 				m_Equips[Auxiliary] = *pitem;
 			}
 			else if (m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 			{
+				//主手空
 				temp = m_Equips[Auxiliary];
 				m_Equips[Auxiliary] = *pitem;
 			}
@@ -1943,6 +2194,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 			{
 				if (m_Equips[main].GetItemBaseAttribute()->eEquipHand == ItemBaseAttribute::TwoHand)
 				{
+					//主手上是双手,把主手换下
 					if (GetFreeItemCount() == 0 && !m_Equips[main].IsClear() && !m_Equips[Auxiliary].IsClear())
 						return false;
 
@@ -2009,6 +2261,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 			break;
 
 		default:
+			//能进来证明见鬼了,
 			ASSERT(0);
 			return false;
 			break;
@@ -2035,13 +2288,15 @@ bool CPlayer::UseOrEquip(int index, int num)
 	}
 	else
 	{
+		//脚本应用存入
 		TempScriptItem = pitem;
 		TempScriptIndex = index;
 		TempScriptNum = num;
 
+		//可重叠
 		if (pitem->GetItemBaseAttribute()->Overlap)
 		{
-			if ((pitem->GetItemBaseAttribute()->GoldBoxIdx != -1)
+			if ((pitem->GetItemBaseAttribute()->GoldBoxIdx != -1)//如果是宝箱或者钥匙 消耗掉就行了
 				|| (pitem->GetItemBaseAttribute()->KEY != -1))
 			{
 				if ((--pitem->m_Overlap) == 0)
@@ -2055,6 +2310,8 @@ bool CPlayer::UseOrEquip(int index, int num)
 
 			if (pitem->GetItemBaseAttribute()->SkillBook)
 			{
+				//技能书，
+
 				if (pitem->GetItemBaseAttribute()->PrevSkillID != -1 &&
 					!FindActiveSkill(pitem->GetItemBaseAttribute()->PrevSkillID))
 					return false;
@@ -2079,6 +2336,12 @@ bool CPlayer::UseOrEquip(int index, int num)
 
 			if (0 <= pitem->GetItemBaseAttribute()->Mode)
 			{
+				/************************************************************************/
+				/* 测试                                                                     */
+				/************************************************************************/
+			/*	return	true;*/
+				//------------------------------------------------------------------------------
+
 				SetItemActivated(pitem, true);
 				if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pitem->GetItemBaseAttribute()->SkillID, 0, 0, 0) == NO_MSG_ERRO)
 				{
@@ -2090,6 +2353,7 @@ bool CPlayer::UseOrEquip(int index, int num)
 				return	false;
 			}
 
+			//血瓶使用 或商城道具使用
 			if (GetRegion()->Skill(this, this, GetPosX(), 0, GetPosZ(), pitem->GetItemBaseAttribute()->SkillID, 0, 0, 0) == NO_MSG_ERRO)
 			{
 				if ((--pitem->m_Overlap) == 0)

@@ -1,6 +1,3 @@
-﻿  ThreadPool.cpp
-E:\GW\Common\Include\Base\Inc\ThreadPool.h(64,59): warning C4100: 'pOverlapped': parámetro formal sin referencia
-  (compilando archivo de origen "Src/ThreadPool.cpp")
-  
+﻿  Timer.cpp
 e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1557,5): warning MSB8012: TargetPath(E:\GW\Release\Base.lib) no coincide con el valor de la propiedad OutputFile de Library (E:\GW\Common\lib\Release\Base.lib). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Lib.OutputFile).
   Base.vcxproj -> E:\GW\Release\Base.lib

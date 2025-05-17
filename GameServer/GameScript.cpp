@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameScript.h"
 #include "./gamecore/SkillManager.h"
 #include "DataCore.h"
@@ -197,9 +197,8 @@ bool InitGameScript()
 
 void Learn(PyObject*, PyObject* args)
 {
-	// Verificar que args no sea NULL
 	if (!args || !PyTuple_Check(args) || PyTuple_Size(args) < 3) {
-		printf("[ERROR] Learn: Argumentos inválidos\n");
+		printf("[ERROR] Learn: Argumentos invé† idos\n");
 		return;
 	}
 
@@ -214,17 +213,15 @@ void Learn(PyObject*, PyObject* args)
 	int id = PyInt_AsLong(arg0);
 	int magic = PyInt_AsLong(arg2);
 
-	// Verificar conversión exitosa
 	if (PyErr_Occurred()) {
 		PyErr_Print();
 		PyErr_Clear();
 		return;
 	}
 
-	// Verificar ID válido
 	CGameObject* obj1 = (CGameObject*)(id);
 	if (!obj1) {
-		printf("[ERROR] Learn: ID de objeto inválido\n");
+		printf("[ERROR] Learn: ID de objeto invé† ido\n");
 		return;
 	}
 
@@ -238,10 +235,8 @@ void Learn(PyObject*, PyObject* args)
 	mgicPerform.uiObjectID = static_cast<CPlayer*>(obj1)->GetID();
 	mgicPerform.ucMagicID = magic;
 
-	// Enviar mensaje
 	obj1->GetRegion()->SendAreaMsgOneToOther(obj1->GetCurrentCell(), &mgicPerform);
 
-	// Limpiar cualquier error de Python
 	if (PyErr_Occurred()) {
 		PyErr_Print();
 		PyErr_Clear();
@@ -1671,7 +1666,7 @@ PyObject* ChangeChatBubble(PyObject* self, PyObject* args)
 
 	pPlayer->SetChatBubbleType((BYTE)style);
 
-	wstring unFound = L"ÄúÒÑ¾­¸ü¸ÄÁËÁÄÌìÆøÅÝÑùÊ½";
+	wstring unFound = L"æ‚¨å·²ç»æ›´æ”¹äº†èŠå¤©æ°”æ³¡æ ·å¼";
 	MSG_TALK	msg_talk;
 	msg_talk.ucAimPlayerNameSize = 0;
 	msg_talk.ucResPlayerNameSize = 0;
@@ -1724,7 +1719,7 @@ PyObject* AddLevel(PyObject* self, PyObject* args)
 	pPlayer->SetcRank((BYTE)Level);
 	pPlayer->PlayerUpGrade(true);
 
-	wstring unFound = L"ÄúÒÑ¾­ÌáÉýÁË×ÔÉíµÈ¼¶";
+	wstring unFound = L"æ‚¨å·²ç»æå‡äº†è‡ªèº«ç­‰çº§";
 	MSG_TALK	msg_talk;
 	msg_talk.ucAimPlayerNameSize = 0;
 	msg_talk.ucResPlayerNameSize = 0;
@@ -1908,10 +1903,10 @@ PyObject* ChangeHairstyle(PyObject* self, PyObject* args)
 	CPlayer* pPlayer = (CPlayer*)(iArg0);
 
 	char Ifbuf[128];
-	_stprintf(Ifbuf, "¸Ä±äÍ··¢s:%d", pPlayer->GetcHairStyle());
+	_stprintf(Ifbuf, "æ”¹å˜å¤´å‘s:%d", pPlayer->GetcHairStyle());
 	pPlayer->SetcHairStyle(10 * iArg1);
 
-	_stprintf(Ifbuf, "¸Ä±äÍ··¢d:%d", pPlayer->GetcHairStyle());
+	_stprintf(Ifbuf, "æ”¹å˜å¤´å‘d:%d", pPlayer->GetcHairStyle());
 	pPlayer->SubOverlap();
 
 	pPlayer->SendUseOrEquip(0);
@@ -1949,11 +1944,11 @@ PyObject* ChangeHaircolor(PyObject* self, PyObject* args)
 	CPlayer* pPlayer = (CPlayer*)(iArg0);
 
 	char Ifbuf[128];
-	_stprintf(Ifbuf, "¸Ä±äÍ··¢s:%d", pPlayer->GetcHairStyle());
+	_stprintf(Ifbuf, "æ”¹å˜å¤´å‘s:%d", pPlayer->GetcHairStyle());
 	int CurHair = pPlayer->GetcHairStyle();
 	pPlayer->SetcHairStyle(CurHair + iArg1);
 
-	_stprintf(Ifbuf, "¸Ä±äÍ··¢d:%d", pPlayer->GetcHairStyle());
+	_stprintf(Ifbuf, "æ”¹å˜å¤´å‘d:%d", pPlayer->GetcHairStyle());
 	pPlayer->SubOverlap();
 
 	pPlayer->SendUseOrEquip(0);

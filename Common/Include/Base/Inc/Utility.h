@@ -129,7 +129,7 @@ namespace utility
 
 	inline void CriticalSection::UnLock()
 	{
-		::LeaveCriticalSection(&m_h_cs);
+	// 	::LeaveCriticalSection(&m_h_cs);
 	}
 
 	inline AutoLock::AutoLock(CriticalSection& c_lock)
