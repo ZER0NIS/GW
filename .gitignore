@@ -1,7 +1,7 @@
 /.vs
 /sdk
 /run
-
+/Lib_net
 *.dll
 *.lib
 *.map
