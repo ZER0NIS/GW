@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{7B2E3F1F-42B9-4BE9-9035-8FCCD2C48201}</ProjectGuid>
+    <RootNamespace>Lib_Base</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.35913.81</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <AllProjectBMIsArePublic>false</AllProjectBMIsArePublic>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\Server\lib\Debug\BaseD.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\..\lib\Release\Base.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="ByteBuffer.h" />
+    <ClInclude Include="Inc\Analyst.h" />
+    <ClInclude Include="Inc\AnalystDef.h" />
+    <ClInclude Include="Inc\Array.h" />
+    <ClInclude Include="Inc\Autoptr.h" />
+    <ClInclude Include="Inc\ByteBuffer.h" />
+    <ClInclude Include="Inc\Exception.h" />
+    <ClInclude Include="Inc\Factory.h" />
+    <ClInclude Include="Inc\Heap.h" />
+    <ClInclude Include="Inc\IException.h" />
+    <ClInclude Include="Inc\ILogger.h" />
+    <ClInclude Include="Inc\IMessage.h" />
+    <ClInclude Include="Inc\IMessagePort.h" />
+    <ClInclude Include="Inc\IModule.h" />
+    <ClInclude Include="Inc\Ini.h" />
+    <ClInclude Include="Inc\IniFile.h" />
+    <ClInclude Include="Inc\IPCChannel.h" />
+    <ClInclude Include="Inc\List.h" />
+    <ClInclude Include="Inc\Logger.h" />
+    <ClInclude Include="Inc\LogSystem.h" />
+    <ClInclude Include="Inc\Map.h" />
+    <ClInclude Include="Inc\mempool.h" />
+    <ClInclude Include="Inc\Msg.h" />
+    <ClInclude Include="Inc\Packet.h" />
+    <ClInclude Include="Inc\PlatformConfig.h" />
+    <ClInclude Include="Inc\Queue.h" />
+    <ClInclude Include="Inc\Singleton.h" />
+    <ClInclude Include="Inc\Stack.h" />
+    <ClInclude Include="Inc\String.h" />
+    <ClInclude Include="Inc\SvrBase.h" />
+    <ClInclude Include="Inc\SyncObjs.h" />
+    <ClInclude Include="Inc\SysTimer.h" />
+    <ClInclude Include="Inc\Thread.h" />
+    <ClInclude Include="Inc\ThreadPool.h" />
+    <ClInclude Include="Inc\Timer.h" />
+    <ClInclude Include="Inc\Translator.h" />
+    <ClInclude Include="Inc\Types.h" />
+    <ClInclude Include="Inc\Utility.h" />
+    <ClInclude Include="Inc\Vector.h" />
+    <ClInclude Include="Mutex.h" />
+    <ClInclude Include="TDContainer.h" />
+    <ClInclude Include="xml\tinystr.h" />
+    <ClInclude Include="xml\tinyxml.h" />
+    <ClInclude Include="xml\XMLBase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Mutex.cpp" />
+    <ClCompile Include="Src\Analyst.cpp" />
+    <ClCompile Include="Src\Heap.cpp" />
+    <ClCompile Include="Src\IMessage.cpp" />
+    <ClCompile Include="Src\Ini.cpp" />
+    <ClCompile Include="Src\IniFile.cpp" />
+    <ClCompile Include="Src\IPCChannel.cpp" />
+    <ClCompile Include="Src\List.cpp" />
+    <ClCompile Include="Src\Logger.cpp" />
+    <ClCompile Include="Src\LogSystem.cpp" />
+    <ClCompile Include="Src\Map.cpp" />
+    <ClCompile Include="Src\mempool.cpp" />
+    <ClCompile Include="Src\Msg.cpp" />
+    <ClCompile Include="Src\Queue.cpp" />
+    <ClCompile Include="Src\Singleton.cpp" />
+    <ClCompile Include="Src\String.cpp" />
+    <ClCompile Include="Src\SvrBase.cpp" />
+    <ClCompile Include="Src\SysTimer.cpp" />
+    <ClCompile Include="Src\Thread.cpp" />
+    <ClCompile Include="Src\ThreadPool.cpp" />
+    <ClCompile Include="Src\Timer.cpp" />
+    <ClCompile Include="Src\Vector.cpp" />
+    <ClCompile Include="xml\tinystr.cpp" />
+    <ClCompile Include="xml\tinyxml.cpp" />
+    <ClCompile Include="xml\tinyxmlerror.cpp" />
+    <ClCompile Include="xml\tinyxmlparser.cpp" />
+    <ClCompile Include="xml\XMLBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Inc\ByteBuffer.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

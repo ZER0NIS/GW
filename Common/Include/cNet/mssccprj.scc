@@ -1,0 +1,5 @@
+SCC = This is a Source Code Control file
+
+[sNet.vcproj]
+SCC_Aux_Path = "\\192.168.6.68\ServerSDK"
+SCC_Project_Name = "$/ServSDK/gwo_serv_sdk/cNet", ECAAAAAA

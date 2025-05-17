@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{4BFB0588-30B2-4E49-BE31-8AC3C897745F}</ProjectGuid>
+    <RootNamespace>GameServer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.35913.81</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;MSVC;MSWIND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\Bin\GameServer\GameServer.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\Common\Include\PyScript\python\libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\debug\$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary />
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>del ..\Bin\GameServer\*.ilk</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\SDK\mysql-5.7.44-win32\include;..\SDK\Python27\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\Run\GameServer\GameServer.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\SDK\mysql-5.7.44-win32\lib;..\SDK\Python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(Configuration)\GameServer.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ChatCommand.cpp" />
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="DataCore.cpp" />
+    <ClCompile Include="Dial.cpp" />
+    <ClCompile Include="GameCore\Altar.cpp" />
+    <ClCompile Include="GameCore\Backup.cpp" />
+    <ClCompile Include="GameCore\Bag.cpp" />
+    <ClCompile Include="GameCore\BaseManager.cpp" />
+    <ClCompile Include="GameCore\Buff.cpp" />
+    <ClCompile Include="GameCore\ChangeRegion.cpp" />
+    <ClCompile Include="GameCore\Combat.cpp" />
+    <ClCompile Include="GameCore\Country.cpp" />
+    <ClCompile Include="GameCore\DropItemMgr.cpp" />
+    <ClCompile Include="GameCore\EquipForge.cpp" />
+    <ClCompile Include="GameCore\Error.cpp" />
+    <ClCompile Include="GameCore\GameObject.cpp" />
+    <ClCompile Include="GameCore\GMCrl.cpp" />
+    <ClCompile Include="GameCore\GMMgr.cpp" />
+    <ClCompile Include="GameCore\Item.cpp" />
+    <ClCompile Include="GameCore\ItemBackup.cpp" />
+    <ClCompile Include="GameCore\ItemManager.cpp" />
+    <ClCompile Include="GameCore\KeyWords.cpp" />
+    <ClCompile Include="GameCore\Mall.cpp" />
+    <ClCompile Include="GameCore\Map.cpp" />
+    <ClCompile Include="GameCore\Mat.cpp" />
+    <ClCompile Include="GameCore\Monster.cpp" />
+    <ClCompile Include="GameCore\NPC.cpp" />
+    <ClCompile Include="GameCore\Obj.cpp" />
+    <ClCompile Include="GameCore\ObjMgr.cpp" />
+    <ClCompile Include="GameCore\Obstacle.cpp" />
+    <ClCompile Include="GameCore\Player.cpp" />
+    <ClCompile Include="GameCore\PlayerAttack.cpp" />
+    <ClCompile Include="GameCore\PlayerItem.cpp" />
+    <ClCompile Include="GameCore\PlayerQuest.cpp" />
+    <ClCompile Include="GameCore\PlayerSkill.cpp" />
+    <ClCompile Include="GameCore\PlayerTeam.cpp" />
+    <ClCompile Include="GameCore\QuestDef.cpp" />
+    <ClCompile Include="GameCore\QuestManager.cpp" />
+    <ClCompile Include="GameCore\Region.cpp" />
+    <ClCompile Include="GameCore\RegionIni.cpp" />
+    <ClCompile Include="GameCore\RegionSize.cpp" />
+    <ClCompile Include="GameCore\RepRegion.cpp" />
+    <ClCompile Include="GameCore\RoleRelation.cpp" />
+    <ClCompile Include="GameCore\SkillManager.cpp" />
+    <ClCompile Include="GameCore\Stall.cpp" />
+    <ClCompile Include="GameCore\Storage.cpp" />
+    <ClCompile Include="GameCore\Trade.cpp" />
+    <ClCompile Include="GameCore\Walk.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameScript.cpp" />
+    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="GSMaster.cpp" />
+    <ClCompile Include="ListenConnect.cpp" />
+    <ClCompile Include="ServiceLoader.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\MsgDefine.h" />
+    <ClInclude Include="..\Common\MsgTypes.h" />
+    <ClInclude Include="ChatCommand.h" />
+    <ClInclude Include="DataCore.h" />
+    <ClInclude Include="Dial.h" />
+    <ClInclude Include="ErrorMessage.h" />
+    <ClInclude Include="GameCore\Altar.h" />
+    <ClInclude Include="GameCore\Backup.h" />
+    <ClInclude Include="GameCore\Bag.h" />
+    <ClInclude Include="GameCore\BaseManager.h" />
+    <ClInclude Include="GameCore\Buff.h" />
+    <ClInclude Include="GameCore\Country.h" />
+    <ClInclude Include="GameCore\DropItemMgr.h" />
+    <ClInclude Include="GameCore\EquipForge.h" />
+    <ClInclude Include="GameCore\Error.h" />
+    <ClInclude Include="GameCore\GameData.h" />
+    <ClInclude Include="GameCore\GameObject.h" />
+    <ClInclude Include="GameCore\GMCrl.h" />
+    <ClInclude Include="GameCore\GMMgr.h" />
+    <ClInclude Include="GameCore\Item.h" />
+    <ClInclude Include="GameCore\ItemBackup.h" />
+    <ClInclude Include="GameCore\ItemManager.h" />
+    <ClInclude Include="GameCore\KeyWords.h" />
+    <ClInclude Include="GameCore\Mall.h" />
+    <ClInclude Include="GameCore\Map.h" />
+    <ClInclude Include="GameCore\Mat.h" />
+    <ClInclude Include="GameCore\Monster.h" />
+    <ClInclude Include="GameCore\NPC.h" />
+    <ClInclude Include="GameCore\Obj.h" />
+    <ClInclude Include="GameCore\ObjMgr.h" />
+    <ClInclude Include="GameCore\Obstacle.h" />
+    <ClInclude Include="GameCore\Player.h" />
+    <ClInclude Include="GameCore\QuestDef.h" />
+    <ClInclude Include="GameCore\QuestManager.h" />
+    <ClInclude Include="GameCore\Region.h" />
+    <ClInclude Include="GameCore\RepRegion.h" />
+    <ClInclude Include="GameCore\rolerelation.h" />
+    <ClInclude Include="GameCore\SkillManager.h" />
+    <ClInclude Include="GameCore\Stall.h" />
+    <ClInclude Include="GameCore\Storage.h" />
+    <ClInclude Include="GameCore\TimeElems.h" />
+    <ClInclude Include="GameCore\Trade.h" />
+    <ClInclude Include="GameScript.h" />
+    <ClInclude Include="GSMaster.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="MacroDefine.h" />
+    <ClInclude Include="ServiceLoader.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VTune\GameServer.vpj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

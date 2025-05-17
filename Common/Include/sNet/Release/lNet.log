@@ -1,0 +1,3 @@
+﻿  IOCP.cpp
+e:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1557,5): warning MSB8012: TargetPath(E:\GW\Release\sNet.lib) no coincide con el valor de la propiedad OutputFile de Library (E:\GW\Common\lib\Release\SNet.lib). Esto puede hacer que el proyecto no se compile correctamente. Para solucionar este problema, asegúrese de que los valores de propiedad $(OutDir), $(TargetName) y $(TargetExt) coinciden con el valor especificado en %(Lib.OutputFile).
+  lNet.vcxproj -> E:\GW\Release\sNet.lib

@@ -1,0 +1,19 @@
+﻿  Service.cpp
+E:\GW\DBServer\Service.cpp(53,63): error C2039: "RUN": no es un miembro de "sbase::CThread"
+      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
+      vea la declaración de 'sbase::CThread'
+  
+E:\GW\DBServer\Service.cpp(53,63): error C2065: 'RUN': identificador no declarado
+E:\GW\DBServer\Service.cpp(60,13): error C2039: "SetThreadAMask": no es un miembro de "sbase::CThread"
+      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
+      vea la declaración de 'sbase::CThread'
+  
+E:\GW\DBServer\Service.cpp(420,63): error C2039: "RUN": no es un miembro de "sbase::CThread"
+      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
+      vea la declaración de 'sbase::CThread'
+  
+E:\GW\DBServer\Service.cpp(420,63): error C2065: 'RUN': identificador no declarado
+E:\GW\DBServer\Service.cpp(423,13): error C2039: "SetThreadAMask": no es un miembro de "sbase::CThread"
+      E:\GW\Common\Include\Base\inc\Thread.h(22,8):
+      vea la declaración de 'sbase::CThread'
+  

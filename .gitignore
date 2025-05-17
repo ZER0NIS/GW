@@ -1,0 +1,13 @@
+/.vs
+/sdk
+/run
+
+*.dll
+*.lib
+*.map
+*.pdb
+*ilk
+
+
+*.ncb
+*sou

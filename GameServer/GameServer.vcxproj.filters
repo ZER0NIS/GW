@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="GameCore Files">
+      <UniqueIdentifier>{1405afdd-56ba-4549-a1af-fa42bd9b0263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCore Files\Header Files">
+      <UniqueIdentifier>{eb725bcd-114f-407b-9e71-444f2ee17ac4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCore Files\Source Files">
+      <UniqueIdentifier>{a7890a5d-7d88-4aa2-9305-00fbe6f0d948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MsgDef">
+      <UniqueIdentifier>{6e529bd5-ed5d-44ac-99d2-a15944b21392}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ChatCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GSMaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenConnect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\RegionSize.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Altar.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Backup.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Bag.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\BaseManager.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Buff.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\ChangeRegion.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Combat.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Country.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DataCore.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dial.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\DropItemMgr.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\EquipForge.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Error.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\GameObject.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\GMCrl.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\GMMgr.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Item.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\ItemBackup.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\ItemManager.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\KeyWords.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Mall.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Map.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Mat.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Monster.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\NPC.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Obj.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\ObjMgr.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Obstacle.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Player.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\PlayerAttack.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\PlayerItem.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\PlayerQuest.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\PlayerSkill.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\PlayerTeam.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\QuestDef.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\QuestManager.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Region.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\RegionIni.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\RepRegion.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\RoleRelation.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\SkillManager.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Stall.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Storage.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Trade.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore\Walk.cpp">
+      <Filter>GameCore Files\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChatCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GSMaster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MacroDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Country.h">
+      <Filter>GameCore Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Altar.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Backup.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Bag.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\BaseManager.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Buff.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataCore.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dial.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\DropItemMgr.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\EquipForge.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Error.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorMessage.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\GameData.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\GameObject.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\GMCrl.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\GMMgr.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Item.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\ItemBackup.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\ItemManager.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\KeyWords.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Mall.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Map.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Mat.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Monster.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\NPC.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Obj.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\ObjMgr.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Obstacle.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Player.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\QuestDef.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\QuestManager.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Region.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\RepRegion.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\rolerelation.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\SkillManager.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Stall.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Storage.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\TimeElems.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore\Trade.h">
+      <Filter>GameCore Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\MsgDefine.h">
+      <Filter>MsgDef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\MsgTypes.h">
+      <Filter>MsgDef</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VTune\GameServer.vpj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

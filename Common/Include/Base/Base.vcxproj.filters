@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="STL">
+      <UniqueIdentifier>{5dedd9a8-1912-4865-9e9b-030d0d2431be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL\Header Files">
+      <UniqueIdentifier>{1da13e7c-d163-4b5b-a706-cfdf99802c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL\Source Files">
+      <UniqueIdentifier>{70e245e5-da6c-441d-bc8e-1d58daf7b493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{39f0c9c0-6f23-4deb-a012-ac99dbf09878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml\Header Files">
+      <UniqueIdentifier>{c7412115-10d4-4f89-b193-78cd9a0bb656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml\Source Files">
+      <UniqueIdentifier>{057a3ad0-514e-4adc-83e0-36b981aa659b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{3f43f358-dd35-428f-ba0b-37518fdec8e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread\Header Files">
+      <UniqueIdentifier>{29d65ad6-5933-44ef-8f22-946ca2786cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread\Source Files">
+      <UniqueIdentifier>{a28f15ad-b156-4e38-897a-b94f39ac0987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{e813cfa0-8070-4864-8b8c-08adad7ae564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="base\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="msg">
+      <UniqueIdentifier>{a7ab2738-c8dc-4dcc-8d86-22f68e35a8ed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Inc\List.h">
+      <Filter>STL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Map.h">
+      <Filter>STL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Queue.h">
+      <Filter>STL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TDContainer.h">
+      <Filter>STL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Vector.h">
+      <Filter>STL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinystr.h">
+      <Filter>xml\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinyxml.h">
+      <Filter>xml\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\XMLBase.h">
+      <Filter>xml\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutex.h">
+      <Filter>thread\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\ThreadPool.h">
+      <Filter>thread\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Array.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteBuffer.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Factory.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Heap.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IMessage.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IModule.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Ini.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IniFile.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IPCChannel.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\mempool.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Msg.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Singleton.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Stack.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\String.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\SvrBase.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\SyncObjs.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Thread.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Timer.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Types.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Utility.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\ByteBuffer.h">
+      <Filter>msg</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Packet.h">
+      <Filter>msg</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Analyst.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\AnalystDef.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Autoptr.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Exception.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IException.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\ILogger.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\IMessagePort.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Logger.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\LogSystem.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\PlatformConfig.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\SysTimer.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Translator.h">
+      <Filter>base\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\List.cpp">
+      <Filter>STL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Map.cpp">
+      <Filter>STL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Queue.cpp">
+      <Filter>STL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Vector.cpp">
+      <Filter>STL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinystr.cpp">
+      <Filter>xml\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxml.cpp">
+      <Filter>xml\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlerror.cpp">
+      <Filter>xml\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlparser.cpp">
+      <Filter>xml\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\XMLBase.cpp">
+      <Filter>xml\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mutex.cpp">
+      <Filter>thread\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ThreadPool.cpp">
+      <Filter>thread\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Analyst.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Heap.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\IMessage.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Ini.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\IniFile.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\IPCChannel.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Logger.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\LogSystem.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\mempool.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\String.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SvrBase.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SysTimer.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Thread.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Timer.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Singleton.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Msg.cpp">
+      <Filter>base\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Inc\ByteBuffer.inl">
+      <Filter>msg</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

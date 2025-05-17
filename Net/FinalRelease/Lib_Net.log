@@ -1,0 +1,10 @@
+﻿  ClientSocket.cpp
+  KernelImpl.cpp
+  Serve.cpp
+  ServeSocket.cpp
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(990,5): warning MSB8012: TargetPath(E:\GameSource\titans来自POLO(惊天战神)\Client\G2Plus\FinalRelease\Lib_Net.dll) 与 Linker 的 OutputFile 属性值(E:\GameSource\titans来自POLO(惊天战神)\Client\G2Plus\bin\Net.dll)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Link.OutputFile) 中指定的值匹配。
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(992,5): warning MSB8012: TargetName(Lib_Net) 与 Linker 的 OutputFile 属性值(Net)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Link.OutputFile) 中指定的值匹配。
+     正在创建库 FinalRelease\Lib_Net.lib 和对象 FinalRelease\Lib_Net.exp
+  正在生成代码
+  已完成代码的生成
+  Lib_Net.vcxproj -> E:\GameSource\titans来自POLO(惊天战神)\Client\G2Plus\FinalRelease\Lib_Net.dll
